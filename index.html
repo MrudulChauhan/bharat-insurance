@@ -483,6 +483,92 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 /* keep the WhatsApp button clear of the mobile viewport edge */
 @media(max-width:620px){ .wa-fab{right:16px;bottom:16px} }
 </style>
+<style>
+/* ================= MOBILE UI OVERHAUL ================= */
+@media(max-width:760px){
+  /* header */
+  header{padding-top:12px}
+  header .bar{width:calc(100% - 24px);border-radius:18px}
+  .nav{height:60px;gap:8px}
+  .brand b{font-size:17px}
+  .brand span{font-size:10px;letter-spacing:.12em}
+  .shield{width:32px;height:36px}
+  .nav .btn.login{padding:10px 14px;font-size:13.5px;border-radius:12px;gap:7px}
+  .nav .btn.login .btn-ic{width:18px;height:18px}
+  #view-home{margin-top:-72px}
+  .hero{padding-top:72px}
+
+  /* hero — centered copy above the quote card */
+  .hero .wrap{padding:30px 20px 26px}
+  .hero .wrap>div:first-child{text-align:center}
+  .lede{margin-left:auto;margin-right:auto}
+  .hero-cta{justify-content:center}
+  .hero-stats{justify-content:center;gap:22px}
+
+  /* section rhythm */
+  section{padding:44px 0}
+  h2{font-size:26px}
+  .sub{margin-bottom:30px;font-size:15px}
+
+  /* value / why / coverage cards — centred icon + text */
+  .grid .card{text-align:center}
+  .card .ic{margin-left:auto;margin-right:auto}
+  .ic3d{margin-left:auto!important;margin-right:auto!important;width:58px;height:58px}
+  .card p{max-width:none}
+
+  /* bento — stack image below text (no overlap) */
+  .bento{gap:16px}
+  .bcard,.bcard.big{min-height:0!important;display:flex;flex-direction:column;overflow:hidden}
+  .bc-body{position:relative;z-index:2;padding:22px 22px 2px!important;width:100%}
+  .bcard p,.bcard.big p{max-width:none!important}
+  .bc-img{position:relative!important;z-index:1;width:auto!important;height:132px!important;max-height:none!important;right:auto!important;bottom:auto!important;margin:10px auto 16px!important;object-position:center bottom}
+  .bcard.big .bc-img{height:158px!important}
+  .bc-arrow{display:none!important}
+
+  /* journey — vertical timeline (icon node + text row) */
+  .journey{margin-top:20px}
+  .jline,.jrider{display:none!important}
+  .jrow{grid-template-columns:1fr!important;gap:18px;max-width:430px;margin:0 auto}
+  .jstep{display:grid;grid-template-columns:auto 1fr;gap:16px;text-align:left;align-items:center}
+  .jnode{margin:0!important}
+  .jstep h4{margin:0 0 3px}
+  .jstep p{margin:0;max-width:none}
+
+  /* claims band */
+  .band{flex-direction:column;text-align:center;gap:18px;padding:28px}
+  .band h2{text-align:center}
+  .band>div[style]{justify-content:center;width:100%}
+
+  /* FAQ */
+  .faq summary{font-size:15px;padding:15px 18px}
+
+  /* footer — compact */
+  footer{padding:36px 0 22px}
+  .ftrust{gap:8px;padding:16px 0;margin-bottom:24px}
+  .ftrust .fb{font-size:11px;padding:7px 11px;gap:7px}
+  .fgrid{grid-template-columns:1fr 1fr!important;gap:22px 18px;margin-bottom:26px}
+  .fbrand{grid-column:1 / -1}
+  .fbrand p{max-width:none}
+  footer h5{margin-bottom:10px}
+  footer a{padding:4px 0;font-size:13.5px}
+  .fbot{font-size:11.5px;gap:8px}
+
+  /* product pages */
+  .ppage-head{gap:16px}
+  .ppage-ic{width:70px;height:70px}
+  .ppage-head h1{font-size:28px}
+  .ppage-head p{font-size:15px}
+
+  /* admin */
+  .astat{grid-template-columns:1fr 1fr;gap:12px}
+  .astat b{font-size:23px}
+}
+@media(max-width:400px){
+  .brand span{display:none}
+  .hero-stats{gap:16px}
+  .hero-stats div b{font-size:22px}
+}
+</style>
 </head>
 <body>
 
@@ -851,6 +937,7 @@ document.getElementById('quoteForm').addEventListener('submit',e=>{
   if(!reg){alert('Please enter your vehicle registration number.');f.reg.focus();return;}
   if(isComm&&!vtype){alert('Please select a vehicle type.');return;}
   const p=premium(curLine,vtype,reg), n=saveLead({line:curLine,vtype,reg,mobile,premium:p});
+  fetch('/api/leads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({line:curLine,vtype,reg,mobile,premium:p})}).catch(()=>{});
   const insurers=['ICICI Lombard','HDFC ERGO','Bajaj Allianz','Tata AIG','Reliance General'];
   const pick=insurers[[...mobile].reduce((s,c)=>s+ +c,0)%insurers.length];
   openModal('Your Indicative Quote',`
@@ -976,19 +1063,27 @@ function showPage(slug){document.getElementById('view-home').style.display='none
 function showHome(target){const pm=document.getElementById('pageMount');pm.style.display='none';pm.innerHTML='';document.getElementById('view-home').style.display='';if(target&&target!=='#top'&&target!=='#'){const el=document.querySelector(target);if(el){el.scrollIntoView();return;}}scrollTo(0,0);}
 function router(){const m=location.hash.match(/^#\/(car|two-wheeler|commercial)$/);if(m)showPage(m[1]);else if(location.hash==='#/admin')showAdmin();else showHome(location.hash);}
 
-// ==== admin panel — captured quote requests ====
+// ==== admin panel — captured quote requests (Vercel Blob + localStorage fallback) ====
 const ADMIN_PASS='bharat@2026';
-function showAdmin(){document.getElementById('view-home').style.display='none';const pm=document.getElementById('pageMount');pm.style.display='block';pm.innerHTML=renderAdmin();scrollTo(0,0);}
+let _adminLeads=[];
+async function showAdmin(){
+  document.getElementById('view-home').style.display='none';
+  const pm=document.getElementById('pageMount');pm.style.display='block';scrollTo(0,0);
+  if(sessionStorage.getItem('bharat_admin_ok')!=='1'){pm.innerHTML=adminLoginHtml();return;}
+  pm.innerHTML='<section class="ppage-hero"><div class="admin-wrap"><div class="crumb"><a href="#top">Home</a> › <span>Admin</span></div><p style="color:var(--muted);padding:24px 0">Loading requests…</p></div></section>';
+  let leads=null;
+  try{const r=await fetch('/api/leads?pass='+encodeURIComponent(ADMIN_PASS),{cache:'no-store'});if(r.ok)leads=(await r.json()).leads||[];}catch(e){}
+  if(leads===null)leads=JSON.parse(localStorage.getItem('bharat_leads')||'[]');
+  _adminLeads=leads;pm.innerHTML=adminDashHtml(leads);
+}
 function adminLogin(){const v=(document.getElementById('apass')||{}).value||'';if(v===ADMIN_PASS){sessionStorage.setItem('bharat_admin_ok','1');showAdmin();}else alert('Incorrect passcode.');}
 function adminLogout(){sessionStorage.removeItem('bharat_admin_ok');showAdmin();}
-function adminClear(){if(!confirm('Delete ALL captured quote requests? This cannot be undone.'))return;localStorage.removeItem('bharat_leads');showAdmin();}
-function adminExport(){const a=JSON.parse(localStorage.getItem('bharat_leads')||'[]');if(!a.length){alert('No requests to export.');return;}
+async function adminClear(){if(!confirm('Delete ALL captured quote requests? This cannot be undone.'))return;localStorage.removeItem('bharat_leads');try{await fetch('/api/leads?pass='+encodeURIComponent(ADMIN_PASS),{method:'DELETE'});}catch(e){}showAdmin();}
+function adminExport(){const a=_adminLeads;if(!a.length){alert('No requests to export.');return;}
   const rows=[['Time','Type','Vehicle','Registration','Mobile','Est. Premium']].concat(a.map(l=>[l.ts,l.line,l.vtype||'',l.reg||'',l.mobile,l.premium]));
   const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const link=document.createElement('a');link.href=url;link.download='bharat-quote-requests.csv';document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);}
-function renderAdmin(){
-  if(sessionStorage.getItem('bharat_admin_ok')!=='1'){
-    return `<section class="ppage-hero"><div class="admin-wrap"><div class="crumb"><a href="#top">Home</a> › <span>Admin</span></div>
+function adminLoginHtml(){return `<section class="ppage-hero"><div class="admin-wrap"><div class="crumb"><a href="#top">Home</a> › <span>Admin</span></div>
       <div style="max-width:380px;margin:16px auto 46px;text-align:center">
         <img src="bharat-assets/favicon.svg" alt="" style="width:54px;height:54px;margin-bottom:14px">
         <h1 style="font-size:26px;margin:0 0 6px">Admin login</h1>
@@ -996,9 +1091,9 @@ function renderAdmin(){
         <input id="apass" type="password" placeholder="Passcode" onkeydown="if(event.key==='Enter')adminLogin()" style="text-align:center">
         <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="adminLogin()">Unlock</button>
         <p class="hint">Demo passcode: <b>bharat@2026</b></p>
-      </div></div></section>`;
-  }
-  const a=JSON.parse(localStorage.getItem('bharat_leads')||'[]'), rev=a.slice().reverse();
+      </div></div></section>`;}
+function adminDashHtml(a){
+  const rev=a.slice().reverse();
   const cnt=l=>a.filter(x=>x.line===l).length, sum=a.reduce((s,x)=>s+(+x.premium||0),0);
   const badge=l=>({Car:'#e8eefb|#122f63','Two-Wheeler':'#e7f5ec|#1a7d3c',Commercial:'#fff2e3|#e8801a'}[l]||'#eef2fa|#5b6b86');
   const fmt=iso=>{try{return new Date(iso).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}};
@@ -1029,7 +1124,7 @@ function renderAdmin(){
       </div>
       ${a.length? `<div style="overflow-x:auto"><table class="atable"><thead><tr><th>#</th><th>Time</th><th>Type</th><th>Vehicle</th><th>Reg No</th><th>Mobile</th><th>Est. premium</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>`
         : `<div class="card" style="text-align:center;padding:48px"><p style="color:var(--muted);margin:0">No requests yet. Submit the quote form on the homepage to see it appear here.</p></div>`}
-      <p class="hint" style="text-align:left;margin-top:16px">Stored in this browser (localStorage). On a deployed site this shows submissions from this browser — connect a database (e.g. Supabase) for cross-device capture.</p>
+      <p class="hint" style="text-align:left;margin-top:16px">Stored centrally via Vercel Blob (falls back to this browser if the API is unreachable).</p>
     </div></section>`;
 }
 
