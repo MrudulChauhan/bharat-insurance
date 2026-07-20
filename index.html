@@ -58,11 +58,11 @@
   .logo:hover .shield{transform:rotate(-6deg) scale(1.05)}
   .brand b{display:block;font-family:"Familjen Grotesk";font-weight:700;font-size:20px;letter-spacing:.01em;color:var(--navy);line-height:1}
   .brand span{display:block;font-weight:600;font-size:12.5px;color:var(--orange);letter-spacing:.22em;line-height:1.5}
-  .navlinks{display:flex;gap:28px;margin-left:auto}
+  .navlinks{display:flex;gap:28px;margin-left:34px}
   .navlinks a{position:relative;font-weight:600;font-size:15px;color:var(--ink);padding:6px 0}
   .navlinks a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--green));transition:width .28s var(--ease)}
   .navlinks a:hover::after,.navlinks a.active::after{width:100%}
-  .nav .btn{margin-left:6px}
+  .nav .btn{margin-left:auto}
   .burger{display:none;margin-left:auto;background:none;border:0;font-size:26px;color:var(--navy);cursor:pointer}
 
   /* HERO */
@@ -516,23 +516,28 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .ic3d{margin-left:auto!important;margin-right:auto!important;width:58px;height:58px}
   .card p{max-width:none}
 
-  /* bento — stack image below text (no overlap) */
+  /* bento — image bottom-right, text reserved to the left (no overlap) */
   .bento{gap:16px}
-  .bcard,.bcard.big{min-height:0!important;display:flex;flex-direction:column;overflow:hidden}
-  .bc-body{position:relative;z-index:2;padding:22px 22px 2px!important;width:100%}
+  .bcard{min-height:188px!important}
+  .bcard.big{min-height:222px!important}
+  .bc-body,.bcard.big .bc-body{padding:22px 46% 8px 22px!important}
   .bcard p,.bcard.big p{max-width:none!important}
-  .bc-img{position:relative!important;z-index:1;width:auto!important;height:132px!important;max-height:none!important;right:auto!important;bottom:auto!important;margin:10px auto 16px!important;object-position:center bottom}
-  .bcard.big .bc-img{height:158px!important}
+  .bc-img,.bcard.big .bc-img{position:absolute!important;width:42%!important;max-height:72%!important;right:3%!important;bottom:8%!important;margin:0!important;object-position:bottom right}
   .bc-arrow{display:none!important}
 
-  /* journey — vertical timeline (icon node + text row) */
-  .journey{margin-top:20px}
+  /* journey — vertical numbered timeline with connecting rail */
+  .journey{margin-top:18px}
   .jline,.jrider{display:none!important}
-  .jrow{grid-template-columns:1fr!important;gap:18px;max-width:430px;margin:0 auto}
-  .jstep{display:grid;grid-template-columns:auto 1fr;gap:16px;text-align:left;align-items:center}
-  .jnode{margin:0!important}
-  .jstep h4{margin:0 0 3px}
-  .jstep p{margin:0;max-width:none}
+  .jrow{grid-template-columns:1fr!important;gap:0;max-width:400px;margin:0 auto}
+  .jstep{position:relative;display:grid;grid-template-columns:64px 1fr;gap:16px;text-align:left;align-items:start;padding-bottom:28px}
+  .jstep:last-child{padding-bottom:0}
+  .jstep::before{content:"";position:absolute;left:31px;top:70px;bottom:4px;width:2px;background:repeating-linear-gradient(#d6deec 0 5px,transparent 5px 11px)}
+  .jstep:last-child::before{display:none}
+  .jnode{margin:0!important;width:64px;height:64px;border-radius:18px}
+  .jnode .jimg{width:38px;height:38px}
+  .jnode .num{width:24px;height:24px;font-size:12px}
+  .jstep h4{margin:6px 0 4px;font-size:16px}
+  .jstep p{margin:0;max-width:none;font-size:14px}
 
   /* claims band */
   .band{flex-direction:column;text-align:center;gap:18px;padding:28px}
