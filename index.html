@@ -48,11 +48,14 @@
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 6px 2px;text-transform:uppercase;letter-spacing:.04em}
 
   /* 1-2-3 wizard */
-  .wsteps{display:flex;align-items:center;gap:0;list-style:none;margin:0 0 16px;padding:0}
-  .wsteps li{flex:1;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:#9fb0cc;position:relative}
-  .wsteps li+li{padding-left:10px}
-  .wsteps li+li::before{content:"";position:absolute;left:-4px;width:12px;height:2px;background:var(--line)}
-  .wsteps .sn{display:grid;place-items:center;width:26px;height:26px;flex:none;border-radius:50%;background:#eef2fb;color:#9fb0cc;font-size:13px;transition:background .25s,color .25s}
+  .wsteps{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0 0 20px;padding:0}
+  .wsteps li{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;
+    font-size:12.5px;font-weight:700;color:#9fb0cc;transition:color .25s}
+  .wsteps li+li::before{content:"";position:absolute;top:13px;right:50%;left:-50%;height:2px;
+    background:var(--line);z-index:0}
+  .wsteps .sn{position:relative;z-index:1;display:grid;place-items:center;width:28px;height:28px;flex:none;
+    border-radius:50%;background:#eef2fb;color:#9fb0cc;font-size:13px;
+    box-shadow:0 0 0 4px #fff;transition:background .25s,color .25s}
   .wsteps li.on{color:var(--navy)}
   .wsteps li.on .sn{background:var(--navy);color:#fff}
   .wsteps li.done .sn{background:var(--green);color:#fff}
@@ -132,9 +135,13 @@
 
 
 
-  /* ===== "see it work": a phone that plays the real flow ===== */
-  .demo{display:grid;grid-template-columns:290px 1fr;gap:52px;align-items:center;
-    max-width:860px;margin:44px auto 0;text-align:left}
+  /* ===== "see it work": a phone whose screen follows the scroll ===== */
+  /* the tall wrapper is the scroll runway; the demo sticks inside it and the
+     step index is (scroll through wrapper) x 4 — so up-scroll reverses for free */
+  .demo-scroll{position:relative;height:300vh;margin-top:20px}
+  .demo{position:sticky;top:0;min-height:100vh;
+    display:grid;grid-template-columns:290px 1fr;gap:52px;align-content:center;align-items:center;
+    max-width:860px;margin:0 auto;text-align:left}
 
   .dphone{position:relative;width:290px;height:520px;border-radius:42px;padding:14px;
     background:linear-gradient(160deg,#1c2b4a,#0d1729);box-shadow:0 30px 60px rgba(13,23,41,.34),0 0 0 1px rgba(255,255,255,.08) inset}
@@ -142,30 +149,35 @@
     background:linear-gradient(180deg,#fbfcff,#eef2fb)}
 
   .dsc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:10px;padding:38px 22px;text-align:center;
+    gap:10px;padding:34px 20px;text-align:center;
     opacity:0;transform:translateY(16px) scale(.98);pointer-events:none;
-    transition:opacity .5s var(--ease),transform .5s var(--ease)}
+    transition:opacity .45s var(--ease),transform .45s var(--ease)}
   .dsc.on{opacity:1;transform:none}
   .dsc-h{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .dsc-t{font-size:18px;color:var(--navy);line-height:1.3}
   .dsc-s{font-size:13.5px;color:var(--muted);line-height:1.6}
   .dsc-s b{color:var(--navy)}
 
-  /* 1 · the plate, typing itself */
+  /* 1 · plate + a keyboard that types it */
+  .dsc[data-s="1"]{justify-content:flex-start;padding-top:54px}
   .dplate{display:flex;align-items:stretch;width:100%;background:#fff;border:2.5px solid #111;border-radius:9px;overflow:hidden}
   .dplate span{display:grid;place-items:center;padding:0 7px;background:#0b3d91;color:#fff;font-size:9px;font-weight:800}
-  .dplate b{flex:1;padding:11px 4px;font-family:ui-monospace,Menlo,monospace;font-size:19px;letter-spacing:.06em;color:#111}
+  .dplate b{flex:1;min-height:41px;display:flex;align-items:center;justify-content:center;
+    font-family:ui-monospace,Menlo,monospace;font-size:19px;letter-spacing:.06em;color:#111}
   .dsc.on .dplate b::after{content:"";display:inline-block;width:2px;height:17px;margin-left:2px;
-    background:var(--orange);vertical-align:-3px;animation:caret .9s step-end infinite}
+    background:var(--orange);animation:caret .9s step-end infinite}
   @keyframes caret{50%{opacity:0}}
-  .dkey{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:100%;margin-top:14px}
-  .dkey i{display:grid;place-items:center;height:28px;border-radius:6px;background:#fff;
-    font-style:normal;font-size:13px;font-weight:700;color:#b6c1d4;box-shadow:0 1px 3px rgba(18,47,99,.12)}
+  .dkb{position:absolute;left:0;right:0;bottom:0;padding:10px 6px 14px;
+    background:#dfe4ee;border-top:1px solid #cfd6e4;display:grid;gap:6px}
+  .dkb-r{display:flex;justify-content:center;gap:4px}
+  .dkb i{flex:1;max-width:23px;display:grid;place-items:center;height:26px;border-radius:5px;
+    background:#fff;font-style:normal;font-size:10.5px;font-weight:600;color:#4a5568;
+    box-shadow:0 1px 1px rgba(18,47,99,.18);transition:background .1s,transform .1s,color .1s}
+  .dkb i.hit{background:var(--navy);color:#fff;transform:translateY(1px) scale(.94)}
 
   /* 2 · the vehicle we found */
-  .dcar{width:74px;height:74px;display:grid;place-items:center;border-radius:50%;
-    background:linear-gradient(140deg,#eaf4ee,#f2f7ff);color:var(--green)}
-  .dcar svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:1.7}
+  .dveh{width:96px;height:72px;display:grid;place-items:center}
+  .dveh img{max-width:100%;max-height:100%;object-fit:contain}
   .dchip{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;font-weight:700;letter-spacing:.07em;
     background:#fff;border:1.5px solid #111;border-radius:4px;padding:2px 7px;color:#111}
   .drow{display:flex;justify-content:space-between;width:100%;font-size:13px;padding:7px 2px;
@@ -185,35 +197,30 @@
   .dsc.on .dtick path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw2 .35s var(--ease) .45s forwards}
   @keyframes draw2{to{stroke-dashoffset:0}}
 
-  /* the step list — doubles as the player's chapter markers */
+  /* the step list, lit by the same scroll position */
   .dlist{list-style:none;margin:0;padding:0}
-  .dli{position:relative;display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start;
-    padding:16px 16px 18px;border-radius:16px;cursor:pointer;
-    transition:background .3s var(--ease),opacity .3s}
-  .dli:not(.on){opacity:.5}
+  .dli{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;
+    padding:14px 16px;border-radius:16px;
+    transition:background .35s var(--ease),opacity .35s,box-shadow .35s}
+  .dli:not(.on){opacity:.42}
   .dli.on{background:#fff;box-shadow:0 10px 26px rgba(18,47,99,.09)}
-  .dli:hover:not(.on){opacity:.78}
-  .dn{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;
-    font-family:"Familjen Grotesk";font-weight:700;font-size:15px;
-    background:#eef2fb;color:#9fb0cc;transition:background .3s,color .3s}
-  .dli.on .dn{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
-  .dli.done .dn{background:var(--green);color:#fff}
-  .dli h4{margin:6px 0 4px;font-size:17px;color:var(--navy)}
+  .dn{width:56px;height:56px;object-fit:contain;transition:transform .35s var(--ease),filter .35s}
+  .dli:not(.on) .dn{filter:grayscale(.65)}
+  .dli.on .dn{transform:scale(1.08)}
+  .dli h4{margin:0 0 4px;font-size:17px;color:var(--navy)}
   .dli p{margin:0;font-size:14.5px;color:var(--muted)}
-  .dbar{position:absolute;left:16px;right:16px;bottom:8px;height:3px;border-radius:2px;background:#e6ebf5;
-    opacity:0;transition:opacity .25s}
-  .dli.on .dbar{opacity:1}
-  .dbar i{display:block;height:100%;width:0;border-radius:2px;
-    background:linear-gradient(90deg,var(--orange),var(--green))}
-  .dli.on .dbar i{animation:tick var(--hold,3200ms) linear forwards}
-  @keyframes tick{to{width:100%}}
 
   @media(max-width:820px){
-    .demo{grid-template-columns:1fr;gap:26px;justify-items:center;max-width:420px}
-    .dphone{width:262px;height:480px}
+    .demo-scroll{height:280vh}
+    .demo{grid-template-columns:1fr;gap:20px;justify-items:center;max-width:420px;padding:14px 0}
+    .dphone{width:250px;height:430px}
     .dlist{width:100%}
+    .dli{grid-template-columns:44px 1fr;gap:12px;padding:9px 12px}
+    .dn{width:44px;height:44px}
+    .dli h4{font-size:15.5px}
+    .dli p{font-size:13.5px}
+    .dli:not(.on) p{display:none}   /* only the live step keeps its description */
   }
-  @media(prefers-reduced-motion:reduce){.dbar i{width:100%;animation:none}}
 
   .tricolor{height:5px;background:linear-gradient(90deg,var(--saffron) 0 33.3%,#fff 33.3% 66.6%,var(--india-green) 66.6% 100%)}
 
@@ -709,7 +716,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
         <h2 class="fq">What's your vehicle number?</h2>
         <div class="plate" id="plate">
           <span class="plate-ind">IND</span>
-          <input id="regIn" class="plate-in" placeholder="MH12AB3456" maxlength="13"
+          <input id="regIn" class="plate-in" placeholder="GJ01AB1234" maxlength="13"
                  autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Vehicle registration number">
           <span class="plate-scan" aria-hidden="true"></span>
         </div>
@@ -850,28 +857,29 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
     <h2 class="reveal">See it work <span class="g">before you start</span></h2>
     <p class="sub reveal d1">This is the whole thing. Four taps, about a minute.</p>
 
-    <div class="demo reveal d1" id="demo">
+    <div class="demo-scroll" id="demoScroll">
+     <div class="demo" id="demo">
       <div class="dphone" aria-hidden="true">
         <div class="dp-view">
 
           <div class="dsc on" data-s="1">
             <span class="dsc-h">Your vehicle number</span>
-            <div class="dplate"><span>IND</span><b id="dType">MH12AB3456</b></div>
-            <div class="dkey"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></div>
+            <div class="dplate"><span>IND</span><b id="dType"></b></div>
+            <div class="dkb" id="dkb"></div>
           </div>
 
           <div class="dsc" data-s="2">
             <span class="dsc-h">We found it</span>
-            <div class="dcar"><svg viewBox="0 0 24 24"><use href="#i-car"/></svg></div>
-            <b class="dsc-t">Hyundai i10 Grand Nios</b>
-            <span class="dchip">MH12AB3456</span>
+            <div class="dveh"><img src="bharat-assets/bike.png" alt=""></div>
+            <b class="dsc-t">Hero Splendor Plus</b>
+            <span class="dchip">GJ01AB1234</span>
             <div class="drow"><span>Fuel</span><b>Petrol</b></div>
             <div class="drow"><span>Registered</span><b>2021</b></div>
           </div>
 
           <div class="dsc" data-s="3">
             <span class="dsc-h">Your price</span>
-            <div class="dprice">₹2,094</div>
+            <div class="dprice">₹1,090</div>
             <span class="dsc-s">Third-party cover · 1 year<br>All taxes included</span>
             <div class="dpay">Proceed to pay</div>
           </div>
@@ -885,20 +893,17 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
         </div>
       </div>
 
-      <ol class="dlist" id="dlist">
-        <li class="dli on"><span class="dn">1</span>
-          <div><h4>Type your number</h4><p>Just what's on your number plate. No forms, no login.</p></div>
-          <span class="dbar"><i></i></span></li>
-        <li class="dli"><span class="dn">2</span>
-          <div><h4>We find your vehicle</h4><p>Model, year and fuel come straight from the records. You only confirm.</p></div>
-          <span class="dbar"><i></i></span></li>
-        <li class="dli"><span class="dn">3</span>
-          <div><h4>One honest price</h4><p>Third-party cover is a fixed government rate. Nothing to compare.</p></div>
-          <span class="dbar"><i></i></span></li>
-        <li class="dli"><span class="dn">4</span>
-          <div><h4>Pay and you're covered</h4><p>Your e-policy reaches WhatsApp and SMS in seconds.</p></div>
-          <span class="dbar"><i></i></span></li>
+      <ol class="dlist">
+        <li class="dli on"><img class="dn" src="bharat-assets/icons/memo.png" alt="">
+          <div><h4>Type your number</h4><p>Just what's on your number plate. No forms, no login.</p></div></li>
+        <li class="dli"><img class="dn" src="bharat-assets/icons/clipboard.png" alt="">
+          <div><h4>We find your vehicle</h4><p>Model, year and fuel come straight from the records. You only confirm.</p></div></li>
+        <li class="dli"><img class="dn" src="bharat-assets/icons/money.png" alt="">
+          <div><h4>One honest price</h4><p>Third-party cover is a fixed government rate. Nothing to compare.</p></div></li>
+        <li class="dli"><img class="dn" src="bharat-assets/icons/mail.png" alt="">
+          <div><h4>Pay and you're covered</h4><p>Your e-policy reaches WhatsApp and SMS in seconds.</p></div></li>
       </ol>
+     </div>
     </div>
   </div>
 </section>
@@ -1009,20 +1014,53 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;cio.unobserve(e.target);const el=e.target,to=+el.dataset.to,dec=+el.dataset.dec||0,suf=el.dataset.suffix||'';let t0=null;const dur=1200;function step(ts){t0=t0||ts;const p=Math.min((ts-t0)/dur,1),v=(to*(1-Math.pow(1-p,3)));el.textContent=(dec?v.toFixed(dec):Math.round(v))+suf;if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}),{threshold:.6});
 document.querySelectorAll('.count').forEach(el=>cio.observe(el));
 
-// demo player: auto-advances, pauses off-screen and on hover, click to jump
-(function(){const d=document.getElementById('demo');if(!d)return;
-  const scs=[...d.querySelectorAll('.dsc')], lis=[...d.querySelectorAll('.dli')];
-  const HOLD=3200; let i=0, t=null, live=false;
-  function show(n){i=n%scs.length;
-    scs.forEach((s,k)=>s.classList.toggle('on',k===i));
-    lis.forEach((l,k)=>{l.classList.toggle('on',k===i);l.classList.toggle('done',k<i);});}
-  function play(){stop();t=setInterval(()=>show(i+1),HOLD);}
-  function stop(){clearInterval(t);t=null;}
-  lis.forEach((l,k)=>l.addEventListener('click',()=>{show(k);if(live)play();}));
-  d.addEventListener('mouseenter',stop); d.addEventListener('mouseleave',()=>{if(live)play();});
-  new IntersectionObserver(es=>es.forEach(e=>{live=e.isIntersecting;live?play():stop();}),
-    {threshold:.35}).observe(d);
-  d.style.setProperty('--hold',HOLD+'ms');})();
+// demo: the step follows the scroll position through a tall sticky section,
+// so scrolling down runs 1->4 and scrolling up runs 4->1.
+(function(){
+  const wrap=document.getElementById('demoScroll'), demo=document.getElementById('demo');
+  if(!wrap) return;
+  const scs=[...demo.querySelectorAll('.dsc')], lis=[...demo.querySelectorAll('.dli')];
+  const REG='GJ01AB1234', kb=document.getElementById('dkb'), out=document.getElementById('dType');
+
+  // phone keyboard, built here so the markup stays small
+  const ROWS=['1234567890','QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+  kb.innerHTML=ROWS.map(r=>`<div class="dkb-r">${[...r].map(c=>`<i data-k="${c}">${c}</i>`).join('')}</div>`).join('');
+  const keys=Object.fromEntries([...kb.querySelectorAll('i')].map(k=>[k.dataset.k,k]));
+
+  let typing=null;
+  function type(){
+    clearTimeout(typing); out.textContent='';
+    let i=0;
+    (function next(){
+      if(i>=REG.length) return;
+      const c=REG[i++];
+      out.textContent+=c;
+      const k=keys[c];
+      if(k){k.classList.add('hit');setTimeout(()=>k.classList.remove('hit'),140);}
+      typing=setTimeout(next,170);
+    })();
+  }
+
+  let cur=-1;
+  function set(n){
+    if(n===cur) return;
+    cur=n;
+    scs.forEach((s,k)=>s.classList.toggle('on',k===n));
+    lis.forEach((l,k)=>{l.classList.toggle('on',k===n);l.classList.toggle('done',k<n);});
+    if(n===0) type(); else clearTimeout(typing);
+  }
+
+  let queued=false;
+  function upd(){
+    queued=false;
+    const b=wrap.getBoundingClientRect(), travel=b.height-innerHeight;
+    if(travel<=0){set(0);return;}
+    const p=Math.max(0,Math.min(0.9999,-b.top/travel));
+    set(Math.floor(p*scs.length));
+  }
+  addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(upd);}},{passive:true});
+  addEventListener('resize',upd); upd();
+})();
 
 // ripple on buttons// ripple on buttons
 document.addEventListener('click',e=>{const b=e.target.closest('.btn');if(!b)return;const r=document.createElement('span');r.className='ripple';const rect=b.getBoundingClientRect(),d=Math.max(rect.width,rect.height);r.style.width=r.style.height=d+'px';r.style.left=(e.clientX-rect.left-d/2)+'px';r.style.top=(e.clientY-rect.top-d/2)+'px';b.appendChild(r);setTimeout(()=>r.remove(),600);});
@@ -1083,7 +1121,7 @@ function lookup(){
   const raw=document.getElementById('regIn').value, reg=norm(raw), plate=document.getElementById('plate');
   if(!REG_RE.test(reg)){
     plate.classList.remove('bad');void plate.offsetWidth;plate.classList.add('bad');
-    say('regErr','That doesn\'t look right. Example: MH12AB3456',true);
+    say('regErr','That doesn\'t look right. Example: GJ01AB1234',true);
     document.getElementById('regIn').focus();return;
   }
   const btn=document.getElementById('lookupBtn');
