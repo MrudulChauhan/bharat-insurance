@@ -158,16 +158,12 @@
   @keyframes drift3{50%{transform:translate(-50px,60px) scale(1.12)}}
   .hero .wrap{position:relative;display:block;z-index:2;padding:52px 22px 54px}
 
-  .eyebrow{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);color:var(--green);font-weight:600;font-size:13px;padding:8px 15px;border-radius:999px;box-shadow:var(--shadow)}
-  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(37,163,79,.5);animation:pulse 2s infinite}
   @keyframes pulse{70%{box-shadow:0 0 0 8px rgba(37,163,79,0)}100%{box-shadow:0 0 0 0 rgba(37,163,79,0)}}
   h1{font-size:52px;line-height:1.05;margin:18px 0 14px;font-weight:700;color:var(--navy);letter-spacing:-.02em}
+  /* headline stays on one line at any width — clamp is sized so 31 chars always fit */
+  .hero h1{font-size:clamp(19px,5.4vw,54px);white-space:nowrap;line-height:1.1;margin:4px 0 26px}
   .rot ul{list-style:none;margin:0;padding:0;animation:roll 9s var(--ease) infinite}
   @keyframes roll{0%,14%{transform:translateY(0)}20%,34%{transform:translateY(-1.1em)}40%,54%{transform:translateY(-2.2em)}60%,74%{transform:translateY(-3.3em)}80%,94%{transform:translateY(-4.4em)}100%{transform:translateY(-5.5em)}}
-  .lede{font-size:17.5px;color:var(--muted);max-width:470px;margin:0 0 24px}
-  .hero-stats{display:flex;justify-content:center;gap:34px;margin-top:34px;flex-wrap:wrap}
-  .hero-stats div b{display:block;font-family:"Familjen Grotesk";font-size:26px;color:var(--navy);font-weight:700;line-height:1}
-  .hero-stats div span{font-size:12.5px;color:var(--muted)}
 
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
   .reveal.in{opacity:1;transform:none}
@@ -560,8 +556,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 
   /* hero — centered copy above the quote card */
   .hero .wrap{padding:26px 16px 34px}
-  .lede{margin-left:auto;margin-right:auto}
-  .hero-stats{justify-content:center;gap:22px}
 
   /* section rhythm */
   section{padding:44px 0}
@@ -627,8 +621,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .astat b{font-size:23px}
 }
 @media(max-width:400px){
-  .hero-stats{gap:16px}
-  .hero-stats div b{font-size:22px}
 }
 </style>
 </head>
@@ -652,9 +644,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
   <div class="grid-overlay"></div>
   <div class="wrap">
-    <span class="eyebrow reveal"><span class="dot"></span>IRDAI-aligned · <span class="dev">बीमा देश के वाहन का</span></span>
     <h1 class="reveal d1">Vehicle insurance in <span class="g">60 seconds</span></h1>
-    <p class="lede reveal d2">Type your vehicle number. We do the rest.</p>
 
     <div class="flow reveal d2" id="quote">
       <ol class="wsteps" id="steps">
@@ -734,12 +724,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
       </div>
     </div>
 
-    <div class="hero-stats reveal d4">
-      <div><b class="count" data-to="20" data-suffix="+">0</b><span>Insurers onboard</span></div>
-      <div><b class="count" data-to="4.9" data-dec="1">0</b><span>Customer rating</span></div>
-      <div><b class="count" data-to="50" data-suffix="k+">0</b><span>Policies issued</span></div>
-      <div><b>24×7</b><span>Claims support</span></div>
-    </div>
   </div>
 </div>
 
