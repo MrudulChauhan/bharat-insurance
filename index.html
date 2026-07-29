@@ -240,7 +240,15 @@
   .burger{display:none;margin-left:auto;background:none;border:0;font-size:26px;color:var(--navy);cursor:pointer}
 
   /* HERO */
-  .hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcff,#eef2fb)}
+  /* The hero owns exactly one screenful, so the insurer marquee never shows on
+     first paint. The negative margin on #view-home already pulls the hero's top
+     to y=0 under the floating header, so 100svh lands its bottom on the fold;
+     its padding-top (--hdr) keeps the content clear of the header.
+     svh, not dvh: svh is the URL-bar-visible height — the state on load — and
+     unlike dvh it never reflows the page when the bar hides. */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfcff,#eef2fb);
+    min-height:100vh;min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center}
   .aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
   .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;will-change:transform}
   .b1{width:460px;height:460px;background:radial-gradient(circle,#ffd8a8,transparent 68%);top:-120px;left:-80px;animation:drift1 18s ease-in-out infinite}
@@ -679,6 +687,22 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 }
 @media(max-width:400px){
 }
+  /* short windows (laptop browser chrome eats ~250px): compress the hero so the
+   card still clears the fold instead of pushing the marquee into view */
+@media(max-height:760px){
+  :root{--hdr:96px}          /* keep in step with .nav height + header padding-top */
+  .nav{height:78px}
+  .logo-img{height:58px}
+  .hero .wrap{padding:16px 22px 20px}
+  .hero h1{font-size:clamp(18px,4.4vw,36px);margin:0 0 16px}
+  .flow{padding:20px 22px 24px;border-radius:22px}
+  .fq{font-size:21px;margin:0 0 14px}
+  .wsteps{margin-bottom:14px}
+  .fbtn{padding:14px 20px;font-size:16.5px;margin-top:14px}
+  .ftrust-row{margin-top:14px}
+  .plate-in{font-size:27px;padding:12px 8px}
+}
+
 </style>
 </head>
 <body>
@@ -1005,6 +1029,13 @@ const INSURERS=[['ICICI Lombard','icicilombard.com'],['HDFC ERGO','hdfcergo.com'
 
 // header shrink
 addEventListener('scroll',()=>document.getElementById('hdr').classList.toggle('scrolled',scrollY>10));
+
+// --hdr must equal the header's real height or the hero's top seam and its
+// one-screen height both drift. The CSS values are a first-paint guess; measure
+// and correct, so no media-query combination can put them out of step.
+(function(){const hd=document.getElementById('hdr');
+  const sync=()=>document.documentElement.style.setProperty('--hdr',hd.offsetHeight+'px');
+  addEventListener('resize',sync); addEventListener('load',sync); sync();})();
 
 // scroll reveal
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15});
