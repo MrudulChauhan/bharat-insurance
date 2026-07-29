@@ -129,6 +129,46 @@
   @keyframes draw{to{stroke-dashoffset:0}}
   .fdone{font-size:16px;color:var(--muted);margin:0 auto;max-width:420px;line-height:1.6}
 
+  /* ===== the road: a scroll-driven journey ===== */
+  .road{position:relative;max-width:620px;margin:46px auto 0}
+  .road-strip{position:absolute;left:34px;top:26px;bottom:26px;width:12px;border-radius:9px;
+    background:#e6ebf5;box-shadow:inset 0 0 0 1px #dde4f1}
+  .road-strip::before{content:"";position:absolute;left:50%;top:8px;bottom:8px;width:2px;margin-left:-1px;
+    background:repeating-linear-gradient(#fff 0 10px,transparent 10px 22px)}
+  .road-fill{position:absolute;inset:0;border-radius:9px;transform-origin:top;transform:scaleY(var(--p,0));
+    background:linear-gradient(180deg,var(--saffron),#e8a33a 42%,var(--india-green))}
+  .road-car{position:absolute;left:40px;top:calc(26px + var(--p,0) * (100% - 52px));z-index:4;width:44px;height:44px;margin:-22px 0 0 -22px;
+    display:grid;place-items:center;border-radius:50%;color:#fff;
+    background:linear-gradient(140deg,var(--navy),var(--navy-2));box-shadow:0 10px 22px rgba(18,47,99,.34);
+    border:3px solid #fff}
+  .road-car svg{width:21px;height:21px;animation:carbob 1.8s ease-in-out infinite}
+  @keyframes carbob{50%{transform:translateY(-2px)}}
+
+  .stops{position:relative;z-index:1;list-style:none;margin:0;padding:0}
+  .stop{position:relative;display:grid;grid-template-columns:80px 1fr;align-items:start;gap:18px;padding:0 0 34px}
+  .stop:last-child{padding-bottom:0}
+  .stop-node{position:relative;width:80px;height:80px;display:grid;place-items:center;border-radius:24px;
+    background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+    transition:border-color .45s var(--ease),box-shadow .45s var(--ease),transform .3s var(--ease)}
+  .stop:hover .stop-node{transform:translateY(-4px) scale(1.04);box-shadow:var(--shadow-lg)}
+  .stop-node img{width:42px;height:42px;object-fit:contain}
+  .stop-node b{position:absolute;top:-9px;right:-9px;width:28px;height:28px;border-radius:50%;
+    display:grid;place-items:center;font-family:"Familjen Grotesk";font-size:14px;color:#fff;
+    background:linear-gradient(135deg,var(--orange),var(--orange-2));border:2.5px solid #fff;
+    box-shadow:0 4px 10px rgba(232,128,26,.42)}
+  .stop-card{padding-top:8px}
+  .stop-card h4{margin:0 0 6px;font-size:19px;color:var(--navy)}
+  .stop-card p{margin:0;font-size:15px;color:var(--muted)}
+
+  /* --p (0..1) comes from one rAF-throttled scroll handler — see the .road JS.
+     ponytail: animation-timeline:view() would be JS-free, but a timeline that
+     doesn't run hides the content, and this audience is on old Android WebViews. */
+  .stop.on .stop-node{border-color:color-mix(in oklab,var(--green) 48%,#fff);
+    box-shadow:0 14px 30px rgba(37,163,79,.22)}
+  .stop.on .stop-node img{animation:nudge .5s var(--ease)}
+  @keyframes nudge{40%{transform:translateY(-6px) scale(1.1)}}
+
+
   .tricolor{height:5px;background:linear-gradient(90deg,var(--saffron) 0 33.3%,#fff 33.3% 66.6%,var(--india-green) 66.6% 100%)}
 
   /* Header */
@@ -205,14 +245,6 @@
     font-size:12px;font-weight:500;color:var(--muted)}
   .qtrust .dotsep{width:4px;height:4px;border-radius:50%;background:#c3cee2}
 
-  /* driving car strip */
-  .road{position:relative;height:70px;margin-top:6px;overflow:hidden;z-index:2}
-  .road .line{position:absolute;left:0;right:0;bottom:20px;height:3px;background:repeating-linear-gradient(90deg,#c3cee2 0 26px,transparent 26px 52px);animation:dash 1.1s linear infinite}
-  @keyframes dash{to{background-position:24px 0}}
-  .car{position:absolute;bottom:14px;font-size:34px;animation:bob 1.2s ease-in-out infinite}
-  @keyframes bob{50%{transform:translateY(-3px)}}
-  .car .wheels{position:absolute}
-  .carsvg{width:120px;height:52px}
   .wheel{transform-box:fill-box;transform-origin:center;animation:spin 0.5s linear infinite}
 
   /* marquee */
@@ -356,32 +388,15 @@ h1{font-size:56px;letter-spacing:-.025em;line-height:1.03}
 .tchip{background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 11px;font-family:"Familjen Grotesk";font-weight:700;font-size:12.5px;white-space:nowrap;box-shadow:0 2px 7px rgba(18,47,99,.08)}
 
 /* JOURNEY */
-.journey{position:relative;margin-top:54px;padding-top:6px}
-.jline{position:absolute;top:37px;left:12%;right:12%;height:14px;border-radius:8px;background:#eaeef7;border:1px solid #e1e7f3;z-index:0;overflow:hidden}
-.jline .dash{position:absolute;top:50%;left:0;right:0;height:2px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,#c3cee2 0 12px,transparent 12px 24px);animation:dash 1.1s linear infinite}
-.jline .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--saffron),#f5981f,var(--india-green));opacity:.6;transition:width .12s linear}
-.jrider{position:absolute;top:20px;left:12%;z-index:3;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;display:grid;place-items:center;box-shadow:0 12px 24px rgba(18,47,99,.32);transition:left .12s linear}
-.jrider svg.i{font-size:24px}
 @keyframes ride{0%,10%{left:12%}28%,34%{left:calc(37% - 24px)}52%,58%{left:calc(62% - 24px)}80%,100%{left:calc(88% - 48px)}}
-.jrow{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;z-index:2}
-.jstep{text-align:center}
-.jnode{position:relative;width:76px;height:76px;margin:0 auto 18px;border-radius:22px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;color:var(--navy);box-shadow:var(--shadow);transition:transform .25s var(--ease),box-shadow .25s}
-.jnode svg.i{font-size:32px}
-.jstep:hover .jnode{transform:translateY(-6px) scale(1.05);box-shadow:var(--shadow-lg)}
-.jnode .num{position:absolute;top:-9px;right:-9px;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;font-family:"Familjen Grotesk";font-weight:700;font-size:14px;display:grid;place-items:center;border:2.5px solid #fff;box-shadow:0 4px 10px rgba(232,128,26,.42)}
-.jstep h4{margin:0 0 6px;color:var(--navy);font-size:17px}
-.jstep p{margin:0 auto;color:var(--muted);font-size:14px;max-width:220px}
 
 @media(max-width:880px){
   h1{font-size:40px}
-  .jrow{grid-template-columns:1fr 1fr}
-  .jline,.jrider{display:none}
   .offer-pill small{display:none}
   .trusted span{max-width:none}
 }
 @media(max-width:540px){
   h1{font-size:32px}
-  .jrow{grid-template-columns:1fr}
 }
 </style>
 <style>
@@ -489,7 +504,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 .ic3d{width:62px;height:62px;object-fit:contain;display:block;margin:0 0 14px;filter:drop-shadow(0 8px 12px rgba(18,47,99,.16));transition:transform .25s var(--ease)}
 .card:hover .ic3d{transform:translateY(-3px) scale(1.05)}
 .why .card{padding:26px;overflow:visible}
-.jnode .jimg{width:44px;height:44px;object-fit:contain}
 /* seamless header: hero background flows up behind the floating bar (no strip seam) */
 #view-home{margin-top:-86px}
 .hero{padding-top:86px}
@@ -528,6 +542,18 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .vc-rows{padding:4px 14px 12px}
   .ftrust-row{gap:8px 14px;font-size:12.5px}
   .paybar b{font-size:22px}
+  /* road on small screens */
+  .road{margin-top:30px}
+  .road-strip{left:27px;width:10px}
+  .stop{grid-template-columns:64px 1fr;gap:14px;padding-bottom:26px}
+  .stop-node{width:64px;height:64px;border-radius:19px}
+  .stop-node img{width:34px;height:34px}
+  .stop-node b{width:24px;height:24px;font-size:12px;top:-8px;right:-8px}
+  .stop-card{padding-top:4px}
+  .stop-card h4{font-size:16.5px}
+  .stop-card p{font-size:14px}
+  .road-car{left:32px;width:38px;height:38px;margin:-19px 0 0 -19px}
+  .road-car svg{width:18px;height:18px}
   .wsteps li{font-size:11.5px;gap:6px}
   .wsteps .sn{width:23px;height:23px;font-size:12px}
   .wsteps li+li::before{width:8px}
@@ -577,19 +603,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .bc-img,.bcard.big .bc-img{position:absolute!important;width:42%!important;max-height:72%!important;right:3%!important;bottom:8%!important;margin:0!important;object-position:bottom right}
   .bc-arrow{display:none!important}
 
-  /* journey — vertical numbered timeline with connecting rail */
-  .journey{margin-top:18px}
-  .jline,.jrider{display:none!important}
-  .jrow{grid-template-columns:1fr!important;gap:0;max-width:400px;margin:0 auto}
-  .jstep{position:relative;display:grid;grid-template-columns:64px 1fr;gap:16px;text-align:left;align-items:start;padding-bottom:28px}
-  .jstep:last-child{padding-bottom:0}
-  .jstep::before{content:"";position:absolute;left:31px;top:70px;bottom:4px;width:2px;background:repeating-linear-gradient(#d6deec 0 5px,transparent 5px 11px)}
-  .jstep:last-child::before{display:none}
-  .jnode{margin:0!important;width:64px;height:64px;border-radius:18px}
-  .jnode .jimg{width:38px;height:38px}
-  .jnode .num{width:24px;height:24px;font-size:12px}
-  .jstep h4{margin:6px 0 4px;font-size:16px}
-  .jstep p{margin:0;max-width:none;font-size:14px}
 
   /* claims band */
   .band{flex-direction:column;text-align:center;gap:18px;padding:28px}
@@ -798,15 +811,43 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   <div class="wrap">
     <p class="kicker reveal">Simple as a push of a button</p>
     <h2 class="reveal">Your journey to <span class="g">getting covered</span></h2>
-    <p class="sub reveal d1">Four stops, ten minutes — no jargon, no paperwork, no waiting rooms.</p>
-    <div class="journey reveal d1">
-      <div class="jline"><span class="dash"></span><span class="fill"></span></div>
-      <div class="jrow">
-        <div class="jstep"><div class="jnode"><span class="num">1</span><img class="jimg" src="bharat-assets/icons/memo.png" alt=""></div><h4>Tell us the basics</h4><p>Vehicle type, registration & mobile — that's it.</p></div>
-        <div class="jstep"><div class="jnode"><span class="num">2</span><img class="jimg" src="bharat-assets/icons/barchart.png" alt=""></div><h4>Compare quotes</h4><p>Best prices from 20+ insurers, side by side.</p></div>
-        <div class="jstep"><div class="jnode"><span class="num">3</span><img class="jimg" src="bharat-assets/icons/phone.png" alt=""></div><h4>Advisor call-back</h4><p>Our expert confirms details & finalises the plan.</p></div>
-        <div class="jstep"><div class="jnode"><span class="num">4</span><img class="jimg" src="bharat-assets/icons/mail.png" alt=""></div><h4>Policy in your inbox</h4><p>Instant e-policy, fully IRDAI-compliant.</p></div>
+    <p class="sub reveal d1">Four stops. Sixty seconds. No paperwork, no phone calls.</p>
+
+    <div class="road">
+      <div class="road-strip" aria-hidden="true">
+        <span class="road-fill"></span>
       </div>
+      <span class="road-car" aria-hidden="true"><svg viewBox="0 0 24 24" class="i"><use href="#i-car"/></svg></span>
+      <ol class="stops">
+        <li class="stop reveal">
+          <span class="stop-node"><img src="bharat-assets/icons/memo.png" alt=""><b>1</b></span>
+          <div class="stop-card">
+            <h4>Type your number</h4>
+            <p>Just the registration on your number plate. Nothing else to fill in.</p>
+          </div>
+        </li>
+        <li class="stop reveal d1">
+          <span class="stop-node"><img src="bharat-assets/icons/clipboard.png" alt=""><b>2</b></span>
+          <div class="stop-card">
+            <h4>We find your vehicle</h4>
+            <p>Model, year, fuel and RTO — pulled straight from the records. You just confirm.</p>
+          </div>
+        </li>
+        <li class="stop reveal d2">
+          <span class="stop-node"><img src="bharat-assets/icons/money.png" alt=""><b>3</b></span>
+          <div class="stop-card">
+            <h4>See one honest price</h4>
+            <p>Third-party cover is a fixed government rate. One number, all taxes in.</p>
+          </div>
+        </li>
+        <li class="stop reveal d3">
+          <span class="stop-node"><img src="bharat-assets/icons/mail.png" alt=""><b>4</b></span>
+          <div class="stop-card">
+            <h4>Pay and you're covered</h4>
+            <p>Your IRDAI-compliant e-policy lands on WhatsApp and SMS within seconds.</p>
+          </div>
+        </li>
+      </ol>
     </div>
   </div>
 </section>
@@ -927,9 +968,16 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;cio.unobserve(e.target);const el=e.target,to=+el.dataset.to,dec=+el.dataset.dec||0,suf=el.dataset.suffix||'';let t0=null;const dur=1200;function step(ts){t0=t0||ts;const p=Math.min((ts-t0)/dur,1),v=(to*(1-Math.pow(1-p,3)));el.textContent=(dec?v.toFixed(dec):Math.round(v))+suf;if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}),{threshold:.6});
 document.querySelectorAll('.count').forEach(el=>cio.observe(el));
 
-// scroll-driven journey progress fill
-(function(){const j=document.querySelector('.journey'),f=document.querySelector('.jline .fill');if(!j||!f)return;let queued=false;
-  function upd(){queued=false;const b=j.getBoundingClientRect();let p=(innerHeight*0.7-b.top)/b.height;p=Math.max(0,Math.min(1,p));f.style.width=(p*100).toFixed(1)+'%';}
+// road progress: fill + car + stop lighting, one rAF-throttled pass
+(function(){const r=document.querySelector('.road');if(!r)return;
+  const stops=[...r.querySelectorAll('.stop')];let queued=false;
+  function upd(){queued=false;
+    const b=r.getBoundingClientRect(),eye=innerHeight*0.62;
+    const p=Math.max(0,Math.min(1,(eye-b.top)/b.height));
+    r.style.setProperty('--p',p.toFixed(3));
+    const y=b.top+p*b.height;
+    stops.forEach(s=>{const n=s.querySelector('.stop-node').getBoundingClientRect();
+      s.classList.toggle('on',y>=n.top+n.height/2);});}
   addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(upd);}},{passive:true});
   addEventListener('resize',upd);upd();})();
 
