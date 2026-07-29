@@ -129,45 +129,91 @@
   @keyframes draw{to{stroke-dashoffset:0}}
   .fdone{font-size:16px;color:var(--muted);margin:0 auto;max-width:420px;line-height:1.6}
 
-  /* ===== the road: a scroll-driven journey ===== */
-  .road{position:relative;max-width:620px;margin:46px auto 0}
-  .road-strip{position:absolute;left:34px;top:26px;bottom:26px;width:12px;border-radius:9px;
-    background:#e6ebf5;box-shadow:inset 0 0 0 1px #dde4f1}
-  .road-strip::before{content:"";position:absolute;left:50%;top:8px;bottom:8px;width:2px;margin-left:-1px;
-    background:repeating-linear-gradient(#fff 0 10px,transparent 10px 22px)}
-  .road-fill{position:absolute;inset:0;border-radius:9px;transform-origin:top;transform:scaleY(var(--p,0));
-    background:linear-gradient(180deg,var(--saffron),#e8a33a 42%,var(--india-green))}
-  .road-car{position:absolute;left:40px;top:calc(26px + var(--p,0) * (100% - 52px));z-index:4;width:44px;height:44px;margin:-22px 0 0 -22px;
-    display:grid;place-items:center;border-radius:50%;color:#fff;
-    background:linear-gradient(140deg,var(--navy),var(--navy-2));box-shadow:0 10px 22px rgba(18,47,99,.34);
-    border:3px solid #fff}
-  .road-car svg{width:21px;height:21px;animation:carbob 1.8s ease-in-out infinite}
-  @keyframes carbob{50%{transform:translateY(-2px)}}
 
-  .stops{position:relative;z-index:1;list-style:none;margin:0;padding:0}
-  .stop{position:relative;display:grid;grid-template-columns:80px 1fr;align-items:start;gap:18px;padding:0 0 34px}
-  .stop:last-child{padding-bottom:0}
-  .stop-node{position:relative;width:80px;height:80px;display:grid;place-items:center;border-radius:24px;
-    background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
-    transition:border-color .45s var(--ease),box-shadow .45s var(--ease),transform .3s var(--ease)}
-  .stop:hover .stop-node{transform:translateY(-4px) scale(1.04);box-shadow:var(--shadow-lg)}
-  .stop-node img{width:42px;height:42px;object-fit:contain}
-  .stop-node b{position:absolute;top:-9px;right:-9px;width:28px;height:28px;border-radius:50%;
-    display:grid;place-items:center;font-family:"Familjen Grotesk";font-size:14px;color:#fff;
-    background:linear-gradient(135deg,var(--orange),var(--orange-2));border:2.5px solid #fff;
-    box-shadow:0 4px 10px rgba(232,128,26,.42)}
-  .stop-card{padding-top:8px}
-  .stop-card h4{margin:0 0 6px;font-size:19px;color:var(--navy)}
-  .stop-card p{margin:0;font-size:15px;color:var(--muted)}
 
-  /* --p (0..1) comes from one rAF-throttled scroll handler — see the .road JS.
-     ponytail: animation-timeline:view() would be JS-free, but a timeline that
-     doesn't run hides the content, and this audience is on old Android WebViews. */
-  .stop.on .stop-node{border-color:color-mix(in oklab,var(--green) 48%,#fff);
-    box-shadow:0 14px 30px rgba(37,163,79,.22)}
-  .stop.on .stop-node img{animation:nudge .5s var(--ease)}
-  @keyframes nudge{40%{transform:translateY(-6px) scale(1.1)}}
 
+  /* ===== "see it work": a phone that plays the real flow ===== */
+  .demo{display:grid;grid-template-columns:290px 1fr;gap:52px;align-items:center;
+    max-width:860px;margin:44px auto 0;text-align:left}
+
+  .dphone{position:relative;width:290px;height:520px;border-radius:42px;padding:14px;
+    background:linear-gradient(160deg,#1c2b4a,#0d1729);box-shadow:0 30px 60px rgba(13,23,41,.34),0 0 0 1px rgba(255,255,255,.08) inset}
+  .dp-view{position:relative;height:100%;border-radius:30px;overflow:hidden;
+    background:linear-gradient(180deg,#fbfcff,#eef2fb)}
+
+  .dsc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;padding:38px 22px;text-align:center;
+    opacity:0;transform:translateY(16px) scale(.98);pointer-events:none;
+    transition:opacity .5s var(--ease),transform .5s var(--ease)}
+  .dsc.on{opacity:1;transform:none}
+  .dsc-h{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .dsc-t{font-size:18px;color:var(--navy);line-height:1.3}
+  .dsc-s{font-size:13.5px;color:var(--muted);line-height:1.6}
+  .dsc-s b{color:var(--navy)}
+
+  /* 1 · the plate, typing itself */
+  .dplate{display:flex;align-items:stretch;width:100%;background:#fff;border:2.5px solid #111;border-radius:9px;overflow:hidden}
+  .dplate span{display:grid;place-items:center;padding:0 7px;background:#0b3d91;color:#fff;font-size:9px;font-weight:800}
+  .dplate b{flex:1;padding:11px 4px;font-family:ui-monospace,Menlo,monospace;font-size:19px;letter-spacing:.06em;color:#111}
+  .dsc.on .dplate b::after{content:"";display:inline-block;width:2px;height:17px;margin-left:2px;
+    background:var(--orange);vertical-align:-3px;animation:caret .9s step-end infinite}
+  @keyframes caret{50%{opacity:0}}
+  .dkey{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:100%;margin-top:14px}
+  .dkey i{display:grid;place-items:center;height:28px;border-radius:6px;background:#fff;
+    font-style:normal;font-size:13px;font-weight:700;color:#b6c1d4;box-shadow:0 1px 3px rgba(18,47,99,.12)}
+
+  /* 2 · the vehicle we found */
+  .dcar{width:74px;height:74px;display:grid;place-items:center;border-radius:50%;
+    background:linear-gradient(140deg,#eaf4ee,#f2f7ff);color:var(--green)}
+  .dcar svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:1.7}
+  .dchip{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;font-weight:700;letter-spacing:.07em;
+    background:#fff;border:1.5px solid #111;border-radius:4px;padding:2px 7px;color:#111}
+  .drow{display:flex;justify-content:space-between;width:100%;font-size:13px;padding:7px 2px;
+    border-bottom:1px dashed var(--line)}
+  .drow span{color:var(--muted)}
+  .drow b{color:var(--ink)}
+
+  /* 3 · the price */
+  .dprice{font-size:46px;font-weight:800;color:var(--navy);letter-spacing:-.03em;line-height:1}
+  .dpay{margin-top:12px;width:100%;padding:13px;border-radius:13px;font-weight:700;font-size:14.5px;color:#fff;
+    background:linear-gradient(135deg,var(--orange),var(--orange-2));box-shadow:0 10px 22px rgba(232,128,26,.32)}
+
+  /* 4 · done */
+  .dtick{width:86px;height:86px}
+  .dtick svg{width:100%;height:100%;fill:none;stroke:var(--green);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+  .dsc.on .dtick circle{stroke-dasharray:151;stroke-dashoffset:151;animation:draw2 .6s var(--ease) forwards}
+  .dsc.on .dtick path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw2 .35s var(--ease) .45s forwards}
+  @keyframes draw2{to{stroke-dashoffset:0}}
+
+  /* the step list — doubles as the player's chapter markers */
+  .dlist{list-style:none;margin:0;padding:0}
+  .dli{position:relative;display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start;
+    padding:16px 16px 18px;border-radius:16px;cursor:pointer;
+    transition:background .3s var(--ease),opacity .3s}
+  .dli:not(.on){opacity:.5}
+  .dli.on{background:#fff;box-shadow:0 10px 26px rgba(18,47,99,.09)}
+  .dli:hover:not(.on){opacity:.78}
+  .dn{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;
+    font-family:"Familjen Grotesk";font-weight:700;font-size:15px;
+    background:#eef2fb;color:#9fb0cc;transition:background .3s,color .3s}
+  .dli.on .dn{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff}
+  .dli.done .dn{background:var(--green);color:#fff}
+  .dli h4{margin:6px 0 4px;font-size:17px;color:var(--navy)}
+  .dli p{margin:0;font-size:14.5px;color:var(--muted)}
+  .dbar{position:absolute;left:16px;right:16px;bottom:8px;height:3px;border-radius:2px;background:#e6ebf5;
+    opacity:0;transition:opacity .25s}
+  .dli.on .dbar{opacity:1}
+  .dbar i{display:block;height:100%;width:0;border-radius:2px;
+    background:linear-gradient(90deg,var(--orange),var(--green))}
+  .dli.on .dbar i{animation:tick var(--hold,3200ms) linear forwards}
+  @keyframes tick{to{width:100%}}
+
+  @media(max-width:820px){
+    .demo{grid-template-columns:1fr;gap:26px;justify-items:center;max-width:420px}
+    .dphone{width:262px;height:480px}
+    .dlist{width:100%}
+  }
+  @media(prefers-reduced-motion:reduce){.dbar i{width:100%;animation:none}}
 
   .tricolor{height:5px;background:linear-gradient(90deg,var(--saffron) 0 33.3%,#fff 33.3% 66.6%,var(--india-green) 66.6% 100%)}
 
@@ -437,7 +483,8 @@ h1{font-size:56px;letter-spacing:-.025em;line-height:1.03}
 .ftrust{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:22px 0;margin-bottom:30px;border-bottom:1px solid rgba(255,255,255,.1)}
 .ftrust .fb{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:9px 15px;font-size:12.5px;font-weight:600;color:#cdd9ef}
 .ftrust .fb span{font-size:18px;line-height:1}
-.flogo{width:34px;height:38px;flex:none}
+.flogo-chip{display:inline-block;background:#fff;border-radius:16px;padding:11px 15px;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.flogo-chip img{display:block;height:50px;width:auto}
 .plans{display:grid;grid-template-columns:1fr;gap:22px;max-width:560px;margin:0 auto}
 .plan{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:28px}
 .plan.featured{border-color:var(--orange);box-shadow:0 20px 50px rgba(232,128,26,.16)}
@@ -504,9 +551,12 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 .ic3d{width:62px;height:62px;object-fit:contain;display:block;margin:0 0 14px;filter:drop-shadow(0 8px 12px rgba(18,47,99,.16));transition:transform .25s var(--ease)}
 .card:hover .ic3d{transform:translateY(-3px) scale(1.05)}
 .why .card{padding:26px;overflow:visible}
-/* seamless header: hero background flows up behind the floating bar (no strip seam) */
-#view-home{margin-top:-86px}
-.hero{padding-top:86px}
+/* seamless header: the hero gradient flows up behind the floating bar, so there is
+   no strip of body background above it. --hdr MUST equal header padding-top + .nav
+   height, or a coloured seam reappears at the top of the page. */
+:root{--hdr:122px}
+#view-home{margin-top:calc(-1 * var(--hdr))}
+.hero{padding-top:var(--hdr)}
 /* 3D icon inside the Get Quote button */
 .btn .btn-ic{width:22px;height:22px;object-fit:contain;flex:none}
 /* admin panel */
@@ -542,18 +592,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .vc-rows{padding:4px 14px 12px}
   .ftrust-row{gap:8px 14px;font-size:12.5px}
   .paybar b{font-size:22px}
-  /* road on small screens */
-  .road{margin-top:30px}
-  .road-strip{left:27px;width:10px}
-  .stop{grid-template-columns:64px 1fr;gap:14px;padding-bottom:26px}
-  .stop-node{width:64px;height:64px;border-radius:19px}
-  .stop-node img{width:34px;height:34px}
-  .stop-node b{width:24px;height:24px;font-size:12px;top:-8px;right:-8px}
-  .stop-card{padding-top:4px}
-  .stop-card h4{font-size:16.5px}
-  .stop-card p{font-size:14px}
-  .road-car{left:32px;width:38px;height:38px;margin:-19px 0 0 -19px}
-  .road-car svg{width:18px;height:18px}
   .wsteps li{font-size:11.5px;gap:6px}
   .wsteps .sn{width:23px;height:23px;font-size:12px}
   .wsteps li+li::before{width:8px}
@@ -577,8 +615,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .logo-img{height:44px}
   .nav .btn.login{padding:10px 14px;font-size:13.5px;border-radius:12px;gap:7px}
   .nav .btn.login .btn-ic{width:18px;height:18px}
-  #view-home{margin-top:-72px}
-  .hero{padding-top:72px}
+  :root{--hdr:82px}
 
   /* hero — centered copy above the quote card */
   .hero .wrap{padding:26px 16px 34px}
@@ -810,43 +847,57 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 <section id="how" style="padding-top:0">
   <div class="wrap">
     <p class="kicker reveal">Simple as a push of a button</p>
-    <h2 class="reveal">Your journey to <span class="g">getting covered</span></h2>
-    <p class="sub reveal d1">Four stops. Sixty seconds. No paperwork, no phone calls.</p>
+    <h2 class="reveal">See it work <span class="g">before you start</span></h2>
+    <p class="sub reveal d1">This is the whole thing. Four taps, about a minute.</p>
 
-    <div class="road">
-      <div class="road-strip" aria-hidden="true">
-        <span class="road-fill"></span>
+    <div class="demo reveal d1" id="demo">
+      <div class="dphone" aria-hidden="true">
+        <div class="dp-view">
+
+          <div class="dsc on" data-s="1">
+            <span class="dsc-h">Your vehicle number</span>
+            <div class="dplate"><span>IND</span><b id="dType">MH12AB3456</b></div>
+            <div class="dkey"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></div>
+          </div>
+
+          <div class="dsc" data-s="2">
+            <span class="dsc-h">We found it</span>
+            <div class="dcar"><svg viewBox="0 0 24 24"><use href="#i-car"/></svg></div>
+            <b class="dsc-t">Hyundai i10 Grand Nios</b>
+            <span class="dchip">MH12AB3456</span>
+            <div class="drow"><span>Fuel</span><b>Petrol</b></div>
+            <div class="drow"><span>Registered</span><b>2021</b></div>
+          </div>
+
+          <div class="dsc" data-s="3">
+            <span class="dsc-h">Your price</span>
+            <div class="dprice">₹2,094</div>
+            <span class="dsc-s">Third-party cover · 1 year<br>All taxes included</span>
+            <div class="dpay">Proceed to pay</div>
+          </div>
+
+          <div class="dsc" data-s="4">
+            <div class="dtick"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-16"/></svg></div>
+            <b class="dsc-t">You're insured</b>
+            <span class="dsc-s">Policy sent to<br><b>+91 98765 43210</b></span>
+          </div>
+
+        </div>
       </div>
-      <span class="road-car" aria-hidden="true"><svg viewBox="0 0 24 24" class="i"><use href="#i-car"/></svg></span>
-      <ol class="stops">
-        <li class="stop reveal">
-          <span class="stop-node"><img src="bharat-assets/icons/memo.png" alt=""><b>1</b></span>
-          <div class="stop-card">
-            <h4>Type your number</h4>
-            <p>Just the registration on your number plate. Nothing else to fill in.</p>
-          </div>
-        </li>
-        <li class="stop reveal d1">
-          <span class="stop-node"><img src="bharat-assets/icons/clipboard.png" alt=""><b>2</b></span>
-          <div class="stop-card">
-            <h4>We find your vehicle</h4>
-            <p>Model, year, fuel and RTO — pulled straight from the records. You just confirm.</p>
-          </div>
-        </li>
-        <li class="stop reveal d2">
-          <span class="stop-node"><img src="bharat-assets/icons/money.png" alt=""><b>3</b></span>
-          <div class="stop-card">
-            <h4>See one honest price</h4>
-            <p>Third-party cover is a fixed government rate. One number, all taxes in.</p>
-          </div>
-        </li>
-        <li class="stop reveal d3">
-          <span class="stop-node"><img src="bharat-assets/icons/mail.png" alt=""><b>4</b></span>
-          <div class="stop-card">
-            <h4>Pay and you're covered</h4>
-            <p>Your IRDAI-compliant e-policy lands on WhatsApp and SMS within seconds.</p>
-          </div>
-        </li>
+
+      <ol class="dlist" id="dlist">
+        <li class="dli on"><span class="dn">1</span>
+          <div><h4>Type your number</h4><p>Just what's on your number plate. No forms, no login.</p></div>
+          <span class="dbar"><i></i></span></li>
+        <li class="dli"><span class="dn">2</span>
+          <div><h4>We find your vehicle</h4><p>Model, year and fuel come straight from the records. You only confirm.</p></div>
+          <span class="dbar"><i></i></span></li>
+        <li class="dli"><span class="dn">3</span>
+          <div><h4>One honest price</h4><p>Third-party cover is a fixed government rate. Nothing to compare.</p></div>
+          <span class="dbar"><i></i></span></li>
+        <li class="dli"><span class="dn">4</span>
+          <div><h4>Pay and you're covered</h4><p>Your e-policy reaches WhatsApp and SMS in seconds.</p></div>
+          <span class="dbar"><i></i></span></li>
       </ol>
     </div>
   </div>
@@ -886,17 +937,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
     </div>
     <div class="fgrid">
       <div class="fbrand">
-        <div class="logo" style="margin-bottom:14px">
-          <svg class="flogo" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
-            <path d="M30 6 10 14v20c0 13.5 10 22 20 25.6 10-3.6 20-12.1 20-25.6V14L30 6Z" fill="#0d2149"/>
-            <path d="M30 8 12 15.4V34c0 12 9 19.6 18 23V8Z" fill="#1a3a6b"/>
-            <path d="M48 15.4 30 8v49c9-3.4 18-11 18-23V15.4Z" fill="#1a7d3c"/>
-            <path d="M18 34c0-2 1.6-3 3.4-3l1.6-4c.4-1 1.2-1.6 2.3-1.6h9.4c1.1 0 2 .6 2.3 1.6l1.6 4c1.8 0 3.4 1 3.4 3v5c0 .8-.6 1.4-1.4 1.4h-1.2c-.8 0-1.4-.6-1.4-1.4v-1H22v1c0 .8-.6 1.4-1.4 1.4h-1.2c-.8 0-1.4-.6-1.4-1.4v-5Z" fill="#fff"/>
-            <path d="M40 24c3-3 8-4 8-4s-2 5-5 6l-3-2Z" fill="#ff9933"/>
-          </svg>
-          <span class="brand"><b style="color:#fff">BHARAT</b><span>INSURANCE</span></span>
-        </div>
-        <p class="dev" style="color:#c9d6ee;font-size:15px;margin:0 0 8px">बीमा देश के वाहन का</p>
+        <div class="flogo-chip"><img src="bharat-assets/bharat-logo.png" alt="Bharat Insurance" width="720" height="270"></div>
         <p>An IRDAI-licensed insurance distribution platform bringing India's top insurers to one simple screen.</p>
       </div>
       <div><h5>Policies</h5><a href="#/car">Car Insurance</a><a href="#/two-wheeler">Two-Wheeler</a><a href="#/commercial">Commercial Vehicle</a><a href="#faq">FAQs</a></div>
@@ -968,20 +1009,22 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;cio.unobserve(e.target);const el=e.target,to=+el.dataset.to,dec=+el.dataset.dec||0,suf=el.dataset.suffix||'';let t0=null;const dur=1200;function step(ts){t0=t0||ts;const p=Math.min((ts-t0)/dur,1),v=(to*(1-Math.pow(1-p,3)));el.textContent=(dec?v.toFixed(dec):Math.round(v))+suf;if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}),{threshold:.6});
 document.querySelectorAll('.count').forEach(el=>cio.observe(el));
 
-// road progress: fill + car + stop lighting, one rAF-throttled pass
-(function(){const r=document.querySelector('.road');if(!r)return;
-  const stops=[...r.querySelectorAll('.stop')];let queued=false;
-  function upd(){queued=false;
-    const b=r.getBoundingClientRect(),eye=innerHeight*0.62;
-    const p=Math.max(0,Math.min(1,(eye-b.top)/b.height));
-    r.style.setProperty('--p',p.toFixed(3));
-    const y=b.top+p*b.height;
-    stops.forEach(s=>{const n=s.querySelector('.stop-node').getBoundingClientRect();
-      s.classList.toggle('on',y>=n.top+n.height/2);});}
-  addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(upd);}},{passive:true});
-  addEventListener('resize',upd);upd();})();
+// demo player: auto-advances, pauses off-screen and on hover, click to jump
+(function(){const d=document.getElementById('demo');if(!d)return;
+  const scs=[...d.querySelectorAll('.dsc')], lis=[...d.querySelectorAll('.dli')];
+  const HOLD=3200; let i=0, t=null, live=false;
+  function show(n){i=n%scs.length;
+    scs.forEach((s,k)=>s.classList.toggle('on',k===i));
+    lis.forEach((l,k)=>{l.classList.toggle('on',k===i);l.classList.toggle('done',k<i);});}
+  function play(){stop();t=setInterval(()=>show(i+1),HOLD);}
+  function stop(){clearInterval(t);t=null;}
+  lis.forEach((l,k)=>l.addEventListener('click',()=>{show(k);if(live)play();}));
+  d.addEventListener('mouseenter',stop); d.addEventListener('mouseleave',()=>{if(live)play();});
+  new IntersectionObserver(es=>es.forEach(e=>{live=e.isIntersecting;live?play():stop();}),
+    {threshold:.35}).observe(d);
+  d.style.setProperty('--hold',HOLD+'ms');})();
 
-// ripple on buttons
+// ripple on buttons// ripple on buttons
 document.addEventListener('click',e=>{const b=e.target.closest('.btn');if(!b)return;const r=document.createElement('span');r.className='ripple';const rect=b.getBoundingClientRect(),d=Math.max(rect.width,rect.height);r.style.width=r.style.height=d+'px';r.style.left=(e.clientX-rect.left-d/2)+'px';r.style.top=(e.clientY-rect.top-d/2)+'px';b.appendChild(r);setTimeout(()=>r.remove(),600);});
 
 // ---- lead store ----
