@@ -47,17 +47,29 @@
   input:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,128,26,.14)}
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 6px 2px;text-transform:uppercase;letter-spacing:.04em}
 
+  /* 1-2-3 wizard */
+  .wsteps{display:flex;align-items:center;gap:0;list-style:none;margin:0 0 16px;padding:0}
+  .wsteps li{flex:1;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:#9fb0cc;position:relative}
+  .wsteps li+li{padding-left:10px}
+  .wsteps li+li::before{content:"";position:absolute;left:-4px;width:12px;height:2px;background:var(--line)}
+  .wsteps .sn{display:grid;place-items:center;width:26px;height:26px;flex:none;border-radius:50%;background:#eef2fb;color:#9fb0cc;font-size:13px;transition:background .25s,color .25s}
+  .wsteps li.on{color:var(--navy)}
+  .wsteps li.on .sn{background:var(--navy);color:#fff}
+  .wsteps li.done .sn{background:var(--green);color:#fff}
+  .srow{display:flex;gap:10px;margin-top:4px}
+  .srow .btn{flex:1;justify-content:center}
+  .srow .btn-ghost{flex:0 0 92px}
+
   .tricolor{height:5px;background:linear-gradient(90deg,var(--saffron) 0 33.3%,#fff 33.3% 66.6%,var(--india-green) 66.6% 100%)}
 
   /* Header */
   header{position:relative;z-index:50;padding-top:18px;background:transparent}
   header .bar{width:calc(100% - 40px);max-width:1180px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(18,47,99,.10)}
-  .nav{display:flex;align-items:center;gap:18px;height:66px}
-  .logo{display:flex;align-items:center;gap:12px}
-  .shield{width:40px;height:44px;flex:none;transition:transform .3s var(--ease)}
-  .logo:hover .shield{transform:rotate(-6deg) scale(1.05)}
-  .brand b{display:block;font-family:"Familjen Grotesk";font-weight:700;font-size:20px;letter-spacing:.01em;color:var(--navy);line-height:1}
-  .brand span{display:block;font-weight:600;font-size:12.5px;color:var(--orange);letter-spacing:.22em;line-height:1.5}
+  .nav{display:flex;align-items:center;gap:18px;height:88px}
+  .logo{display:flex;align-items:flex-start;gap:3px}
+  .logo-img{height:66px;width:auto;flex:none;transition:transform .3s var(--ease)}
+  .logo:hover .logo-img{transform:scale(1.03)}
+  .rtm{font-size:13px;font-weight:700;color:var(--navy);line-height:1;margin-top:6px}
   .navlinks{display:flex;gap:28px;margin-left:34px}
   .navlinks a{position:relative;font-weight:600;font-size:15px;color:var(--ink);padding:6px 0}
   .navlinks a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--green));transition:width .28s var(--ease)}
@@ -75,8 +87,6 @@
   @keyframes drift1{50%{transform:translate(60px,50px) scale(1.1)}}
   @keyframes drift2{50%{transform:translate(-70px,-40px) scale(1.08)}}
   @keyframes drift3{50%{transform:translate(-50px,60px) scale(1.12)}}
-  .chakra{position:absolute;right:-100px;top:20px;width:440px;height:440px;opacity:.05;pointer-events:none;animation:spin 90s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
   .hero .wrap{position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:44px;padding:60px 22px 40px;align-items:center;z-index:2}
 
   .eyebrow{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);color:var(--green);font-weight:600;font-size:13px;padding:8px 15px;border-radius:999px;box-shadow:var(--shadow)}
@@ -425,7 +435,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 .kicker{display:none}
 /* calmer hero: static, softened atmosphere — no drifting/oscillating backgrounds */
 .blob{opacity:.28;animation:none!important}
-.chakra{opacity:.06}
 /* quieter quote card: no sheen sweep, no gradient frame, no cursor-tilt */
 .qsheen{display:none}
 .quote-card::before{display:none}
@@ -470,14 +479,16 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 @media(max-width:620px){
   header .wrap{padding:0 14px}
   .nav{gap:10px}
-  .brand b{font-size:18px}
-  .brand span{font-size:10.5px;letter-spacing:.14em}
-  .shield{width:34px;height:38px}
+  .logo-img{height:42px}
+  .rtm{font-size:11px;margin-top:4px}
+  .wsteps li{font-size:11.5px;gap:6px}
+  .wsteps .sn{width:23px;height:23px;font-size:12px}
+  .wsteps li+li::before{width:8px}
   .nav .btn.login{padding:11px 15px;font-size:14px}
   .nav .btn.login .btn-ic{width:18px;height:18px}
 }
 @media(max-width:380px){
-  .brand span{display:none}
+  .logo-img{height:36px}
   .nav .btn.login{padding:10px 12px}
 }
 /* keep the WhatsApp button clear of the mobile viewport edge */
@@ -489,10 +500,8 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   /* header */
   header{padding-top:12px}
   header .bar{width:calc(100% - 24px);border-radius:18px}
-  .nav{height:60px;gap:8px}
-  .brand b{font-size:17px}
-  .brand span{font-size:10px;letter-spacing:.12em}
-  .shield{width:32px;height:36px}
+  .nav{height:70px;gap:8px}
+  .logo-img{height:44px}
   .nav .btn.login{padding:10px 14px;font-size:13.5px;border-radius:12px;gap:7px}
   .nav .btn.login .btn-ic{width:18px;height:18px}
   #view-home{margin-top:-72px}
@@ -569,7 +578,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .astat b{font-size:23px}
 }
 @media(max-width:400px){
-  .brand span{display:none}
   .hero-stats{gap:16px}
   .hero-stats div b{font-size:22px}
 }
@@ -582,16 +590,8 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
  <div class="bar">
   <div class="wrap nav">
     <a href="#top" class="logo" aria-label="Bharat Insurance home">
-      <svg class="shield" viewBox="0 0 60 66" xmlns="http://www.w3.org/2000/svg">
-        <path d="M30 2 6 12v22c0 16 12 26 24 30 12-4 24-14 24-30V12L30 2Z" fill="#122f63"/>
-        <path d="M30 6 10 14v20c0 13.5 10 22 20 25.6 10-3.6 20-12.1 20-25.6V14L30 6Z" fill="#fff"/>
-        <path d="M30 8 12 15.4V34c0 12 9 19.6 18 23V8Z" fill="#153a7a"/>
-        <path d="M48 15.4 30 8v49c9-3.4 18-11 18-23V15.4Z" fill="#1a7d3c"/>
-        <path d="M18 34c0-2 1.6-3 3.4-3l1.6-4c.4-1 1.2-1.6 2.3-1.6h9.4c1.1 0 2 .6 2.3 1.6l1.6 4c1.8 0 3.4 1 3.4 3v5c0 .8-.6 1.4-1.4 1.4h-1.2c-.8 0-1.4-.6-1.4-1.4v-1H22v1c0 .8-.6 1.4-1.4 1.4h-1.2c-.8 0-1.4-.6-1.4-1.4v-5Z" fill="#fff"/>
-        <path d="M24.4 31h11.2l-1.2-3h-8.8l-1.2 3Z" fill="#122f63"/>
-        <path d="M40 24c3-3 8-4 8-4s-2 5-5 6l-3-2Z" fill="#ff9933"/>
-      </svg>
-      <span class="brand"><b>BHARAT</b><span>INSURANCE</span></span>
+      <img class="logo-img" src="bharat-assets/bharat-logo.png" alt="Bharat Insurance" width="600" height="226">
+      <span class="rtm" aria-hidden="true">®</span>
     </a>
     <nav class="navlinks">
       <a href="#/car">Car Insurance</a>
@@ -609,7 +609,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 <div id="top" class="hero">
   <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
   <div class="grid-overlay"></div>
-  <svg class="chakra" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#122f63" stroke-width="1.6"/><circle cx="50" cy="50" r="5" fill="#122f63"/><g stroke="#122f63" stroke-width="1.1" id="sp"></g></svg>
   <div class="wrap">
     <div>
       <span class="eyebrow reveal"><span class="dot"></span>IRDAI-aligned · <span class="dev">बीमा देश के वाहन का</span></span>
@@ -617,7 +616,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
       <p class="lede reveal d2">Protecting you & others on the road. Mandatory third-party cover for your car, bike and commercial vehicle — from India's top insurers, in minutes.</p>
       <div class="hero-cta reveal d3">
         <a href="#products" class="btn btn-primary"><svg class="i"><use href="#i-spark"/></svg>Explore Policies</a>
-        <a href="#claims" class="btn btn-ghost"><svg class="i"><use href="#i-search"/></svg>Track a Claim</a>
+        <a href="#faq" class="btn btn-ghost"><svg class="i"><use href="#i-search"/></svg>How It Works</a>
       </div>
       <div class="hero-stats reveal d4">
         <div><b class="count" data-to="20" data-suffix="+">0</b><span>Insurers onboard</span></div>
@@ -635,30 +634,53 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
             <span class="qh-live"><span class="qh-pulse"></span>Live · instant quote</span>
             <span class="qh-secure">🔒 256-bit secure</span>
           </div>
-          <b>Get a Quick Quote</b><p>No spam. Our advisor calls you back with the best price.</p>
+          <b>Get a Quick Quote</b><p>Three steps. No login, no spam.</p>
         </div>
         <div class="quote-body">
-          <div class="tabs" id="lineTabs">
-            <span class="tab-ind" id="tabInd" aria-hidden="true"></span>
-            <button class="tab active" data-line="Car"><svg class="i"><use href="#i-car"/></svg>Car</button>
-            <button class="tab" data-line="Two-Wheeler"><svg class="i"><use href="#i-bike"/></svg>Bike</button>
-            <button class="tab" data-line="Commercial"><svg class="i"><use href="#i-truck"/></svg>Commercial</button>
-          </div>
+          <ol class="wsteps" id="steps">
+            <li class="on"><span class="sn">1</span>Vehicle</li>
+            <li><span class="sn">2</span>Number</li>
+            <li><span class="sn">3</span>Contact</li>
+          </ol>
           <div class="est">
             <span class="est-lbl">Starting from</span>
             <span class="est-val"><b id="estVal">₹7,500</b><small>/ year onwards</small></span>
           </div>
           <form id="quoteForm">
-            <div class="row" id="fldVehicle"><label>Vehicle Type</label>
-              <select name="vtype"><option value="" disabled selected>Select vehicle type</option>
-                <option>Goods (Truck)</option><option>Passenger (Taxi / Auto)</option><option>Bus / Van</option><option>Tractor</option>
-              </select></div>
-            <div class="row" id="fldReg"><label>Registration Number</label>
-              <input name="reg" placeholder="e.g. MH12 AB 3456" autocomplete="off"></div>
-            <div class="row"><label>Mobile Number</label>
-              <input name="mobile" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="off"></div>
-            <button class="btn btn-primary" style="width:100%;margin-top:4px" type="submit">Get a Quick Quote <svg class="i"><use href="#i-arrow"/></svg></button>
-            <p class="hint">By continuing you agree to be contacted by a Bharat Insurance advisor.</p>
+
+            <div class="step" data-step="1">
+              <div class="tabs" id="lineTabs">
+                <span class="tab-ind" id="tabInd" aria-hidden="true"></span>
+                <button type="button" class="tab active" data-line="Car"><svg class="i"><use href="#i-car"/></svg>Car</button>
+                <button type="button" class="tab" data-line="Two-Wheeler"><svg class="i"><use href="#i-bike"/></svg>Bike</button>
+                <button type="button" class="tab" data-line="Commercial"><svg class="i"><use href="#i-truck"/></svg>Commercial</button>
+              </div>
+              <div class="row" id="fldVehicle"><label>Vehicle Type</label>
+                <select name="vtype"><option value="" disabled selected>Select vehicle type</option>
+                  <option>Goods (Truck)</option><option>Passenger (Taxi / Auto)</option><option>Bus / Van</option><option>Tractor</option>
+                </select></div>
+              <button type="button" class="btn btn-primary" style="width:100%;margin-top:4px" onclick="goStep(2)">Next <svg class="i"><use href="#i-arrow"/></svg></button>
+            </div>
+
+            <div class="step" data-step="2" hidden>
+              <div class="row"><label>Registration Number</label>
+                <input name="reg" placeholder="e.g. MH12 AB 3456" autocomplete="off"></div>
+              <div class="srow">
+                <button type="button" class="btn btn-ghost" onclick="goStep(1)">Back</button>
+                <button type="button" class="btn btn-primary" onclick="goStep(3)">Next <svg class="i"><use href="#i-arrow"/></svg></button>
+              </div>
+            </div>
+
+            <div class="step" data-step="3" hidden>
+              <div class="row"><label>Mobile Number</label>
+                <input name="mobile" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="off"></div>
+              <div class="srow">
+                <button type="button" class="btn btn-ghost" onclick="goStep(2)">Back</button>
+                <button class="btn btn-primary" type="submit">See my price <svg class="i"><use href="#i-arrow"/></svg></button>
+              </div>
+              <p class="hint">By continuing you agree to be contacted by a Bharat Insurance advisor.</p>
+            </div>
+
           </form>
         </div>
         <div class="qtrust">
@@ -755,23 +777,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   </div>
 </section>
 
-<!-- CLAIMS -->
-<section id="claims" style="padding-top:0">
-  <div class="wrap">
-    <div class="band reveal">
-      <div>
-        <h2>Need to file or track a claim?</h2>
-        <p>Enter your policy number and we'll pull up the status. Our claims desk is available 24×7 to guide you through every step.</p>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="openClaim()"><svg class="i"><use href="#i-search"/></svg>Track a Claim</button>
-        <button class="btn btn-dark" onclick="openLogin()">File New Claim</button>
-      </div>
-      <div class="glow"></div>
-    </div>
-  </div>
-</section>
-
 <!-- FAQ -->
 <section id="faq">
   <div class="wrap">
@@ -782,7 +787,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
       <details><summary>Is third-party vehicle insurance mandatory in India?<span class="chev"></span></summary><div class="faq-a">Yes. Under the Motor Vehicles Act, 1988, every vehicle on Indian roads must carry at least a valid third-party liability policy. Driving without one is a punishable offence.</div></details>
       <details><summary>What does a third-party policy actually cover?<span class="chev"></span></summary><div class="faq-a">It covers injury, death or property damage you cause to a third party, plus a mandatory ₹15 lakh personal-accident cover for the owner. It's the legally required minimum for every vehicle in India.</div></details>
       <details><summary>How quickly can I get my policy?<span class="chev"></span></summary><div class="faq-a">Usually within minutes. Share your vehicle and contact details, get an indicative quote instantly, and our advisor confirms and issues the IRDAI-compliant e-policy to your inbox.</div></details>
-      <details><summary>How do I file or track a claim?<span class="chev"></span></summary><div class="faq-a">Use the "Track a Claim" button with your policy number, or message us on WhatsApp. Our 24×7 claims desk guides you through survey, documentation and settlement.</div></details>
+      <details><summary>How do I file or track a claim?<span class="chev"></span></summary><div class="faq-a">Message us on WhatsApp with your policy number, or call your advisor. Our 24×7 claims desk guides you through survey, documentation and settlement.</div></details>
       <details><summary>Can I insure a commercial vehicle or a fleet?<span class="chev"></span></summary><div class="faq-a">Yes — trucks, taxis, autos, buses, tractors and full fleets. Fleet policies come with consolidated billing and a dedicated relationship manager.</div></details>
       <details><summary>Will my No Claim Bonus (NCB) carry over if I switch?<span class="chev"></span></summary><div class="faq-a">Yes. Your accumulated NCB (up to 50%) transfers when you renew or move to a new insurer through Bharat Insurance.</div></details>
       <details><summary>What documents do I need?<span class="chev"></span></summary><div class="faq-a">Usually just your vehicle registration (RC) and a mobile number to start. For own-damage cover a quick photo self-inspection may be needed if the policy has lapsed.</div></details>
@@ -820,7 +825,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
         <p>An IRDAI-licensed insurance distribution platform bringing India's top insurers to one simple screen.</p>
       </div>
       <div><h5>Policies</h5><a href="#/car">Car Insurance</a><a href="#/two-wheeler">Two-Wheeler</a><a href="#/commercial">Commercial Vehicle</a><a href="#faq">FAQs</a></div>
-      <div><h5>Company</h5><a href="#about">About Us</a><a href="#claims">Claims</a><a href="#">Careers</a><a href="#">Become a POSP</a><a href="https://wa.me/917226800990" target="_blank" rel="noopener">Contact</a><a href="#/admin">Admin</a></div>
+      <div><h5>Company</h5><a href="#about">About Us</a><a href="#faq">FAQ</a><a href="#">Careers</a><a href="#">Become a POSP</a><a href="https://wa.me/917226800990" target="_blank" rel="noopener">Contact</a><a href="#/admin">Admin</a></div>
       <div><h5>Support</h5><a href="https://wa.me/917226800990" target="_blank" rel="noopener">WhatsApp us</a><a href="tel:+917226800990">+91 72268 00990</a><a href="mailto:care@bharatinsurance.in">care@bharatinsurance.in</a><a href="#">Grievance</a></div>
     </div>
     <div class="fbot">
@@ -872,9 +877,6 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 </svg>
 
 <script>
-// chakra spokes
-(function(){let s='';for(let i=0;i<24;i++){const a=i*15*Math.PI/180;s+=`<line x1="${50+5*Math.cos(a)}" y1="${50+5*Math.sin(a)}" x2="${50+46*Math.cos(a)}" y2="${50+46*Math.sin(a)}"/>`;}document.getElementById('sp').innerHTML=s;})();
-
 // insurers as crisp brand wordmarks (favicon/logo APIs are all low-res or key-gated)
 const INSURERS=[['ICICI Lombard','icicilombard.com'],['HDFC ERGO','hdfcergo.com'],['Bajaj Allianz','bajajallianz.com'],['Tata AIG','tataaig.com'],['Digit','godigit.com'],['Acko','acko.com'],['SBI General','sbigeneral.in'],['Reliance General','reliancegeneral.co.in'],['New India','newindia.co.in'],['Cholamandalam','cholainsurance.com'],['Kotak General','kotakgeneralinsurance.com'],['Future Generali','futuregenerali.in']];
 (function(){const cell=([n,d])=>`<span class="mlogo"><img src="https://www.google.com/s2/favicons?sz=64&domain=${d}" alt="" loading="lazy" onerror="this.remove()"><b>${n}</b></span>`;const html=INSURERS.map(cell).join('');document.getElementById('mtrack').innerHTML=html+html;})();
@@ -908,7 +910,24 @@ function saveLead(o){const a=JSON.parse(localStorage.getItem(LEADS)||'[]');a.pus
 let curLine='Car';
 const tabs=document.getElementById('lineTabs');
 tabs.addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;curLine=b.dataset.line;[...tabs.children].forEach(t=>t.classList.toggle('active',t===b));toggleVehicleFields();});
-function toggleVehicleFields(){const isComm=curLine==='Commercial';document.getElementById('fldVehicle').style.display=isComm?'':'none';document.getElementById('fldReg').style.display='';}
+function toggleVehicleFields(){document.getElementById('fldVehicle').style.display=curLine==='Commercial'?'':'none';}
+
+// ---- 1-2-3 wizard ----
+let curStep=1;
+const f0=()=>document.getElementById('quoteForm');
+function goStep(n){
+  // validate forward only; going back is always allowed
+  if(n>curStep){
+    if(curStep===1&&curLine==='Commercial'&&!f0().vtype.value){alert('Please select a vehicle type.');return;}
+    if(curStep===2){const r=f0().reg.value.trim();if(!r){alert('Please enter your vehicle registration number.');f0().reg.focus();return;}}
+  }
+  curStep=n;
+  document.querySelectorAll('.step').forEach(s=>s.hidden=+s.dataset.step!==n);
+  document.querySelectorAll('#steps li').forEach((li,i)=>{li.classList.toggle('on',i+1===n);li.classList.toggle('done',i+1<n);});
+  document.querySelector(`.step[data-step="${n}"] input`)?.focus();
+}
+// Enter advances instead of submitting an incomplete form
+f0().addEventListener('keydown',e=>{if(e.key==='Enter'&&curStep<3){e.preventDefault();goStep(curStep+1);}});
 
 // product cards are links to dedicated pages (handled by the hash router below)
 
@@ -957,8 +976,9 @@ document.getElementById('quoteForm').addEventListener('submit',e=>{
       </div>
     </div>
     <p style="font-size:14px;color:var(--muted);margin:0 0 16px">✅ Lead #${String(n).padStart(4,'0')} logged. A Bharat Insurance advisor will call <b>+91 ${mobile}</b> within 30 minutes to finalise your policy.</p>
-    <button class="btn btn-primary" style="width:100%" onclick="closeModal()">Great, I'll expect the call</button>`);
-  f.reset();
+    <button class="btn btn-primary" style="width:100%" onclick="closeModal()">Great, I'll expect the call</button>
+    <button class="btn btn-ghost" style="width:100%;margin-top:10px;justify-content:center" onclick="openLogin()">Save this quote &amp; track it</button>`);
+  f.reset(); goStep(1);
 });
 
 // ---- login ----
@@ -977,20 +997,6 @@ function verifyOtp(m){if(document.getElementById('o').value.trim()!=='1234'){ale
   <h3 style="margin:0 0 6px;color:var(--navy)">You're logged in</h3>
   <p style="color:var(--muted);margin:0 0 18px">Signed in as <b>+91 ${m}</b>. Your policies & claims dashboard would open here.</p>
   <button class="btn btn-primary" style="width:100%" onclick="closeModal()">Continue</button></div>`);}
-
-// ---- claims ----
-function openClaim(){openModal('Track your Claim',`
-  <label>Policy / Claim Number</label>
-  <input id="cpol" placeholder="e.g. BI-2026-448210">
-  <button class="btn btn-primary" style="width:100%;margin-top:14px" onclick="trackClaim()">Track Status</button>
-  <p class="hint">Try any number for a demo status.</p>`);}
-function trackClaim(){const id=document.getElementById('cpol').value.trim();if(!id){alert('Enter a policy or claim number.');return;}
-  const stages=['Registered','Surveyor Assigned','Under Review','Approved'];const at=[...id].reduce((s,c)=>s+c.charCodeAt(0),0)%stages.length;
-  openModal('Claim '+id,`<div style="margin:4px 0 6px">${stages.map((s,i)=>`
-    <div class="track-stage"><div class="sd" style="background:${i<=at?'linear-gradient(135deg,var(--green),var(--green-2))':'#cdd6e6'}">${i<=at?'✓':i+1}</div>
-    <b style="color:${i<=at?'var(--navy)':'var(--muted)'};font-size:15px">${s}</b></div>`).join('')}</div>
-  <p style="font-size:14px;color:var(--muted);margin:14px 0 16px">Current status: <b style="color:var(--green)">${stages[at]}</b>. Our claims desk will keep you updated at every step.</p>
-  <button class="btn btn-primary" style="width:100%" onclick="closeModal()">Close</button>`);}
 
 // ---- modal ----
 function openModal(t,h){document.getElementById('mTitle').textContent=t;document.getElementById('mBody').innerHTML=h;document.getElementById('overlay').classList.add('open');}
