@@ -94,7 +94,7 @@
   /* fetched vehicle */
   .vcard{border:1px solid var(--line);border-radius:20px;overflow:hidden;text-align:left;background:#fbfcff}
   .vc-top{display:flex;align-items:center;gap:16px;padding:18px 20px;background:linear-gradient(120deg,#f3f7ff,#eef7f1)}
-  .vc-img{width:76px;height:56px;object-fit:contain;flex:none}
+  .vc-img{width:96px;height:70px;object-fit:cover;flex:none;border-radius:11px;background:#eef2fb}
   .vc-top b{display:block;font-size:19px;color:var(--navy);line-height:1.25}
   .vc-reg{display:inline-block;margin-top:5px;font-family:ui-monospace,Menlo,monospace;font-size:13.5px;font-weight:700;letter-spacing:.07em;background:#fff;border:1.5px solid #111;border-radius:5px;padding:2px 8px;color:#111}
   .vc-tick{margin-left:auto;display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:var(--green);color:#fff;font-size:18px;font-weight:800;transform:scale(0);animation:pop .45s var(--ease) .25s forwards}
@@ -602,7 +602,7 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .plate-ind{padding:0 8px;font-size:11px}
   .pb-amt{font-size:48px}
   .vc-top{padding:14px;gap:12px}
-  .vc-img{width:60px;height:46px}
+  .vc-img{width:76px;height:56px;border-radius:9px}
   .vc-top b{font-size:16.5px}
   .vc-rows{padding:4px 14px 12px}
   .ftrust-row{gap:8px 14px;font-size:12.5px}
@@ -1110,23 +1110,69 @@ const hash=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
 
 // third-party tariff is IRDAI-fixed per vehicle class — one price, no comparison
 const CLASSES=[
-  {line:'Two-Wheeler',name:'Two-Wheeler',img:'bharat-assets/bike.png',price:1090,
-   fuels:['Petrol'],models:['Hero Splendor Plus','Honda Shine 125','Bajaj Pulsar 150','TVS Jupiter 110']},
-  {line:'Car',name:'Private Car',img:'bharat-assets/car.png',price:2094,
-   fuels:['Petrol','CNG','Diesel'],models:['Maruti Suzuki Alto 800','Hyundai i10 Grand Nios','Tata Punch','Maruti Suzuki WagonR']},
-  {line:'Commercial',name:'Commercial Vehicle',img:'bharat-assets/truck.png',price:16049,
+  {line:'Two-Wheeler',name:'Two-Wheeler',t:'b',img:'bharat-assets/bike.png',price:1090,
+   fuels:['Petrol'],brands:['hero','honda','bajaj','tvs','yamaha','suzuki','royal-enfield','hero-motocorp']},
+  {line:'Car',name:'Private Car',t:'c',img:'bharat-assets/car.png',price:2094,
+   fuels:['Petrol','CNG','Diesel'],brands:['maruti','hyundai','tata','mahindra','kia','toyota','honda','renault']},
+  {line:'Commercial',name:'Commercial Vehicle',t:null,img:'bharat-assets/truck.png',price:16049,
    fuels:['Diesel','CNG'],models:['Tata Ace Gold','Mahindra Bolero Pik-Up','Ashok Leyland Dost']},
 ];
 const RTO={MH:'Maharashtra',UP:'Uttar Pradesh',DL:'Delhi',KA:'Karnataka',GJ:'Gujarat',RJ:'Rajasthan',MP:'Madhya Pradesh',TN:'Tamil Nadu',BR:'Bihar',WB:'West Bengal',PB:'Punjab',HR:'Haryana',AP:'Andhra Pradesh',TS:'Telangana',KL:'Kerala',OD:'Odisha',JH:'Jharkhand',CG:'Chhattisgarh',UK:'Uttarakhand',AS:'Assam',HP:'Himachal Pradesh',GA:'Goa'};
 
+// ---- vehicle image bank ----
+// bharat-assets/vehicles.json is one hero shot per model (1,524 models) built from
+// CarDekho's and BikeDekho's public image sitemaps. We store URLs only and let the
+// browser pull the picture from their CDN at display size — nothing is mirrored.
+// Every use degrades to the local car/bike/truck silhouette if anything fails.
+const IMG_CDN={c:'https://stimg.cardekho.com/',b:'https://cdn.bikedekho.com/'};
+const imgUrl=(e,w)=>IMG_CDN[e.t]+e.i+'?imwidth='+w;
+let BANK=null, bankKeys=null;
+function loadBank(){
+  if(!BANK) BANK=fetch('bharat-assets/vehicles.json')
+    .then(r=>r.ok?r.json():Promise.reject(r.status))
+    .then(j=>{bankKeys=Object.keys(j);return j;})
+    .catch(()=>{BANK=null;return null;});   // null => callers fall back to the silhouette
+  return BANK;
+}
+
+// Match a maker+model string (what VAHAN gives us) to a bank entry. Scores on how
+// many of the record's words the entry accounts for, then prefers the shortest
+// name so "Swift" wins over "Swift Hybrid" unless the record actually says hybrid.
+function matchVehicle(bank,text){
+  if(!bank||!text) return null;
+  const want=text.toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>1);
+  if(!want.length) return null;
+  let best=null,bestScore=0;
+  for(const k of bankKeys){
+    const e=bank[k], hay=(k+' '+e.n).toLowerCase();
+    let score=0;
+    for(const w of want) if(hay.includes(w)) score++;
+    if(score>bestScore||(score===bestScore&&score>0&&best&&e.n.length<best.n.length)){
+      best=e;bestScore=score;
+    }
+  }
+  return bestScore>=2?best:null;   // one word alone matches far too much
+}
+
 let vehicle=null, curFlow=1;
 
-function lookupVehicle(reg){
-  const s=hash(reg), c=CLASSES[s%CLASSES.length];   // >>> not >>: hash is uint32, signed shift goes negative
-  return {reg,line:c.line,img:c.img,class:c.name,price:c.price,
-    model:c.models[(s>>>5)%c.models.length],
+// Mock stands in until the VAHAN doc lands; it now picks a REAL model from the
+// bank so the photo, the name and the class always agree.
+function lookupVehicle(reg,bank){
+  const s=hash(reg), c=CLASSES[s%CLASSES.length];
+  const v={reg,line:c.line,img:c.img,class:c.name,price:c.price,
     year:2014+(s>>>3)%11, fuel:c.fuels[(s>>>7)%c.fuels.length],
-    state:RTO[reg.slice(0,2)]||'India'};
+    state:RTO[reg.slice(0,2)]||'India',
+    model:c.models?c.models[(s>>>5)%c.models.length]:''};
+  if(bank&&c.t){
+    const pool=bankKeys.filter(k=>bank[k].t===c.t&&c.brands.some(b=>k.startsWith(c.t+':'+b+'/')));
+    if(pool.length){
+      const e=bank[pool[(s>>>5)%pool.length]];
+      v.model=e.n; v.img=imgUrl(e,340); v.photo=true;
+    }
+  }
+  if(!v.model) v.model=c.name;
+  return v;
 }
 
 function goFlow(n){
@@ -1160,11 +1206,14 @@ function lookup(){
   const beats=['Reading your number plate…','Checking the RTO records…','Almost there…'];
   let i=0;say('regErr',beats[0]);
   const tick=setInterval(()=>say('regErr',beats[Math.min(++i,beats.length-1)]),700);
-  setTimeout(()=>{
+  // the bank is already warming from the input's focus; whichever finishes last wins
+  Promise.all([loadBank(),new Promise(r=>setTimeout(r,2100))]).then(([bank])=>{
     clearInterval(tick);plate.classList.remove('scanning');btn.disabled=false;
     say('regErr','Just like it\'s written on your number plate.');
-    vehicle=lookupVehicle(reg);
-    document.getElementById('vcImg').src=vehicle.img;
+    vehicle=lookupVehicle(reg,bank);
+    const im=document.getElementById('vcImg');
+    im.onerror=()=>{im.onerror=null;im.src=CLASSES.find(c=>c.line===vehicle.line).img;};
+    im.src=vehicle.img;
     document.getElementById('vcName').textContent=vehicle.model;
     document.getElementById('vcReg').textContent=reg;
     document.getElementById('vcRows').innerHTML=[
@@ -1172,7 +1221,7 @@ function lookup(){
       ['Registered',vehicle.year],['RTO state',vehicle.state],
     ].map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
     goFlow(2);
-  },2100);
+  });
 }
 
 function payNow(){
@@ -1195,6 +1244,7 @@ function payNow(){
 }
 
 // Enter advances the flow
+document.getElementById('regIn').addEventListener('focus',loadBank,{once:true});
 document.getElementById('regIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lookup();}});
 document.getElementById('mobIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();payNow();}});
 // keep the plate looking like a plate while typing
