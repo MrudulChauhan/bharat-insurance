@@ -2,3 +2,17 @@ node_modules
 .DS_Store
 .vercel
 .env*
+.leads.local.json
+# Vendor-shared PDFs — not for the public repo.
+Third Party API Docs/
+# Contains verified eKYC test PII (NITIN SINGH / PAN / kyc_id / address) pulled
+# from HDFC UAT during E2E verification. Regenerate locally with
+# `node scripts/e2e-log.mjs` — do not commit.
+vendor-e2e-log.html
+# Internal alignment doc with vendor + strategy details; keep local.
+vendor-alignment-report.html
+# Vendor-facing query briefs (internal — forward via email, don't commit).
+vendor-queries-*.html
+# Probe output files from scripts/probe-*.mjs — regenerable, no PII,
+# but keep out of git to avoid noise.
+probe-*.json

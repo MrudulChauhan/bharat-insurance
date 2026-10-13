@@ -1,0 +1,19 @@
+Third Party API Docs/
+dev.sh
+vendor-alignment-report.html
+# Vendor-facing query briefs — internal docs, must not ship to the public site.
+vendor-queries-*.html
+# Contains verified eKYC test PII (NITIN SINGH / PAN / kyc_id / address).
+# Must never be served as a public static asset.
+vendor-e2e-log.html
+# E2E harness is a local dev tool, not a Vercel function.
+scripts/
+# Env files are gitignored but Vercel uses .vercelignore when present, so
+# re-exclude them here too.
+.env
+.env.local
+.env.*
+.leads.local.json
+# Docs and lockfile aren't needed at the edge.
+*.md
+package-lock.json

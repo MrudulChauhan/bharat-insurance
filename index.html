@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="IRDAI-compliant third-party vehicle insurance for cars, two-wheelers and commercial vehicles. Get an e-policy in 60 seconds.">
 <title>Bharat Insurance — बीमा देश के वाहन का</title>
 <link rel="icon" type="image/svg+xml" href="bharat-assets/favicon.svg">
 <link rel="apple-touch-icon" href="bharat-assets/favicon.svg">
@@ -47,10 +48,10 @@
   input:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,128,26,.14)}
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 6px 2px;text-transform:uppercase;letter-spacing:.04em}
 
-  /* 1-2-3 wizard */
-  .wsteps{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0 0 20px;padding:0}
+  /* 5-step wizard - auto-fits however many <li>s the markup has */
+  .wsteps{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;list-style:none;margin:0 0 20px;padding:0}
   .wsteps li{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;
-    font-size:12.5px;font-weight:700;color:#9fb0cc;transition:color .25s}
+    font-size:12.5px;font-weight:700;color:#9fb0cc;transition:color .25s;min-width:0;text-align:center}
   .wsteps li+li::before{content:"";position:absolute;top:13px;right:50%;left:-50%;height:2px;
     background:var(--line);z-index:0}
   .wsteps .sn{position:relative;z-index:1;display:grid;place-items:center;width:28px;height:28px;flex:none;
@@ -106,6 +107,10 @@
   .vc-rows dd{margin:0;color:var(--ink);font-weight:700;text-align:right}
 
   /* price */
+  .insurer-pick{display:flex;gap:8px;margin:0 0 14px}
+  .ins-opt{flex:1;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+  .ins-opt:hover{border-color:#b7c3dd;color:var(--ink)}
+  .ins-opt.on{border-color:var(--green);color:var(--green);background:#f4fbf6}
   .pricebox{border:2px solid var(--green);border-radius:22px;padding:26px 24px;background:linear-gradient(180deg,#f4fbf6,#fff)}
   .pb-lbl{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--green)}
   .pb-amt{font-size:62px;font-weight:800;color:var(--navy);line-height:1.05;margin:6px 0 2px;letter-spacing:-.03em}
@@ -574,20 +579,138 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
 .hero{padding-top:var(--hdr)}
 /* 3D icon inside the Get Quote button */
 .btn .btn-ic{width:22px;height:22px;object-fit:contain;flex:none}
-/* admin panel */
-.admin-wrap{max-width:1100px;margin:0 auto;padding:0 22px}
-.astat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin:22px 0 24px}
-.astat .card{padding:18px 20px}
-.astat b{font-family:"Familjen Grotesk";font-size:27px;color:var(--navy);display:block;line-height:1.15}
-.astat span{font-size:12.5px;color:var(--muted)}
-.atoolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-.btn-sm{padding:9px 15px;font-size:13.5px;border-radius:11px}
-.atable{width:100%;border-collapse:collapse;min-width:660px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.atable th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:12px 14px;background:#f6f8fd;border-bottom:1px solid var(--line);white-space:nowrap}
-.atable td{padding:12px 14px;font-size:14px;border-bottom:1px solid var(--line);color:var(--ink);white-space:nowrap}
+/* admin panel — dashboard shell */
+.admin-shell{background:#f6f8fc;min-height:100vh;padding-bottom:60px}
+.admin-topbar{position:sticky;top:0;z-index:40;background:#122f63;color:#fff;padding:14px 0;box-shadow:0 2px 12px rgba(18,47,99,.18)}
+.admin-topbar-inner{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.admin-brand{display:flex;align-items:center;gap:12px}
+.admin-brand-ic{width:38px;height:38px;background:#fff;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
+.admin-brand-ic img{width:26px;height:26px}
+.admin-brand-title{font-size:16px;font-weight:800;line-height:1.15;letter-spacing:.2px}
+.admin-brand-sub{font-size:12px;color:#8fa4c9;font-weight:500;margin-top:1px}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap}
+.admin-btn{padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s;display:inline-flex;align-items:center;gap:6px}
+.admin-btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3)}
+.admin-btn.danger{color:#ffb2bb;border-color:rgba(255,178,187,.3)}
+.admin-btn.danger:hover{background:rgba(200,16,46,.15)}
+.admin-container{max-width:1240px;margin:0 auto;padding:28px 24px 0}
+.admin-crumb{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+.admin-crumb a{color:var(--muted);text-decoration:none}
+.admin-crumb a:hover{color:var(--navy)}
+.admin-warn{background:#fff2e3;border:1px solid #f4d5a3;border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13.5px;color:#8a5a00;display:flex;align-items:flex-start;gap:10px}
+.admin-warn::before{content:"⚠";font-size:18px;flex-shrink:0}
+
+/* KPI cards */
+.admin-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:#fff;border:1px solid #e2e8f4;border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(18,47,99,.04)}
+.kpi-lbl{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-family:"Familjen Grotesk";font-size:32px;font-weight:800;color:var(--navy);line-height:1.05;margin-top:8px}
+.kpi-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+.kpi-sub .up{color:var(--green);font-weight:700}
+.kpi-sub .down{color:#c8102e;font-weight:700}
+.kpi-ic{float:right;width:36px;height:36px;border-radius:10px;background:#eef2fa;color:var(--navy);display:grid;place-items:center;font-size:18px;margin:-2px -4px 0 0}
+
+/* Section cards */
+.admin-two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:20px}
+.admin-card{background:#fff;border:1px solid #e2e8f4;border-radius:14px;padding:20px 22px;box-shadow:0 1px 3px rgba(18,47,99,.04)}
+.admin-card-h{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.admin-card-h h3{font-size:15px;font-weight:800;color:var(--navy);margin:0;letter-spacing:.2px}
+.admin-card-h .h-sub{font-size:12.5px;color:var(--muted);font-weight:500}
+
+/* Funnel bars */
+.funnel-row{display:grid;grid-template-columns:130px 1fr 90px;gap:14px;align-items:center;margin-bottom:10px;font-size:13.5px}
+.funnel-lbl{color:var(--ink);font-weight:600}
+.funnel-track{height:26px;background:#f0f4fb;border-radius:8px;overflow:hidden;position:relative}
+.funnel-fill{height:100%;border-radius:8px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding:0 10px;color:#fff;font-size:12px;font-weight:700;min-width:38px}
+.funnel-num{text-align:right;color:var(--muted);font-size:12.5px;font-weight:600}
+.funnel-num b{color:var(--navy);font-weight:800;font-size:14px}
+
+/* Insurer breakdown */
+.pie-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed #eef2fa}
+.pie-row:last-child{border-bottom:0}
+.pie-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.pie-lbl{flex:1;font-size:13.5px;font-weight:600;color:var(--ink)}
+.pie-num{font-size:13.5px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.pie-pct{font-size:12px;color:var(--muted);width:40px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* Toolbar row: search + filter chips */
+.admin-toolbar-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.admin-search{position:relative;flex:1;min-width:240px;max-width:360px}
+.admin-search input{width:100%;padding:9px 14px 9px 36px;border:1px solid #d8dde8;border-radius:10px;font-family:inherit;font-size:13.5px;background:#fff;color:var(--ink)}
+.admin-search input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(18,47,99,.1)}
+.admin-search::before{content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none}
+.chip-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip-lbl{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-right:4px}
+.chip{padding:5px 12px;border:1px solid #d8dde8;background:#fff;border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .12s}
+.chip:hover{border-color:var(--navy);color:var(--navy)}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* Table */
+.atable-wrap{overflow-x:auto;border:1px solid #e2e8f4;border-radius:12px;background:#fff}
+.atable{width:100%;border-collapse:collapse;min-width:920px}
+.atable th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:11px 14px;background:#f6f8fc;border-bottom:1px solid #e2e8f4;font-weight:700;white-space:nowrap}
+.atable td{padding:12px 14px;font-size:13.5px;border-bottom:1px solid #f0f3f9;color:var(--ink);vertical-align:top}
 .atable tr:last-child td{border-bottom:0}
 .atable tbody tr:hover td{background:#fafbfe}
-.abadge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+.atable .asub{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.atable .amuted{color:var(--muted);font-weight:500}
+.atable .arow-num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600}
+.atable .aprice{font-family:"Familjen Grotesk";font-variant-numeric:tabular-nums;font-weight:700;font-size:14.5px;color:var(--navy)}
+.abadge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.abadge.dot::before{content:"•";margin-right:5px;font-size:14px;line-height:0;vertical-align:middle}
+.kyc-yes{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#e0f2e6;color:var(--green);border-radius:50%;font-weight:900;font-size:13px}
+.kyc-pending{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#fdece0;color:var(--amber,#e8801a);border-radius:50%;font-weight:900;font-size:14px;line-height:1}
+.kyc-none{color:#c8ced9;font-weight:600}
+.arow-btn{padding:5px 11px;font-size:11.5px;font-weight:600;border:1px solid #d8dde8;background:#fff;color:var(--navy);border-radius:8px;cursor:pointer;font-family:inherit;transition:all .12s;white-space:nowrap}
+.arow-btn:hover{border-color:var(--navy);background:#eef2fa}
+
+/* Expanded row detail */
+.detail-row td{background:#f6f8fc!important;padding:18px 22px}
+.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.detail-box{background:#fff;border:1px solid #e2e8f4;border-radius:10px;padding:14px 16px}
+.detail-box h4{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px}
+.detail-kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:12.5px}
+.detail-kv dt{color:var(--muted);white-space:nowrap;font-weight:500}
+.detail-kv dd{margin:0;color:var(--ink);font-weight:600;word-break:break-word}
+.detail-timeline{background:#fff;border:1px solid #e2e8f4;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.detail-timeline h4{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px}
+.timeline-item{display:inline-flex;align-items:center;gap:8px;margin:0 8px 8px 0;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.detail-raw{margin-top:12px}
+.detail-raw summary{cursor:pointer;color:var(--navy);font-weight:600;font-size:12.5px;padding:8px 0}
+.detail-raw summary:hover{color:var(--green)}
+.detail-raw pre{background:#0e2547;color:#c8dcff;border-radius:10px;padding:16px 18px;font-size:11.5px;overflow:auto;max-height:400px;margin:6px 0 0;line-height:1.5}
+
+/* Login screen */
+.admin-login-card{max-width:400px;margin:80px auto;background:#fff;border:1px solid #e2e8f4;border-radius:16px;padding:36px 34px;box-shadow:0 4px 24px rgba(18,47,99,.06);text-align:center}
+.admin-login-card img{width:56px;height:56px;margin-bottom:16px}
+.admin-login-card h1{font-size:22px;color:var(--navy);margin:0 0 6px;font-weight:800}
+.admin-login-card p.sub{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+.admin-login-card input{width:100%;padding:12px 14px;border:1px solid #d8dde8;border-radius:10px;font-family:inherit;font-size:15px;text-align:center;letter-spacing:.05em}
+.admin-login-card input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(18,47,99,.1)}
+.admin-login-card button{width:100%;margin-top:12px;padding:12px 18px;border:0;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
+.admin-login-card button:hover{background:#0d234a}
+.admin-login-card .hint{color:var(--muted);font-size:12px;margin-top:16px}
+.admin-login-notice{background:#fce4e6;color:#8a1420;border-radius:10px;padding:10px 14px;margin:0 0 16px;font-size:13px;text-align:left;line-height:1.5}
+
+/* Empty state */
+.admin-empty{padding:60px 24px;text-align:center;color:var(--muted);background:#fff;border-radius:12px;border:1px dashed #d8dde8}
+.admin-empty h4{font-size:16px;color:var(--ink);margin:0 0 6px}
+
+@media(max-width:1000px){
+  .admin-kpis{grid-template-columns:repeat(2,1fr)}
+  .admin-two{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .admin-topbar-inner{padding:0 16px;flex-wrap:wrap}
+  .admin-container{padding:20px 16px 0}
+  .admin-kpis{grid-template-columns:1fr 1fr;gap:10px}
+  .kpi{padding:14px 16px}
+  .kpi-val{font-size:24px}
+  .admin-card{padding:16px 18px}
+  .funnel-row{grid-template-columns:100px 1fr 60px;font-size:12.5px}
+  .detail-grid{grid-template-columns:1fr}
+}
 /* mobile header: logo + Get Quote, tightened to fit small screens */
 @media(max-width:620px){
   header .wrap{padding:0 14px}
@@ -607,9 +730,9 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .vc-rows{padding:4px 14px 12px}
   .ftrust-row{gap:8px 14px;font-size:12.5px}
   .paybar b{font-size:22px}
-  .wsteps li{font-size:11.5px;gap:6px}
-  .wsteps .sn{width:23px;height:23px;font-size:12px}
-  .wsteps li+li::before{width:8px}
+  .wsteps li{font-size:10.5px;gap:5px}
+  .wsteps .sn{width:22px;height:22px;font-size:11.5px}
+  .wsteps li+li::before{top:11px}
   .nav .btn.login{padding:11px 15px;font-size:14px}
   .nav .btn.login .btn-ic{width:18px;height:18px}
 }
@@ -703,6 +826,76 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
   .plate-in{font-size:27px;padding:12px 8px}
 }
 
+/* step 2 confirm-details panel */
+.vconfirm{margin-top:14px}
+.vconfirm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.vconfirm-grid label{display:flex;flex-direction:column;font-size:12.5px;color:var(--muted);font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.vconfirm-grid label.full{grid-column:1 / -1}
+.vconfirm-grid label small{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:4px}
+.vconfirm-grid select,.vconfirm-grid input.vconfirm-in{margin-top:6px;padding:12px 14px;border:1px solid #d8dde8;border-radius:10px;font-size:15px;background:#fff;color:#1a1a2e;font-family:inherit;font-weight:500;letter-spacing:0;text-transform:none;min-height:46px;box-sizing:border-box;width:100%}
+.vconfirm-grid select:focus,.vconfirm-grid input.vconfirm-in:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(26,125,60,.12)}
+.vconfirm-grid select[disabled]{background:#f5f7fb;color:#8a94a8;cursor:not-allowed}
+/* CIS PDF modal — mandatory IRDAI disclosure before payment */
+.cis-back{position:fixed;inset:0;background:rgba(15,25,50,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;animation:cisFade .18s ease}
+@keyframes cisFade{from{opacity:0}to{opacity:1}}
+.cis-modal{background:#fff;border-radius:16px;width:100%;max-width:820px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(15,25,50,.35)}
+.cis-h{padding:18px 22px 10px;border-bottom:1px solid var(--line)}
+.cis-h h3{margin:0;font-size:18px;color:var(--navy);font-weight:800}
+.cis-h .cis-sub{margin-top:4px;font-size:12.5px;color:var(--muted)}
+.cis-body{flex:1;min-height:320px;background:#f6f8fc;overflow:auto}
+.cis-body iframe{width:100%;height:100%;min-height:52vh;border:0;display:block;background:#fff}
+.cis-nopdf{padding:40px 30px;text-align:center;color:var(--muted);font-size:14px}
+.cis-f{padding:14px 22px 18px;border-top:1px solid var(--line);background:#fff}
+.cis-ack{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink);margin-bottom:14px;cursor:pointer;line-height:1.5}
+.cis-ack input{margin-top:3px;width:16px;height:16px;flex-shrink:0;accent-color:var(--green);cursor:pointer}
+.cis-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.cis-actions .btn{padding:10px 16px;font-size:14px;text-decoration:none}
+@media(max-width:520px){.cis-back{padding:8px}.cis-h{padding:14px 16px 8px}.cis-h h3{font-size:16px}.cis-f{padding:12px 16px 14px}.cis-actions{justify-content:stretch}.cis-actions .btn{flex:1;min-width:0;text-align:center}}
+/* IRDAI pre-payment consent modal */
+.irdai-body{padding:18px 22px;overflow-y:auto;max-height:60vh;background:#fff;font-size:13.5px;line-height:1.55;color:var(--ink)}
+.irdai-body h4{margin:16px 0 6px;font-size:13px;color:var(--navy);font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.irdai-body h4:first-child{margin-top:0}
+.irdai-body p{margin:0 0 8px}
+.irdai-body .irdai-sect{padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin:10px 0;background:#f8fafd}
+.irdai-body .irdai-sect label.cis-ack{margin:0}
+.irdai-body .cpa-choices{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.irdai-body .cpa-choices label{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink);cursor:pointer;line-height:1.5}
+.irdai-body .cpa-choices input{margin-top:3px;flex-shrink:0;accent-color:var(--green);cursor:pointer}
+.irdai-body .alt-cover-input{width:100%;margin-top:6px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-family:inherit}
+.irdai-body .fine{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dt-sect{margin:14px 0 2px;padding:8px 0 4px;border-top:1px solid #eef2fa;font-size:12.5px;color:var(--muted);font-weight:600;letter-spacing:.3px;text-transform:uppercase;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.dt-sect b{color:var(--navy);font-weight:800;letter-spacing:.5px}
+.dt-sect small{font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;font-size:11.5px}
+.vconfirm-note{font-size:12.5px;color:var(--muted);margin:12px 0 0;min-height:18px}
+.vconfirm-note.bad{color:#c8102e;font-weight:600}
+
+/* step 1 vehicle-type picker. User tells us the class up-front instead of us
+   guessing from the reg (no VAHAN endpoint from the vendor). */
+.line-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}
+.line-pick{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px;border:1.5px solid #d8dde8;background:#fff;border-radius:14px;font:600 14px inherit;color:#5b6b86;cursor:pointer;transition:background .15s,color .15s,border-color .15s,transform .1s}
+.line-pick:hover{border-color:var(--green);color:var(--green)}
+.line-pick:active{transform:scale(.97)}
+.line-pick.active{background:var(--green);border-color:var(--green);color:#fff}
+.line-pick-ic{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;font-size:22px}
+.line-pick-ic svg{width:26px;height:26px}
+.line-pick-lbl{font-size:14px}
+.fq-sub{font-size:14px;color:var(--muted);font-weight:600;margin:6px 0 8px}
+@media(max-width:520px){.line-pick{padding:12px 6px}.line-pick-lbl{font-size:13px}}
+
+/* step 2 compact header - reg badge + line badge + edit link, no fake image */
+.vc-topline{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f5f7fb;border-radius:12px;margin-bottom:14px;flex-wrap:wrap}
+.vc-line-badge{padding:4px 10px;background:var(--green);color:#fff;border-radius:999px;font:700 12px inherit;letter-spacing:.3px}
+.vc-reg-plate{display:inline-flex;align-items:center;gap:6px;font:700 15px inherit;color:#1a1a2e}
+.vc-reg-plate .plate-ind.sm{font-size:9px;padding:2px 5px}
+.vc-match{padding:3px 9px;background:#e7f5ec;color:#1a7d3c;border-radius:999px;font:600 11.5px inherit;letter-spacing:.2px}
+.vc-edit{margin-left:auto;background:none;border:none;color:var(--green);font:600 13px inherit;cursor:pointer;padding:6px 8px}
+.vc-edit:hover{text-decoration:underline}
+@media(max-width:520px){.vconfirm-grid{grid-template-columns:1fr}}
+
+/* admin table extras */
+.atable .asub{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.atable .amuted{color:var(--muted);font-weight:500}
+
 </style>
 </head>
 <body>
@@ -731,73 +924,268 @@ h2 .g, .rot li{background:none!important;-webkit-background-clip:border-box!impo
       <ol class="wsteps" id="steps">
         <li class="on"><span class="sn">1</span>Number</li>
         <li><span class="sn">2</span>Vehicle</li>
-        <li><span class="sn">3</span>Price</li>
-        <li><span class="sn">4</span>Pay</li>
+        <li><span class="sn">3</span>Details</li>
+        <li><span class="sn">4</span>KYC</li>
+        <li><span class="sn">5</span>Price</li>
+        <li><span class="sn">6</span>Pay</li>
       </ol>
 
-      <!-- 1 · NUMBER -->
+      <!-- 1 · TYPE + NUMBER -->
       <div class="fstep on" data-step="1">
-        <h2 class="fq">What's your vehicle number?</h2>
+        <h2 class="fq">What are you insuring?</h2>
+        <div class="line-picker" role="radiogroup" aria-label="Vehicle type">
+          <button type="button" class="line-pick active" role="radio" aria-checked="true" data-line="Car" onclick="pickLine('Car')">
+            <span class="line-pick-ic"><svg class="i"><use href="#i-car"/></svg></span>
+            <span class="line-pick-lbl">Private Car</span>
+          </button>
+          <button type="button" class="line-pick" role="radio" aria-checked="false" data-line="Two-Wheeler" onclick="pickLine('Two-Wheeler')">
+            <span class="line-pick-ic"><svg class="i"><use href="#i-bike"/></svg></span>
+            <span class="line-pick-lbl">Two-Wheeler</span>
+          </button>
+          <button type="button" class="line-pick" role="radio" aria-checked="false" data-line="Commercial" onclick="pickLine('Commercial')">
+            <span class="line-pick-ic"><svg class="i"><use href="#i-truck"/></svg></span>
+            <span class="line-pick-lbl">Commercial</span>
+          </button>
+        </div>
+        <p class="fq-sub">Enter your vehicle registration number</p>
         <div class="plate" id="plate">
           <span class="plate-ind">IND</span>
           <input id="regIn" class="plate-in" placeholder="GJ01AB1234" maxlength="13"
                  autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Vehicle registration number">
-          <span class="plate-scan" aria-hidden="true"></span>
         </div>
         <p class="fhint" id="regErr">Just like it's written on your number plate.</p>
-        <button class="btn btn-primary fbtn" id="lookupBtn" onclick="lookup()">Check my vehicle <svg class="i"><use href="#i-arrow"/></svg></button>
+        <button class="btn btn-primary fbtn" id="lookupBtn" onclick="startFlow()">Continue <svg class="i"><use href="#i-arrow"/></svg></button>
         <div class="ftrust-row">
           <span>⚡ 60 seconds</span><span>🔒 100% secure</span><span>📄 Instant e-policy</span>
         </div>
       </div>
 
-      <!-- 2 · VEHICLE -->
+      <!-- 2 · VEHICLE DETAILS -->
       <div class="fstep" data-step="2" hidden>
-        <h2 class="fq">Is this your vehicle?</h2>
-        <div class="vcard" id="vcard">
-          <div class="vc-top"><img class="vc-img" id="vcImg" src="bharat-assets/car.png" alt=""><div>
-            <b id="vcName">—</b><span class="vc-reg" id="vcReg">—</span></div>
-            <span class="vc-tick" aria-hidden="true">✓</span>
-          </div>
-          <dl class="vc-rows" id="vcRows"></dl>
+        <h2 class="fq">Confirm your vehicle details</h2>
+        <div class="vc-topline">
+          <span class="vc-line-badge" id="vcLine">Private Car</span>
+          <span class="vc-reg-plate"><span class="plate-ind sm">IND</span><b id="vcReg">—</b></span>
+          <span class="vc-match" id="vcMatch" hidden>✓ Recognised</span>
+          <button type="button" class="vc-edit" onclick="goFlow(1)">Edit</button>
         </div>
-        <button class="btn btn-primary fbtn" onclick="goFlow(3)">Yes, that's mine <svg class="i"><use href="#i-arrow"/></svg></button>
-        <button class="btn-link" onclick="goFlow(1)">No — change the number</button>
+        <div class="vconfirm" id="vconfirm">
+          <div class="vconfirm-grid">
+              <label>Make
+                <select id="vfMake" onchange="onVerifyMakeChange()"><option value="">Loading…</option></select>
+              </label>
+              <label>Model
+                <select id="vfModel" onchange="onVerifyModelChange()" disabled><option value="">Select make first</option></select>
+              </label>
+              <label>Variant <small>(required — pick your exact trim)</small>
+                <select id="vfVariant" disabled><option value="">Select model first</option></select>
+              </label>
+              <label>RTO
+                <select id="vfRto"><option value="">Loading…</option></select>
+              </label>
+              <label class="full">Previous insurer <small>(leave blank for a new policy)</small>
+                <select id="vfInsurer"><option value="">Loading…</option></select>
+              </label>
+            </div>
+          <p class="vconfirm-note" id="vconfirmNote"></p>
+        </div>
+        <button class="btn btn-primary fbtn" id="confirmBtn" onclick="confirmDetails()">Confirm and continue <svg class="i"><use href="#i-arrow"/></svg></button>
       </div>
 
-      <!-- 3 · PRICE -->
+      <!-- 3 · YOUR DETAILS (new — required for vendor insert-quote API) -->
       <div class="fstep" data-step="3" hidden>
+        <h2 class="fq">Your details</h2>
+        <div class="vconfirm" id="details">
+          <div class="vconfirm-grid">
+            <label>Salutation
+              <select id="dtSalutation"><option value="">Loading…</option></select>
+            </label>
+            <label>Full name
+              <input type="text" id="dtName" class="vconfirm-in" placeholder="As on your ID" autocomplete="name">
+            </label>
+            <label>Gender
+              <select id="dtGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </label>
+            <label>Marital status
+              <select id="dtMarital"><option value="">Loading…</option></select>
+            </label>
+            <label>Mobile number
+              <input type="tel" id="dtMobile" class="vconfirm-in" inputmode="numeric" maxlength="10" placeholder="10-digit number" autocomplete="tel">
+            </label>
+            <label>Email
+              <input type="email" id="dtEmail" class="vconfirm-in" placeholder="you@example.com" autocomplete="email">
+            </label>
+            <label>Vehicle registered on
+              <input type="date" id="dtRegDate" class="vconfirm-in">
+            </label>
+            <label>Vehicle owned by
+              <select id="dtOwnership">
+                <option value="I" selected>Individual</option>
+                <option value="O">Organization</option>
+              </select>
+            </label>
+
+            <div class="dt-sect full"><b>Vehicle identity</b> <small>required for policy issuance</small></div>
+            <label>Chassis number
+              <input type="text" id="dtChassis" class="vconfirm-in" placeholder="e.g. MA3ETDE1S00123456" autocomplete="off" style="text-transform:uppercase">
+            </label>
+            <label>Engine number
+              <input type="text" id="dtEngine" class="vconfirm-in" placeholder="e.g. K10BN1234567" autocomplete="off" style="text-transform:uppercase">
+            </label>
+            <label class="full">Valid PUC certificate?
+              <select id="dtPuc" onchange="onPucChange()">
+                <option value="No" selected>No / not applicable</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </label>
+            <label id="dtPucNoWrap" hidden>PUC certificate number
+              <input type="text" id="dtPucNo" class="vconfirm-in" placeholder="Certificate number">
+            </label>
+            <label id="dtPucExpWrap" hidden>PUC expires on
+              <input type="date" id="dtPucExpiry" class="vconfirm-in">
+            </label>
+
+            <div class="dt-sect full"><b>Insurance history</b></div>
+            <label class="full">Do you have a valid previous policy?
+              <select id="dtValidPolCopy" onchange="onValidPolCopyChange()">
+                <option value="Yes" selected>Yes — renewing an existing policy</option>
+                <option value="No">No — new / lapsed policy</option>
+              </select>
+            </label>
+            <label id="dtPrepolWrap">Previous policy expires on
+              <input type="date" id="dtPrepolExpiry" class="vconfirm-in">
+            </label>
+            <label id="dtPrevPolNumWrap">Previous policy number
+              <input type="text" id="dtPrevPolNum" class="vconfirm-in" placeholder="e.g. 2801201225864700000">
+            </label>
+            <label class="full" id="dtPrevPolTypeWrap" hidden>Previous policy type
+              <select id="dtPrevPolType"><option value="">Loading…</option></select>
+            </label>
+
+            <div class="dt-sect full"><b>Address</b> <small>optional now, required at policy issuance</small></div>
+            <label>Pincode
+              <input type="text" id="dtPincode" class="vconfirm-in" inputmode="numeric" maxlength="6" placeholder="6-digit pincode" autocomplete="postal-code" oninput="onPincodeChange()">
+            </label>
+            <label>City
+              <input type="text" id="dtCity" class="vconfirm-in" placeholder="Auto-filled from pincode" readonly>
+            </label>
+            <label class="full">State
+              <input type="text" id="dtState" class="vconfirm-in" placeholder="Auto-filled from pincode" readonly>
+            </label>
+            <label class="full">Address
+              <input type="text" id="dtAddressLine" class="vconfirm-in" placeholder="House / street / area" autocomplete="street-address">
+            </label>
+
+            <div class="dt-sect full"><b>Nominee</b> <small>for the ₹15L CPA cover</small></div>
+            <label>Nominee name
+              <input type="text" id="dtNomineeName" class="vconfirm-in" placeholder="Full name" autocomplete="off">
+            </label>
+            <label>Nominee DOB
+              <input type="date" id="dtNomineeDob" class="vconfirm-in">
+            </label>
+            <label class="full">Relation to proposer
+              <select id="dtNomineeRelation"><option value="">Loading…</option></select>
+            </label>
+
+            <div class="dt-sect full"><b>Additional</b></div>
+            <label class="full">Occupation
+              <select id="dtOccupation"><option value="">Loading…</option></select>
+            </label>
+            <label>Vehicle financed?
+              <select id="dtFinanced" onchange="onFinancedChange()">
+                <option value="No" selected>No</option>
+                <option value="Yes">Yes — hypothecated</option>
+              </select>
+            </label>
+            <label id="dtFinancierWrap" hidden>Financier / lender
+              <input type="text" id="dtFinancier" class="vconfirm-in" placeholder="Type to search…" autocomplete="off" list="dtFinancierList">
+              <datalist id="dtFinancierList"></datalist>
+            </label>
+          </div>
+          <p class="vconfirm-note" id="detailsNote"></p>
+        </div>
+        <button class="btn btn-primary fbtn" id="detailsBtn" onclick="submitDetails()">Get my price <svg class="i"><use href="#i-arrow"/></svg></button>
+        <button class="btn-link" onclick="goFlow(2)">Back</button>
+      </div>
+
+      <!-- 4 · eKYC (HDFC ERGO) -->
+      <div class="fstep" data-step="4" hidden>
+        <h2 class="fq">Verify your identity</h2>
+        <p class="fq-sub">HDFC ERGO requires a quick KYC check before we can issue your policy.</p>
+        <div class="vconfirm" id="kyc">
+          <div class="vconfirm-grid">
+            <label class="full">Verification method
+              <select id="kycMethod" onchange="onKycMethodChange()">
+                <option value="pan">PAN</option>
+                <option value="pan_doi">PAN + Date of Incorporation</option>
+                <option value="aadhaar_dob">Aadhaar + Date of Birth</option>
+                <option value="cin_doi">CIN + Date of Incorporation</option>
+                <option value="ckyc_doi">CKYC Number + Date of Incorporation</option>
+              </select>
+            </label>
+            <label class="full" id="kycPanWrap">PAN
+              <input type="text" id="kycPan" class="vconfirm-in" placeholder="ABCDE1234F" maxlength="10" autocomplete="off" style="text-transform:uppercase">
+            </label>
+            <label class="full" id="kycAadhaarWrap" hidden>Aadhaar Number
+              <input type="text" id="kycAadhaar" class="vconfirm-in" placeholder="12-digit Aadhaar" inputmode="numeric" maxlength="12" autocomplete="off">
+            </label>
+            <label class="full" id="kycCinWrap" hidden>CIN
+              <input type="text" id="kycCin" class="vconfirm-in" placeholder="U85191MH2014NPL257833" autocomplete="off" style="text-transform:uppercase">
+            </label>
+            <label class="full" id="kycCkycWrap" hidden>CKYC Number
+              <input type="text" id="kycCkyc" class="vconfirm-in" placeholder="CKYC Number" autocomplete="off">
+            </label>
+            <label class="full" id="kycDobWrap" hidden>Date of Birth / Incorporation
+              <input type="date" id="kycDob" class="vconfirm-in">
+            </label>
+          </div>
+          <p class="vconfirm-note" id="kycNote"></p>
+        </div>
+        <button class="btn btn-primary fbtn" id="kycBtn" onclick="submitKyc()">Verify and continue <svg class="i"><use href="#i-arrow"/></svg></button>
+        <button class="btn-link" onclick="goFlow(3)">Back</button>
+      </div>
+
+      <!-- 5 · PRICE (was step 3 — now driven by real vendor quote APIs) -->
+      <div class="fstep" data-step="5" hidden>
         <h2 class="fq">Your price</h2>
-        <div class="pricebox">
-          <span class="pb-lbl">Third-party cover · 1 year</span>
-          <div class="pb-amt">₹<b id="pbVal">0</b></div>
-          <span class="pb-sub">All taxes included. No hidden charges.</span>
-          <ul class="pb-list">
+        <div class="insurer-pick" id="insurerPick" role="radiogroup" aria-label="Choose insurer">
+          <button type="button" class="ins-opt on" data-code="HDFCTP" onclick="pickInsurer('HDFCTP')" role="radio" aria-checked="true">HDFC ERGO</button>
+          <button type="button" class="ins-opt"    data-code="GODIGITTP" onclick="pickInsurer('GODIGITTP')" role="radio" aria-checked="false">Digit</button>
+        </div>
+        <div class="pricebox" id="priceBox">
+          <span class="pb-lbl">Fetching your quote…</span>
+          <div class="pb-amt">₹<b id="pbVal">…</b></div>
+          <span class="pb-sub" id="pbSub">One moment while the insurer calculates your premium.</span>
+          <ul class="pb-list" id="pbBreakdown">
             <li>Unlimited third-party injury cover</li>
             <li>₹7.5 lakh property damage cover</li>
             <li>₹15 lakh owner-driver accident cover</li>
             <li>Valid across India · IRDAI approved</li>
           </ul>
         </div>
-        <button class="btn btn-primary fbtn" onclick="goFlow(4)">Proceed to pay <svg class="i"><use href="#i-arrow"/></svg></button>
-        <button class="btn-link" onclick="goFlow(2)">Back</button>
+        <button class="btn btn-primary fbtn" id="payProceedBtn" onclick="goFlow(6)" hidden>Proceed to pay <svg class="i"><use href="#i-arrow"/></svg></button>
+        <button class="btn btn-primary fbtn" id="retryQuoteBtn" onclick="fetchQuote()" hidden>Retry <svg class="i"><use href="#i-arrow"/></svg></button>
+        <button class="btn-link" onclick="goFlow(4)">Back</button>
       </div>
 
-      <!-- 4 · PAY -->
-      <div class="fstep" data-step="4" hidden>
-        <h2 class="fq">Where do we send the policy?</h2>
+      <!-- 5 · PAY (was step 4) -->
+      <div class="fstep" data-step="6" hidden>
+        <h2 class="fq">Ready to pay</h2>
         <div class="mob">
           <span class="mob-cc">+91</span>
-          <input id="mobIn" class="mob-in" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" aria-label="Mobile number">
+          <input id="mobIn" class="mob-in" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" aria-label="Mobile number" readonly>
         </div>
         <p class="fhint" id="mobErr">Your e-policy arrives here on WhatsApp and SMS.</p>
         <div class="paybar"><span>Amount to pay</span><b id="payVal">₹0</b></div>
         <button class="btn btn-primary fbtn" id="payBtn" onclick="payNow()">Pay securely <svg class="i"><use href="#i-arrow"/></svg></button>
-        <button class="btn-link" onclick="goFlow(3)">Back</button>
+        <button class="btn-link" onclick="goFlow(5)">Back</button>
       </div>
 
-      <!-- 5 · DONE -->
-      <div class="fstep" data-step="5" hidden>
+      <!-- 6 · DONE (was step 5) -->
+      <div class="fstep" data-step="7" hidden>
         <div class="donetick" aria-hidden="true"><svg viewBox="0 0 52 52"><circle class="dt-c" cx="26" cy="26" r="24"/><path class="dt-p" d="M14 27l8 8 16-16"/></svg></div>
         <h2 class="fq">You're insured!</h2>
         <p class="fdone" id="doneMsg">—</p>
@@ -1098,81 +1486,114 @@ document.addEventListener('click',e=>{const b=e.target.closest('.btn');if(!b)ret
 
 // ---- lead store ----
 const LEADS='bharat_leads';
-function saveLead(o){const a=JSON.parse(localStorage.getItem(LEADS)||'[]');a.push({...o,ts:new Date().toISOString()});localStorage.setItem(LEADS,JSON.stringify(a));return a.length;}
+function readLeads(){try{const v=JSON.parse(localStorage.getItem(LEADS)||'[]');return Array.isArray(v)?v:[];}catch{return [];}}
+function saveLead(o){const a=readLeads();a.push({...o,ts:new Date().toISOString()});localStorage.setItem(LEADS,JSON.stringify(a));return a.length;}
 
-// ---- hero flow: number -> vehicle -> price -> pay ----
-// ponytail: VAHAN lookup + payment are mocked. Both are deterministic off the reg
-// number so a demo replays identically. Swap lookupVehicle()/payNow() for the real
-// APIs when the integration doc lands — nothing else in the flow needs to change.
-const REG_RE=/^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{4}$/;
+// ---- per-session lead tracking ----
+// One ID per browser session so every step (details / kyc / quote / pay /
+// issued) upserts into the same record on the server. Owner sees the full
+// customer journey and any drop-off in the admin panel.
+function newLeadId(){
+  // Not crypto — just needs to be unique enough per session.
+  return 'BI-' + Date.now().toString(36).toUpperCase() + '-' +
+         Math.random().toString(36).slice(2, 8).toUpperCase();
+}
+function currentLeadId(){
+  let id = sessionStorage.getItem('bharat_lead_id');
+  if(!id){ id = newLeadId(); sessionStorage.setItem('bharat_lead_id', id); }
+  return id;
+}
+function resetLeadId(){ sessionStorage.removeItem('bharat_lead_id'); }
+function sessionInfo(){
+  try{
+    return {
+      ua: navigator.userAgent||'',
+      lang: navigator.language||'',
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone||'',
+      referrer: document.referrer||'',
+      screen: (screen.width||0)+'x'+(screen.height||0),
+    };
+  }catch(e){ return {}; }
+}
+
+// Fires an upsert to /api/leads with everything we know so far. Fire-and-forget:
+// tracking failures must never block the user flow.
+function trackLead(status, extras){
+  const c = vehicle.customer || {};
+  const body = {
+    id: currentLeadId(),
+    status,
+    line: vehicle.line||'', vtype: vehicle.class||'', reg: vehicle.reg||'',
+    mobile: c.mobile||'', premium: vehicle.price||0,
+    make: vehicle.make||'', model: vehicle.model||'', variant: vehicle.variant||'',
+    rto: vehicle.rto||'', previousInsurer: vehicle.previousInsurer||'',
+    insurerCode: vehicle.insurerCode||'',
+    insurerLabel: (typeof INSURER_LABELS!=='undefined' && INSURER_LABELS[vehicle.insurerCode])||'',
+    customer: c,
+    kyc: vehicle.kyc||null,
+    quote: vehicle._quoteResponse ? {
+      pTransactionId: vehicle._quoteResponse.pTransactionId||'',
+      policystartDate: vehicle._quoteResponse.policystartDate||'',
+      policyEndDate: vehicle._quoteResponse.policyEndDate||'',
+      thirdPartyPremium: vehicle._quoteResponse.thirdPartyPremium||0,
+      baseThirdPartyPremium: vehicle._quoteResponse.baseThirdPartyPremium||0,
+      paOwnerDriver: vehicle._quoteResponse.paOwnerDriver||0,
+      geogExtensionTPPremium: vehicle._quoteResponse.geogExtensionTPPremium||0,
+      tpBiFuel: vehicle._quoteResponse.tpBiFuel||0,
+      netPremium: vehicle._quoteResponse.netPremium||0,
+      serviceTax: vehicle._quoteResponse.serviceTax||0,
+      payablePremium: vehicle._quoteResponse.payablePremium||0,
+      errorStatus: !!vehicle._quoteResponse.errorStatus,
+      errorText: vehicle._quoteResponse.errorText||'',
+    } : null,
+    session: sessionInfo(),
+    ...(extras||{}),
+  };
+  const payload = JSON.stringify(body);
+  // sendBeacon is designed for exactly this — fire-and-forget across page
+  // navigation (including the HDFC gateway form POST). Falls back to
+  // fetch+keepalive when sendBeacon isn't available or refuses the payload.
+  let sent = false;
+  try {
+    if (navigator.sendBeacon) {
+      sent = navigator.sendBeacon('/api/leads', new Blob([payload], {type:'application/json'}));
+    }
+  } catch(_) {}
+  if (!sent) {
+    fetch('/api/leads', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: payload, keepalive: true,
+    }).catch(()=>{ /* never block the user */ });
+  }
+}
+
+// ---- hero flow: type + number -> details -> price -> pay ----
+// Reg-to-vehicle lookup is NOT provided by the current vendor API surface
+// (no VAHAN-style endpoint). We ask the user for the vehicle type up front
+// instead of guessing, then drive Make/Model/Variant/RTO/Insurer from real
+// Simson master data on step 2.
+// Accepts standard state-code plates (e.g. GJ01AB1234) plus Bharat-series
+// plates (e.g. 23BH3521J) - two digits, "BH", four digits, one or two letters.
+const REG_RE=/^(?:[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{4}|\d{2}BH\d{4}[A-Z]{1,2})$/;
 const norm=s=>s.toUpperCase().replace(/[^A-Z0-9]/g,'');
-const hash=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
 
-// third-party tariff is IRDAI-fixed per vehicle class — one price, no comparison
+// third-party tariff is IRDAI-fixed per vehicle class - one price, no comparison
 const CLASSES=[
-  {line:'Two-Wheeler',name:'Two-Wheeler',t:'b',img:'bharat-assets/bike.png',price:1090,
-   fuels:['Petrol'],brands:['hero','honda','bajaj','tvs','yamaha','suzuki','royal-enfield','hero-motocorp']},
-  {line:'Car',name:'Private Car',t:'c',img:'bharat-assets/car.png',price:2094,
-   fuels:['Petrol','CNG','Diesel'],brands:['maruti','hyundai','tata','mahindra','kia','toyota','honda','renault']},
-  {line:'Commercial',name:'Commercial Vehicle',t:null,img:'bharat-assets/truck.png',price:16049,
-   fuels:['Diesel','CNG'],models:['Tata Ace Gold','Mahindra Bolero Pik-Up','Ashok Leyland Dost']},
+  {line:'Two-Wheeler', name:'Two-Wheeler',        img:'bharat-assets/bike.png',  price:1090},
+  {line:'Car',         name:'Private Car',        img:'bharat-assets/car.png',   price:2094},
+  {line:'Commercial',  name:'Commercial Vehicle', img:'bharat-assets/truck.png', price:16049},
 ];
-const RTO={MH:'Maharashtra',UP:'Uttar Pradesh',DL:'Delhi',KA:'Karnataka',GJ:'Gujarat',RJ:'Rajasthan',MP:'Madhya Pradesh',TN:'Tamil Nadu',BR:'Bihar',WB:'West Bengal',PB:'Punjab',HR:'Haryana',AP:'Andhra Pradesh',TS:'Telangana',KL:'Kerala',OD:'Odisha',JH:'Jharkhand',CG:'Chhattisgarh',UK:'Uttarakhand',AS:'Assam',HP:'Himachal Pradesh',GA:'Goa'};
 
-// ---- vehicle image bank ----
-// bharat-assets/vehicles.json is one hero shot per model (1,524 models) built from
-// CarDekho's and BikeDekho's public image sitemaps. We store URLs only and let the
-// browser pull the picture from their CDN at display size — nothing is mirrored.
-// Every use degrades to the local car/bike/truck silhouette if anything fails.
-const IMG_CDN={c:'https://stimg.cardekho.com/',b:'https://cdn.bikedekho.com/'};
-const imgUrl=(e,w)=>IMG_CDN[e.t]+e.i+'?imwidth='+w;
-let BANK=null, bankKeys=null;
-function loadBank(){
-  if(!BANK) BANK=fetch('bharat-assets/vehicles.json')
-    .then(r=>r.ok?r.json():Promise.reject(r.status))
-    .then(j=>{bankKeys=Object.keys(j);return j;})
-    .catch(()=>{BANK=null;return null;});   // null => callers fall back to the silhouette
-  return BANK;
-}
+let vehicle=null, curFlow=1, selectedLine='Car';
 
-// Match a maker+model string (what VAHAN gives us) to a bank entry. Scores on how
-// many of the record's words the entry accounts for, then prefers the shortest
-// name so "Swift" wins over "Swift Hybrid" unless the record actually says hybrid.
-function matchVehicle(bank,text){
-  if(!bank||!text) return null;
-  const want=text.toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>1);
-  if(!want.length) return null;
-  let best=null,bestScore=0;
-  for(const k of bankKeys){
-    const e=bank[k], hay=(k+' '+e.n).toLowerCase();
-    let score=0;
-    for(const w of want) if(hay.includes(w)) score++;
-    if(score>bestScore||(score===bestScore&&score>0&&best&&e.n.length<best.n.length)){
-      best=e;bestScore=score;
-    }
-  }
-  return bestScore>=2?best:null;   // one word alone matches far too much
-}
-
-let vehicle=null, curFlow=1;
-
-// Mock stands in until the VAHAN doc lands; it now picks a REAL model from the
-// bank so the photo, the name and the class always agree.
-function lookupVehicle(reg,bank){
-  const s=hash(reg), c=CLASSES[s%CLASSES.length];
-  const v={reg,line:c.line,img:c.img,class:c.name,price:c.price,
-    year:2014+(s>>>3)%11, fuel:c.fuels[(s>>>7)%c.fuels.length],
-    state:RTO[reg.slice(0,2)]||'India',
-    model:c.models?c.models[(s>>>5)%c.models.length]:''};
-  if(bank&&c.t){
-    const pool=bankKeys.filter(k=>bank[k].t===c.t&&c.brands.some(b=>k.startsWith(c.t+':'+b+'/')));
-    if(pool.length){
-      const e=bank[pool[(s>>>5)%pool.length]];
-      v.model=e.n; v.img=imgUrl(e,340); v.photo=true;
-    }
-  }
-  if(!v.model) v.model=c.name;
-  return v;
+function pickLine(line){
+  if(!CLASSES.some(c=>c.line===line))return;
+  selectedLine=line;
+  document.querySelectorAll('.line-pick').forEach(b=>{
+    const on=b.dataset.line===line;
+    b.classList.toggle('active',on);
+    b.setAttribute('aria-checked',on?'true':'false');
+  });
 }
 
 function goFlow(n){
@@ -1180,8 +1601,14 @@ function goFlow(n){
   document.querySelectorAll('.fstep').forEach(s=>{const on=+s.dataset.step===n;s.hidden=!on;s.classList.toggle('on',on);});
   document.querySelectorAll('#steps li').forEach((li,i)=>{li.classList.toggle('on',i+1===n);li.classList.toggle('done',i+1<n);});
   if(n===1){const p=document.getElementById('plate');p.classList.remove('bad');}
-  if(n===3)countUp('pbVal',vehicle.price);
-  if(n===4){document.getElementById('payVal').textContent=inr(vehicle.price);setTimeout(()=>document.getElementById('mobIn').focus(),300);}
+  if(n===3){setTimeout(()=>{const el=document.getElementById('dtName');if(el)el.focus();},250);onValidPolCopyChange();loadPrevPolicyTypes();loadIssuanceMasters();}
+  if(n===4){initKycStep();}
+  if(n===5){fetchQuote();}
+  if(n===6){
+    document.getElementById('payVal').textContent=inr(vehicle.price||0);
+    const mob=(vehicle.customer&&vehicle.customer.mobile)||'';
+    document.getElementById('mobIn').value=mob;
+  }
   document.getElementById('quote').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
@@ -1194,7 +1621,7 @@ function countUp(id,to){
 }
 function say(id,msg,bad){const el=document.getElementById(id);el.textContent=msg;el.classList.toggle('bad',!!bad);}
 
-function lookup(){
+async function startFlow(){
   const raw=document.getElementById('regIn').value, reg=norm(raw), plate=document.getElementById('plate');
   if(!REG_RE.test(reg)){
     plate.classList.remove('bad');void plate.offsetWidth;plate.classList.add('bad');
@@ -1202,54 +1629,2069 @@ function lookup(){
     document.getElementById('regIn').focus();return;
   }
   const btn=document.getElementById('lookupBtn');
-  btn.disabled=true;plate.classList.add('scanning');
-  const beats=['Reading your number plate…','Checking the RTO records…','Almost there…'];
-  let i=0;say('regErr',beats[0]);
-  const tick=setInterval(()=>say('regErr',beats[Math.min(++i,beats.length-1)]),700);
-  // the bank is already warming from the input's focus; whichever finishes last wins
-  Promise.all([loadBank(),new Promise(r=>setTimeout(r,2100))]).then(([bank])=>{
-    clearInterval(tick);plate.classList.remove('scanning');btn.disabled=false;
-    say('regErr','Just like it\'s written on your number plate.');
-    vehicle=lookupVehicle(reg,bank);
-    const im=document.getElementById('vcImg');
-    im.onerror=()=>{im.onerror=null;im.src=CLASSES.find(c=>c.line===vehicle.line).img;};
-    im.src=vehicle.img;
-    document.getElementById('vcName').textContent=vehicle.model;
-    document.getElementById('vcReg').textContent=reg;
-    document.getElementById('vcRows').innerHTML=[
-      ['Vehicle type',vehicle.class],['Fuel',vehicle.fuel],
-      ['Registered',vehicle.year],['RTO state',vehicle.state],
-    ].map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-    goFlow(2);
+  const origHtml=btn.innerHTML;
+  btn.disabled=true; btn.innerHTML='Looking up your vehicle…';
+  say('regErr','Checking the registration records…');
+
+  let hit=null;
+  try{
+    const r=await fetch('/api/vehicle-lookup?reg='+encodeURIComponent(reg));
+    if(r.ok){const j=await r.json();if(j&&j.found)hit=j;}
+  }catch(e){/* falls through to manual pick */}
+
+  // Chain: if the sample lookup gave us a FastLane uniqueId, call Simson's
+  // GetFastlaneVehicleDetails proxy for the canonical variantwithCC/CC/fuel/
+  // seatingCapacity - those are the exact values insert-quote wants.
+  let fla=null;
+  if(hit && hit.uniqueId){
+    say('regErr','Fetching canonical vehicle details…');
+    try{
+      const vt = hit.type==='Two-Wheeler' ? 'Bike' : hit.type;
+      const fr = await fetch('/api/simson/fastlane-vehicle-details',{
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({uniqueId:String(hit.uniqueId), vehicleType:vt}),
+      });
+      if(fr.ok){const fj=await fr.json();if(fj&&fj.variantwithCC)fla=fj;}
+    }catch(e){/* not fatal - fall back to manual variant pick */}
+  }
+
+  btn.disabled=false; btn.innerHTML=origHtml;
+  say('regErr','Just like it\'s written on your number plate.');
+
+  // If the reg is recognised, use the vendor-verified type and pre-fill
+  // Make/Model on step 2. Otherwise fall through to the user's manual pick.
+  const line = hit ? hit.type : selectedLine;
+  const cls  = CLASSES.find(c=>c.line===line) || CLASSES[1];
+  // Prefer FastLane canonical values when available.
+  const canonMake  = (fla && fla.make)   || (hit && hit.make)  || '';
+  const canonModel = (fla && fla.model)  || (hit && hit.model) || '';
+  vehicle={
+    reg, line:cls.line, class:cls.name, price:cls.price, img:cls.img,
+    make: canonMake,
+    // pre-fill string that initVerifyStep parses for Make + Model auto-selection
+    model: canonMake ? `${canonMake} ${canonModel}` : '',
+    variant:'', rto:'', previousInsurer:'', matched: !!hit,
+    rtoHint: hit ? (hit.rto || '') : '',
+    previousInsurerHint: hit ? (hit.previousInsurer || '') : '',
+    // FastLane canonical: variantwithCC is what insert-quote wants verbatim
+    variantHint: fla ? (fla.variantwithCC || '') : '',
+    seatingCapacityHint: fla ? (fla.seatingCapacity || '') : '',
+  };
+  // sync the step-1 pill row with whatever we ended up on
+  if(hit) pickLine(cls.line);
+  document.getElementById('vcReg').textContent=reg;
+  document.getElementById('vcLine').textContent=cls.name;
+  const matchEl=document.getElementById('vcMatch');
+  if(matchEl) matchEl.hidden = !hit;
+  initVerifyStep();
+  goFlow(2);
+}
+
+// ---- Simson master-data client ----
+// Cached in memory + localStorage. Master lists are stable enough that a
+// 24-hour TTL is safe; drop the key from storage to force a refresh.
+const SIM_TTL_MS = 24 * 60 * 60 * 1000;
+function simCacheGet(k){
+  try{const raw=localStorage.getItem('sim:'+k);if(!raw)return null;
+    const j=JSON.parse(raw);if(!j||!j.t||Date.now()-j.t>SIM_TTL_MS)return null;
+    return j.v;}catch{return null;}
+}
+function simCacheSet(k,v){try{localStorage.setItem('sim:'+k,JSON.stringify({t:Date.now(),v}));}catch{}}
+async function simGet(path,cacheKey){
+  if(cacheKey){const c=simCacheGet(cacheKey);if(c)return c;}
+  const r=await fetch(path);if(!r.ok)throw new Error(path+' '+r.status);
+  const j=await r.json();if(cacheKey)simCacheSet(cacheKey,j);return j;
+}
+async function simPost(path,body,cacheKey){
+  if(cacheKey){const c=simCacheGet(cacheKey);if(c)return c;}
+  const r=await fetch(path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error(path+' '+r.status);
+  const j=await r.json();if(cacheKey)simCacheSet(cacheKey,j);return j;
+}
+function simPaths(line){
+  const bike=line==='Two-Wheeler';
+  return{
+    makes:    bike?'/api/simson/bike-makes'    :'/api/simson/car-makes',
+    models:   bike?'/api/simson/bike-models'   :'/api/simson/car-models',
+    variants: bike?'/api/simson/bike-variants' :'/api/simson/car-variants',
+  };
+}
+
+// ---- Step 2 confirm-details ----
+// FastLane-style long insurer names → Simson currentInsurerCode. First we try
+// a small explicit-alias table for cases where a simple substring match would
+// pick the wrong entry (e.g. "GODIGIT" → "Digit", not "Digital"); if none of
+// those hit we scan the Simson list for a code whose token appears in the name.
+function matchInsurerCode(rawName, insurerList){
+  if(!rawName||!insurerList.length)return null;
+  const name=String(rawName).toUpperCase().replace(/[^A-Z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
+  const aliases=[
+    [/\bGO\s*DIGIT\b/,     'Digit'],
+    [/\bINDUSIND\b/,       'Reliance'],  // Simson maps IndusInd's portfolio to Reliance
+    [/\bTHE\s*NEW\s*INDIA\b/, 'NewIndia'],
+    [/\bTATA\s*AIG\b/,     'TATAAIG'],
+    [/\bZUNO\b/,           'Edelweiss'],
+    [/\bUNIVERSAL\s*SOMPO\b/, 'Sompo'],
+    [/\bROYAL\s*SUNDARAM\b/,  'Royal'],
+    [/\bHDFC\s*ERGO\b/,    'HDFC'],
+    [/\bCHOLA\s*MS\b|\bCHOLAMANDALAM\b/, 'Cholamandalam'],
+    [/\bIFFCO\s*TOKIO\b/,  'IFFCO'],
+    [/\bBHARTI\s*AXA\b/,   'Bharti'],
+    [/\bFUTURE\s*GENERALI\b|\bGENERALI\s*CENTRAL\b/, 'Future'],
+    [/\bZURICH\s*KOTAK\b/, 'Zurich'],
+    [/\bNATIONAL\s*INSURANCE\b/, 'NationalInsurance'],
+  ];
+  for(const [rx,code] of aliases) if(rx.test(name)) return code;
+  // fall back: any Simson code that appears as a whole word in the name
+  const codes=insurerList.map(i=>String(i.currentInsurerCode||''));
+  for(const code of codes){
+    if(!code)continue;
+    const upper=code.toUpperCase();
+    if(new RegExp('\\b'+upper.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\b').test(name)) return code;
+  }
+  return null;
+}
+
+function fillSelect(sel,items,{value,label,placeholder,emptyMessage}={}){
+  // filter first so we can detect "all items malformed" (e.g. a Simson response
+  // shape mismatch) as if the list were empty, instead of rendering "undefined".
+  const clean=(items||[]).map(it=>{
+    const v=value?value(it):it;
+    const l=label?label(it):it;
+    if(v==null||String(v).trim()===''||String(v)==='undefined')return null;
+    return {v:String(v),l:String(l||v)};
+  }).filter(Boolean);
+  sel.innerHTML='';
+  if(!clean.length && emptyMessage){
+    const opt=document.createElement('option');
+    opt.value='';opt.textContent=emptyMessage;sel.appendChild(opt);
+    sel.disabled=true;
+    return 0;
+  }
+  const opt=document.createElement('option');
+  opt.value='';opt.textContent=placeholder||'Select';sel.appendChild(opt);
+  clean.forEach(({v,l})=>{
+    const o=document.createElement('option');
+    o.value=v;o.textContent=l;sel.appendChild(o);
+  });
+  sel.disabled=false;
+  return clean.length;
+}
+function swapToTextInput(id,placeholder,initial){
+  const old=document.getElementById(id);if(!old||old.tagName==='INPUT')return;
+  const inp=document.createElement('input');
+  inp.type='text';inp.id=id;inp.placeholder=placeholder;
+  inp.className='vconfirm-in';inp.autocomplete='off';
+  if(initial)inp.value=initial;
+  old.replaceWith(inp);
+}
+
+// canonical picker DOM. Rebuilt every time initVerifyStep runs so switching
+// lines (e.g. commercial → car after a "change the number" bounce) never
+// leaves stale <input> elements where <select>s are expected.
+const PICKER_HTML=`
+  <label>Make
+    <select id="vfMake" onchange="onVerifyMakeChange()"><option value="">Loading…</option></select>
+  </label>
+  <label>Model
+    <select id="vfModel" onchange="onVerifyModelChange()" disabled><option value="">Select make first</option></select>
+  </label>
+  <label>Variant <small>(required — pick your exact trim)</small>
+    <select id="vfVariant" disabled><option value="">Select model first</option></select>
+  </label>
+  <label>RTO
+    <select id="vfRto"><option value="">Loading…</option></select>
+  </label>
+  <label class="full">Previous insurer <small>(leave blank for a new policy)</small>
+    <select id="vfInsurer"><option value="">Loading…</option></select>
+  </label>`;
+
+async function initVerifyStep(){
+  const line=vehicle.line;
+  const isCommercial=line==='Commercial';
+  const grid=document.querySelector('#vconfirm .vconfirm-grid');
+  if(grid) grid.innerHTML=PICKER_HTML;
+  const note=document.getElementById('vconfirmNote');
+  note.classList.remove('bad');
+  note.textContent=isCommercial?'For commercial vehicles, please enter the make/model manually.':'';
+
+  const rtoSel=document.getElementById('vfRto');
+  const insSel=document.getElementById('vfInsurer');
+  const makeSel=document.getElementById('vfMake');
+
+  // eager: RTOs + previous insurers (shared master data)
+  simGet('/api/simson/rtos','rtos').then(rtos=>{
+    fillSelect(rtoSel,rtos,{value:r=>r.regno,label:r=>r.regno+' — '+(r.state||''),placeholder:'Select RTO',emptyMessage:'No RTOs available'});
+    // Prefer the exact RTO from the reg lookup (vehicle.rtoHint like "MH12")
+    // and fall back to the state-prefix match if we only know that.
+    const list=Array.isArray(rtos)?rtos:[];
+    const rtoHint=(vehicle.rtoHint||'').toUpperCase();
+    let match = rtoHint && list.find(r=>r&&String(r.regno||'').startsWith(rtoHint));
+    if(!match){
+      const pref=vehicle.reg.slice(0,2);
+      match=list.find(r=>r&&String(r.regno||'').startsWith(pref));
+    }
+    if(match)rtoSel.value=match.regno;
+  }).catch(()=>{rtoSel.innerHTML='<option value="">Could not load — try again later</option>';});
+
+  simGet('/api/simson/previous-insurers','insurers').then(ins=>{
+    fillSelect(insSel,ins,{value:i=>i.currentInsurerCode,label:i=>i.currentInsurerName,placeholder:'New policy / not renewing',emptyMessage:'No insurers available'});
+    // Match FastLane's long insurer name (e.g. "ICICI  LOMBARD",
+    // "GODIGIT GENERAL INSURANCE LTD.") to Simson's short code list.
+    const hint=vehicle.previousInsurerHint;
+    if(hint){
+      const code=matchInsurerCode(hint,Array.isArray(ins)?ins:[]);
+      if(code)insSel.value=code;
+    }
+  }).catch(()=>{insSel.innerHTML='<option value="">Could not load</option>';});
+
+  if(isCommercial){
+    swapToTextInput('vfMake','Make (e.g. Tata)');
+    swapToTextInput('vfModel','Model (e.g. Ace Gold)');
+    swapToTextInput('vfVariant','Variant (optional)');
+    const parts=(vehicle.model||'').split(' ');
+    if(parts.length){
+      document.getElementById('vfMake').value=parts[0]||'';
+      document.getElementById('vfModel').value=parts.slice(1).join(' ');
+    }
+    return;
+  }
+
+  const paths=simPaths(line);
+  try{
+    const makes=await simGet(paths.makes,'makes:'+line);
+    fillSelect(makeSel,makes,{value:m=>m.make,label:m=>m.make,placeholder:'Select make',emptyMessage:'No makes available'});
+    // Pre-fill priority: an explicit hint from the reg lookup (vehicle.make)
+    // wins over a first-word guess parsed from vehicle.model. This is what
+    // makes multi-word makes like "Royal Enfield" pre-select correctly.
+    const list=Array.isArray(makes)?makes:[];
+    const makeHint=(vehicle.make||(vehicle.model||'').split(' ')[0]||'').toLowerCase().trim();
+    const pick=makeHint&&(list.find(m=>m&&(m.make||'').toLowerCase()===makeHint)
+             ||list.find(m=>m&&(m.make||'').toLowerCase().startsWith(makeHint)));
+    if(pick){makeSel.value=pick.make;await onVerifyMakeChange();
+      // Model hint: if we know make+model from the lookup, use model directly;
+      // otherwise fall back to the mock behaviour of stripping the first word.
+      const modelHint=vehicle.make
+        ? (vehicle.model||'').replace(new RegExp('^'+vehicle.make+'\\s*','i'),'')
+        : (vehicle.model||'').split(' ').slice(1).join(' ');
+      const rest=modelHint.toLowerCase().trim();
+      if(rest){
+        const modelSelNow=document.getElementById('vfModel');
+        const opts=[...modelSelNow.options].map(o=>o.value).filter(Boolean);
+        // 1) exact case-insensitive match wins
+        let mm=opts.find(o=>o.toLowerCase()===rest);
+        if(!mm){
+          // 2) among options containing our guess, prefer petrol (India's
+          //    dominant fuel) so we don't quietly pre-select a CNG variant
+          //    just because "(CNG)" comes first alphabetically.
+          const containing=opts.filter(o=>o.toLowerCase().includes(rest.split(' ')[0]));
+          mm=containing.find(o=>/\(petrol\)/i.test(o))
+           ||containing.find(o=>/\(diesel\)/i.test(o))
+           ||containing[0];
+        }
+        if(mm){modelSelNow.value=mm;await onVerifyModelChange();}
+      }
+    }
+  }catch(e){makeSel.innerHTML='<option value="">Could not load — try again</option>';}
+}
+
+async function onVerifyMakeChange(){
+  const makeEl=document.getElementById('vfMake');
+  const make=makeEl?makeEl.value:'';
+  const modelSel=document.getElementById('vfModel');
+  const varSel=document.getElementById('vfVariant');
+  if(!modelSel||modelSel.tagName!=='SELECT')return;
+  varSel.innerHTML='<option value="">Select model first</option>';varSel.disabled=true;
+  if(!make){modelSel.innerHTML='<option value="">Select make first</option>';modelSel.disabled=true;return;}
+  modelSel.innerHTML='<option value="">Loading…</option>';modelSel.disabled=true;
+  try{
+    const paths=simPaths(vehicle.line);
+    const models=await simPost(paths.models,{make},'models:'+vehicle.line+':'+make);
+    fillSelect(modelSel,models,{value:m=>m.model,label:m=>m.model,placeholder:'Select model',emptyMessage:'No models found for this make'});
+  }catch(e){modelSel.innerHTML='<option value="">Could not load models</option>';}
+}
+
+async function onVerifyModelChange(){
+  const makeEl=document.getElementById('vfMake');
+  const modelEl=document.getElementById('vfModel');
+  const make=makeEl?makeEl.value:'', model=modelEl?modelEl.value:'';
+  const varSel=document.getElementById('vfVariant');
+  if(!varSel||varSel.tagName!=='SELECT')return;
+  if(!make||!model){varSel.innerHTML='<option value="">Select model first</option>';varSel.disabled=true;return;}
+  varSel.innerHTML='<option value="">Loading…</option>';varSel.disabled=true;
+  try{
+    const paths=simPaths(vehicle.line);
+    const vs=await simPost(paths.variants,{make,model},'variants:'+vehicle.line+':'+make+':'+model);
+    // Cache the raw variants array so we can look up seatCapacity later - the
+    // insert-quote API requires it and it's only present on the variant record.
+    vehicle._variantList=Array.isArray(vs)?vs:[];
+    fillSelect(varSel,vs,{value:v=>v.variant,label:v=>v.variant,placeholder:'Select variant (optional)',emptyMessage:'No variants found for this model'});
+    // Auto-select if FastLane gave us a canonical variantwithCC that matches
+    // an option in the master list. Doesn't matter if we don't match - the
+    // hint still flows through buildQuoteBody as the variant value.
+    if(vehicle.variantHint){
+      const opts=[...varSel.options].map(o=>o.value).filter(Boolean);
+      const wanted=vehicle.variantHint.trim().toLowerCase();
+      const hit = opts.find(o=>o.toLowerCase()===wanted)
+               || opts.find(o=>o.toLowerCase().includes(wanted));
+      if(hit) varSel.value=hit;
+    }
+  }catch(e){varSel.innerHTML='<option value="">Could not load variants</option>';}
+}
+
+function confirmDetails(){
+  const note=document.getElementById('vconfirmNote');
+  note.classList.remove('bad');
+  note.textContent='';
+  const val=id=>{const el=document.getElementById(id);return el?(el.value||'').trim():'';};
+  const make=val('vfMake'), model=val('vfModel'), variant=val('vfVariant'),
+        rto=val('vfRto'), previousInsurer=val('vfInsurer');
+  if(!make||!model||!rto){
+    note.classList.add('bad');
+    note.textContent='Please pick make, model and RTO to continue.';
+    return;
+  }
+  if(!variant && !vehicle.variantHint){
+    // FastLane may have supplied variantwithCC even if no master-list option
+    // matches — accept that. Otherwise force the user to pick.
+    note.classList.add('bad');
+    note.textContent='Please pick your specific variant — insurers price by variant.';
+    return;
+  }
+  vehicle.make=make; vehicle.model=model; vehicle.variant=variant;
+  vehicle.rto=rto; vehicle.previousInsurer=previousInsurer;
+  goFlow(3);
+}
+
+// ---- Step 3 (Your details) + Step 4 (real quote via vendor APIs) ----
+
+// Reg like "GJ04DP8910" → vendor format "GJ-04-DP-8910".
+function toHyphenReg(reg){
+  const m=(reg||'').match(/^([A-Z]{2})(\d{1,2})([A-Z]{0,3})(\d{4})$/);
+  if(m) return `${m[1]}-${m[2]}-${m[3]}-${m[4]}`;
+  const bh=(reg||'').match(/^(\d{2})(BH)(\d{4})([A-Z]{1,2})$/);
+  if(bh) return `${bh[1]}-${bh[2]}-${bh[3]}-${bh[4]}`;
+  return reg;
+}
+
+// Convert an HTML <input type="date"> value (YYYY-MM-DD) into DD/MM/YYYY.
+function toDdMmYyyy(iso){
+  if(!iso) return '';
+  const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : String(iso);
+}
+
+function onValidPolCopyChange(){
+  const val=document.getElementById('dtValidPolCopy').value;
+  const on = val==='Yes';
+  document.getElementById('dtPrepolWrap').hidden = !on;
+  document.getElementById('dtPrevPolNumWrap').hidden = !on;
+  // Previous policy type only meaningful when a prior policy exists. Bike
+  // insertquote requires it; car doesn't ship it in the sample payload.
+  const isBike = vehicle.line==='Two-Wheeler';
+  document.getElementById('dtPrevPolTypeWrap').hidden = !(on && isBike);
+}
+
+function onPucChange(){
+  const on = document.getElementById('dtPuc').value==='Yes';
+  document.getElementById('dtPucNoWrap').hidden = !on;
+  document.getElementById('dtPucExpWrap').hidden = !on;
+}
+
+// Fetches the previous-policy-type master once per Details visit. Bike-only:
+// the car insertquote sample doesn't include this field.
+async function loadPrevPolicyTypes(){
+  if(vehicle.line!=='Two-Wheeler') return;
+  const sel=document.getElementById('dtPrevPolType');
+  if(!sel) return;
+  sel.innerHTML='<option value="">Loading…</option>';
+  try{
+    const r=await fetch('/api/simson/previous-policy-types',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({companyName:'MIALTUS',module:'bike',currentPolicyType:'TP'}),
+    });
+    const j=await r.json();
+    if(!Array.isArray(j)) throw new Error('unexpected response');
+    fillSelect(sel,j,{
+      value:o=>o.policyTypeCode||o.policyType,
+      label:o=>o.policyType||o.policyTypeCode,
+      placeholder:'Select previous policy type',
+      emptyMessage:'No options available',
+    });
+    // Default to Comprehensive if present (matches the prior hardcoded value).
+    const def=j.find(o=>/Comprehensive/i.test(o.policyType||o.policyTypeCode||''));
+    if(def) sel.value = def.policyTypeCode||def.policyType;
+  }catch(e){
+    sel.innerHTML='<option value="">Could not load — will default to Comprehensive</option>';
+  }
+}
+
+// ---- Issuance-time master data ----
+// These fields are optional on the current screen; they'll become required
+// when the proposal / issue APIs are wired. Company is fixed to "HDFC" since
+// our default insurer is HDFC ERGO; if Simson confirms these masters vary
+// per insurer we can refetch when the user switches at the Price step.
+const KYC_COMPANY_NAME = 'HDFC';
+let _financiersCache = null;
+
+async function loadOccupations(){
+  const sel=document.getElementById('dtOccupation');
+  if(!sel || sel.dataset.loaded) return;
+  try{
+    const r=await fetch('/api/simson/occupations',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({companyName:KYC_COMPANY_NAME}),
+    });
+    const j=await r.json();
+    if(!Array.isArray(j)) throw new Error('unexpected response');
+    fillSelect(sel,j,{
+      value:o=>o.id||o.occupation,
+      label:o=>o.occupation||o.id,
+      placeholder:'Select occupation',
+      emptyMessage:'No options available',
+    });
+    sel.dataset.loaded='1';
+  }catch(_){
+    sel.innerHTML='<option value="">Could not load</option>';
+  }
+}
+
+async function loadRelations(){
+  const sel=document.getElementById('dtNomineeRelation');
+  if(!sel || sel.dataset.loaded) return;
+  try{
+    const r=await fetch('/api/simson/relations',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({companyName:KYC_COMPANY_NAME}),
+    });
+    const j=await r.json();
+    if(!Array.isArray(j)) throw new Error('unexpected response');
+    fillSelect(sel,j,{
+      value:o=>o.code||o.name,
+      label:o=>o.name||o.code,
+      placeholder:'Select relation',
+      emptyMessage:'No options available',
+    });
+    sel.dataset.loaded='1';
+  }catch(_){
+    sel.innerHTML='<option value="">Could not load</option>';
+  }
+}
+
+// Financier list is large (thousands of entries). Fetch lazily the first time
+// the user marks the vehicle as financed, cache in-memory, and render into a
+// <datalist> so browser handles the type-ahead filtering.
+async function loadFinanciers(){
+  const dl=document.getElementById('dtFinancierList');
+  if(!dl || _financiersCache) return;
+  try{
+    const r=await fetch('/api/simson/financiers',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({companyName:KYC_COMPANY_NAME}),
+    });
+    const j=await r.json();
+    if(!Array.isArray(j)) throw new Error('unexpected response');
+    _financiersCache=j;
+    const frag=document.createDocumentFragment();
+    for(const f of j){
+      const name=String(f.financerName||'').trim();
+      if(!name) continue;
+      const opt=document.createElement('option');
+      opt.value=name;
+      opt.dataset.code=f.financerCode||'';
+      frag.appendChild(opt);
+    }
+    dl.innerHTML='';
+    dl.appendChild(frag);
+  }catch(_){/* leave datalist empty; input still accepts free text */}
+}
+
+function onFinancedChange(){
+  const on=document.getElementById('dtFinanced').value==='Yes';
+  document.getElementById('dtFinancierWrap').hidden=!on;
+  if(on) loadFinanciers();
+}
+
+// Pincode → city/state. Fires on input; only calls the API once we have 6
+// digits, and only when the value actually changed (guards against retyping).
+let _lastPincode='';
+async function onPincodeChange(){
+  const raw=(document.getElementById('dtPincode').value||'').replace(/\D/g,'').slice(0,6);
+  document.getElementById('dtPincode').value=raw;
+  const city=document.getElementById('dtCity');
+  const state=document.getElementById('dtState');
+  if(raw.length!==6){city.value='';state.value='';_lastPincode='';return;}
+  if(raw===_lastPincode) return;
+  _lastPincode=raw;
+  city.value='Looking up…'; state.value='';
+  try{
+    const r=await fetch('/api/simson/pincode',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({pincode:raw, company:KYC_COMPANY_NAME}),
+    });
+    const j=await r.json();
+    // GetDetailsbyPincode returns a single object; GetDetailsbyPincodeList
+    // returns an array. Accept both to be safe.
+    const rec=Array.isArray(j) ? j[0] : j;
+    if(!rec || !rec.cityname){throw new Error('no match');}
+    city.value=rec.cityname||''; state.value=rec.statename||'';
+  }catch(_){
+    city.value=''; state.value='';
+    // Don't nag on failure - user can proceed; issuance layer will validate.
+  }
+}
+
+async function loadSalutations(){
+  const sel=document.getElementById('dtSalutation');
+  if(!sel || sel.dataset.loaded) return;
+  const org = (vehicle.customer&&vehicle.customer.vehicleOwnedBy==='O') || false;
+  try{
+    const r=await fetch('/api/simson/salutations',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({companyName:KYC_COMPANY_NAME}),
+    });
+    const j=await r.json();
+    if(!Array.isArray(j)) throw new Error('unexpected');
+    // Filter by customer type. Doc: code Mr/Mrs/Ms are I, M/S is O.
+    const opts = j.filter(o => !o.customertype || o.customertype===(org?'O':'I'));
+    fillSelect(sel, opts, {
+      value:o=>o.code||o.name, label:o=>o.name||o.code,
+      placeholder:'Select salutation', emptyMessage:'No options',
+    });
+    sel.dataset.loaded='1';
+  }catch(_){ sel.innerHTML='<option value="">Could not load</option>'; }
+}
+
+async function loadMaritalStatus(){
+  const sel=document.getElementById('dtMarital');
+  if(!sel || sel.dataset.loaded) return;
+  try{
+    const r=await fetch('/api/simson/marital-status',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({companyName:KYC_COMPANY_NAME}),
+    });
+    const j=await r.json();
+    if(!Array.isArray(j)) throw new Error('unexpected');
+    fillSelect(sel, j, {
+      value:o=>o.maritalstatusCode||o.maritalstatusName,
+      label:o=>o.maritalstatusName||o.maritalstatusCode,
+      placeholder:'Select status', emptyMessage:'No options',
+    });
+    sel.dataset.loaded='1';
+  }catch(_){ sel.innerHTML='<option value="">Could not load</option>'; }
+}
+
+function loadIssuanceMasters(){
+  // Fire-and-forget; each loader is idempotent.
+  loadOccupations();
+  loadRelations();
+  loadSalutations();
+  loadMaritalStatus();
+  // Also apply initial visibility for the new PUC toggle.
+  onPucChange();
+  // Financiers are lazy — only when user clicks Yes.
+}
+
+function submitDetails(){
+  const note=document.getElementById('detailsNote');
+  note.classList.remove('bad'); note.textContent='';
+  const val=id=>{const el=document.getElementById(id);return el?(el.value||'').trim():'';};
+  const name=val('dtName'), mobile=val('dtMobile'), email=val('dtEmail'), regDateISO=val('dtRegDate'),
+        ownership=val('dtOwnership'), validPolCopy=val('dtValidPolCopy'),
+        prepolISO=val('dtPrepolExpiry');
+  if(!name){ note.classList.add('bad'); note.textContent='Please enter your full name.'; return; }
+  if(!/^[6-9]\d{9}$/.test(mobile)){ note.classList.add('bad'); note.textContent='Please enter a valid 10-digit Indian mobile (starts 6-9).'; return; }
+  if(!/^\S+@\S+\.\S+$/.test(email)){ note.classList.add('bad'); note.textContent='Please enter a valid email.'; return; }
+  if(!regDateISO){ note.classList.add('bad'); note.textContent='Please pick your vehicle registration date.'; return; }
+  if(validPolCopy==='Yes' && !prepolISO){ note.classList.add('bad'); note.textContent='Please pick the previous policy expiry date, or switch to "No" above.'; return; }
+
+  const regDate=toDdMmYyyy(regDateISO);
+  const prepol=prepolISO?toDdMmYyyy(prepolISO):'';
+  const [yyyy,mm]=regDateISO.split('-');
+  const prevPolType = (vehicle.line==='Two-Wheeler' && validPolCopy==='Yes')
+    ? (val('dtPrevPolType') || 'Comprehensive (Own damage + Third Party Liability)')
+    : '';
+
+  // Issuance-time details. All optional at this step; when the proposal /
+  // issue API is wired, whichever fields are still blank will be re-prompted
+  // there. Financier code comes from the datalist option match, if any.
+  const pincode=val('dtPincode');
+  const nomineeDobISO=val('dtNomineeDob');
+  const financed=val('dtFinanced')==='Yes';
+  const financierName=financed?val('dtFinancier'):'';
+  let financierCode='';
+  if(financierName && _financiersCache){
+    const hit=_financiersCache.find(f=>String(f.financerName||'').trim()===financierName);
+    if(hit) financierCode=hit.financerCode||'';
+  }
+
+  // Salutation / gender / marital / vehicle-identity / PUC — all optional
+  // for the quote path, but required at proposal issuance for HDFC.
+  const salutationSel = document.getElementById('dtSalutation');
+  const salutation = val('dtSalutation');
+  const salutationText = salutationSel && salutationSel.selectedIndex>=0 ? (salutationSel.options[salutationSel.selectedIndex].text||'') : '';
+  const gender = val('dtGender');
+  const maritalSel = document.getElementById('dtMarital');
+  const maritalValue = val('dtMarital');
+  const maritalText = maritalSel && maritalSel.selectedIndex>=0 ? (maritalSel.options[maritalSel.selectedIndex].text||'') : '';
+  const chassis = val('dtChassis').toUpperCase();
+  const engine = val('dtEngine').toUpperCase();
+  const hasPuc = val('dtPuc')==='Yes';
+  const pucNo = hasPuc ? val('dtPucNo') : '';
+  const pucExpISO = hasPuc ? val('dtPucExpiry') : '';
+  const prevPolNum = validPolCopy==='Yes' ? val('dtPrevPolNum') : '';
+
+  vehicle.customer={
+    salutation, salutationText, gender, maritalValue, maritalText,
+    fullname:name, mobile, email, regDate,
+    mfgMonth:mm||'', mfgYear:yyyy||'',
+    vehicleOwnedBy:ownership, validPolCopy,
+    prepolExpiryDate:prepol,
+    previousYearPolicyType:prevPolType,
+    previousPolicyNumber:prevPolNum,
+    chassisNo:chassis, engineNo:engine,
+    hasPuc, pucNo, pucExpiryDate: pucExpISO?toDdMmYyyy(pucExpISO):'',
+    // Issuance-time fields (stored, not yet forwarded to insert-quote).
+    address:{
+      pincode,
+      city:val('dtCity'),
+      state:val('dtState'),
+      line:val('dtAddressLine'),
+    },
+    nominee:{
+      name:val('dtNomineeName'),
+      dob:nomineeDobISO?toDdMmYyyy(nomineeDobISO):'',
+      relation:val('dtNomineeRelation'),
+      relationText: (function(){const s=document.getElementById('dtNomineeRelation');return s&&s.selectedIndex>=0?(s.options[s.selectedIndex].text||''):'';})(),
+    },
+    occupation:val('dtOccupation'),
+    occupationText: (function(){const s=document.getElementById('dtOccupation');return s&&s.selectedIndex>=0?(s.options[s.selectedIndex].text||''):'';})(),
+    hypothecated:financed,
+    financier:financed?{name:financierName, code:financierCode}:null,
+  };
+  trackLead('details_captured');
+  goFlow(4);
+}
+
+// ---- Step 4 (HDFC ERGO eKYC) ----
+// Two flows per the vendor doc:
+//   (a) Direct auto-verify: isVerified=true, kycData populated → continue.
+//   (b) Web-KYC redirect: isVerified=false + ekycUrl → persist state, redirect
+//       to ekycUrl. HDFC bounces the browser back to ReturnUrl with
+//       ?status=&kyc_id=; on return, re-call the same endpoint with
+//       ekycType="kyc id" to fetch the finalised record.
+const KYC_METHOD_MAP={
+  pan:         {ekycType:'Pan Number',                    show:['kycPanWrap']},
+  pan_doi:     {ekycType:'PAN + DOI',                     show:['kycPanWrap','kycDobWrap']},
+  aadhaar_dob: {ekycType:'Aadhar Number + Date Of Birth', show:['kycAadhaarWrap','kycDobWrap']},
+  cin_doi:     {ekycType:'CIN + DOI',                     show:['kycCinWrap','kycDobWrap']},
+  ckyc_doi:    {ekycType:'CKYC NUMBER + DOI',             show:['kycCkycWrap','kycDobWrap']},
+};
+const KYC_ALL_WRAPS=['kycPanWrap','kycAadhaarWrap','kycCinWrap','kycCkycWrap','kycDobWrap'];
+const KYC_TRANS_KEY='bi:kyc:transId';
+const KYC_STATE_KEY='bi:kyc:pending';
+
+function onKycMethodChange(){
+  const cfg=KYC_METHOD_MAP[document.getElementById('kycMethod').value]||KYC_METHOD_MAP.pan;
+  KYC_ALL_WRAPS.forEach(w=>{document.getElementById(w).hidden=!cfg.show.includes(w);});
+}
+
+function initKycStep(){
+  const c=vehicle.customer||{};
+  const sel=document.getElementById('kycMethod');
+  // Filter methods to the ones that fit the ownership captured in step 3.
+  const org=c.vehicleOwnedBy==='O';
+  const orgMethods=new Set(['pan_doi','cin_doi','ckyc_doi']);
+  const indMethods=new Set(['pan','aadhaar_dob']);
+  Array.from(sel.options).forEach(o=>{o.hidden=org?indMethods.has(o.value):orgMethods.has(o.value);});
+  if(org && !orgMethods.has(sel.value)) sel.value='pan_doi';
+  if(!org && !indMethods.has(sel.value)) sel.value='pan';
+  onKycMethodChange();
+  const note=document.getElementById('kycNote');
+  note.classList.remove('bad'); note.textContent='';
+  setTimeout(()=>{const el=document.getElementById(org?'kycPan':'kycPan');if(el&&!el.closest('label').hidden)el.focus();},250);
+}
+
+function kycTransId(){
+  let t=sessionStorage.getItem(KYC_TRANS_KEY);
+  if(!t){t='BI'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase();
+    sessionStorage.setItem(KYC_TRANS_KEY,t);}
+  return t;
+}
+
+function kycReturnUrl(){
+  const u=new URL(window.location.href);
+  u.hash=''; u.search='?kyc_return=1';
+  return u.toString();
+}
+
+function saveKycToVehicle(resp){
+  let parsed={};
+  if(resp.kycData){try{parsed=typeof resp.kycData==='string'?JSON.parse(resp.kycData):resp.kycData;}catch(_){}}
+  vehicle.kyc={
+    verified:true,
+    kycId:resp.eky_Id||parsed.kyc_id||'',
+    ckycNumber:resp.ckycNumber||parsed.ckycNumber||'',
+    fullName:resp.fullName||parsed.name||'',
+    dob:resp.kycDob||parsed.dob||parsed.doi||'',
+    pan:parsed.pan||'',
+    raw:parsed,
+  };
+}
+
+async function submitKyc(){
+  const note=document.getElementById('kycNote');
+  note.classList.remove('bad'); note.textContent='';
+  const val=id=>(document.getElementById(id).value||'').trim();
+  const method=document.getElementById('kycMethod').value;
+  const cfg=KYC_METHOD_MAP[method];
+  const c=vehicle.customer||{};
+  const dob=val('kycDob')?toDdMmYyyy(val('kycDob')):'';
+  const module=vehicle.line==='Two-Wheeler'?'bike':'Car';
+
+  const body={
+    transId:kycTransId(),
+    ekycInsurer:'hdfc',
+    ekycType:cfg.ekycType,
+    idVerificationDocType:cfg.ekycType,
+    module,
+    vehicleOwnedBy:c.vehicleOwnedBy||'I',
+    kycEmail:c.email||'',
+    kycName:c.fullname||'',
+    ReturnUrl:kycReturnUrl(),
+    domain:window.location.origin+'/',
+  };
+
+  const bad=m=>{note.classList.add('bad');note.textContent=m;return null;};
+  if(method==='pan'||method==='pan_doi'){
+    const pan=val('kycPan').toUpperCase();
+    if(!/^[A-Z]{5}\d{4}[A-Z]$/.test(pan)) return bad('Enter a valid PAN (e.g. ABCDE1234F).');
+    body.kycPan=pan;
+    if(method==='pan_doi'){
+      if(!dob) return bad('Pick the Date of Incorporation.');
+      body.kycDob=dob;
+    } else {
+      // Web-KYC initiation fields per doc scenario 3
+      body.ekycNumber=pan; body.customerType='I'; body.isKYCDone=false; body.email=c.email||'';
+    }
+  } else if(method==='aadhaar_dob'){
+    const aad=val('kycAadhaar').replace(/\D/g,'');
+    if(!/^\d{12}$/.test(aad)) return bad('Enter a valid 12-digit Aadhaar number.');
+    if(!dob) return bad('Pick your Date of Birth.');
+    body.kycAadharNo=aad; body.kycDob=dob;
+  } else if(method==='cin_doi'){
+    const cin=val('kycCin').toUpperCase();
+    if(!cin) return bad('Enter the company CIN.');
+    if(!dob) return bad('Pick the Date of Incorporation.');
+    body.kycCinNo=cin; body.kycDob=dob;
+  } else if(method==='ckyc_doi'){
+    const ck=val('kycCkyc');
+    if(!ck) return bad('Enter the CKYC number.');
+    if(!dob) return bad('Pick the Date of Incorporation.');
+    body.ckycNumber=ck; body.kycDob=dob;
+  }
+
+  const btn=document.getElementById('kycBtn');
+  const orig=btn.innerHTML; btn.disabled=true; btn.innerHTML='Verifying with HDFC ERGO…';
+  try{
+    const r=await fetch('/api/swapinsurer/ekyc',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(!r.ok) throw new Error((j&&j.error&&(j.error.message||j.error))||`KYC failed (${r.status})`);
+    if(j.isVerified){
+      saveKycToVehicle(j);
+      trackLead('kyc_verified');
+      note.textContent='Identity verified — fetching your quote.';
+      goFlow(5);
+      return;
+    }
+    if(j.ekycUrl){
+      // Persist enough state that a full page redirect + return leaves the
+      // user exactly where they were.
+      sessionStorage.setItem(KYC_STATE_KEY,JSON.stringify({vehicle,transId:kycTransId()}));
+      trackLead('kyc_redirect');
+      window.location.href=j.ekycUrl;
+      return;
+    }
+    throw new Error(j.error||'HDFC did not verify KYC and did not return a redirect URL.');
+  }catch(e){
+    note.classList.add('bad'); note.textContent=String(e.message||e);
+  }finally{
+    btn.disabled=false; btn.innerHTML=orig;
+  }
+}
+
+async function detectKycReturn(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('kyc_return')!=='1') return;
+  history.replaceState(null,'',window.location.origin+window.location.pathname+window.location.hash);
+  const status=(params.get('status')||'').toLowerCase();
+  const kycId=params.get('kyc_id')||'';
+  const raw=sessionStorage.getItem(KYC_STATE_KEY);
+  if(!raw) return;
+  let saved;try{saved=JSON.parse(raw);}catch(_){return;}
+  sessionStorage.removeItem(KYC_STATE_KEY);
+  Object.assign(vehicle,saved.vehicle||{});
+  goFlow(4);
+  const note=document.getElementById('kycNote');
+  if(status!=='approved'||!kycId){
+    note.classList.add('bad');
+    note.textContent=`Web-KYC was not approved${status?` (status: ${status})`:''}. Please try another method.`;
+    return;
+  }
+  const btn=document.getElementById('kycBtn');
+  const orig=btn.innerHTML; btn.disabled=true; btn.innerHTML='Fetching verified KYC…';
+  try{
+    const module=vehicle.line==='Two-Wheeler'?'bike':'car';
+    const r=await fetch('/api/swapinsurer/ekyc',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({transID:saved.transId,module,kyc_id:kycId,ekycType:'kyc id'}),
+    });
+    const j=await r.json();
+    if(!r.ok) throw new Error((j&&j.error&&(j.error.message||j.error))||`KYC fetch failed (${r.status})`);
+    if(!j.isVerified) throw new Error(j.error||'HDFC did not return a verified record.');
+    saveKycToVehicle(j);
+    trackLead('kyc_verified');
+    goFlow(5);
+  }catch(e){
+    note.classList.add('bad'); note.textContent=String(e.message||e);
+  }finally{
+    btn.disabled=false; btn.innerHTML=orig;
+  }
+}
+
+// Pull seatCapacity for the selected variant. FastLane's canonical value
+// (from GetFastlaneVehicleDetails) wins; else look up in the cached variant
+// list; else fall back to a sensible default per line.
+function pickSeatCapacity(){
+  if(vehicle.seatingCapacityHint) return String(vehicle.seatingCapacityHint);
+  const list=vehicle._variantList||[];
+  const chosen=String(vehicle.variant||'').trim();
+  const hit = (chosen && list.find(v=>v && String(v.variant||'').trim()===chosen)) || list[0];
+  const raw = hit && hit.seatCapacity;
+  return raw ? String(raw) : (vehicle.line==='Two-Wheeler'?'2':'5');
+}
+
+// Build the { quote, carAddons|bikeAddons } payload for the vendor.
+function buildQuoteBody(){
+  const c=vehicle.customer||{};
+  const isBike = vehicle.line==='Two-Wheeler';
+  // Variant priority: (1) FastLane's variantwithCC - vendor said "use this
+  // property for variant" verbatim; (2) user's explicit pick from the picker;
+  // (3) first variant from the cached list as a last resort.
+  const list=vehicle._variantList||[];
+  const variant = vehicle.variantHint || vehicle.variant || (list[0] && list[0].variant) || '';
+  // HDFC eKYC (step 4) returns eky_Id; carry it through so the insurer can
+  // tie the quote to the verified KYC record. Field name isn't in the
+  // MIALTUS insert-quote doc yet — confirm with Simson if this needs to be
+  // kyc_id, hdfcKycId, etc.
+  const kyc=vehicle.kyc||{};
+  const kycRaw=kyc.raw||{};
+  const kycId=kyc.kycId||'';
+  // HDFC eKYC doc: "Use the verified information returned in kycData rather
+  // than relying solely on the details initially entered by the customer."
+  // Prefer verified fullName / email when present, fall back to user input.
+  const fullname=kyc.fullName||c.fullname||'';
+  const email=(kycRaw.email && String(kycRaw.email).trim())||c.email||'';
+  // Digit's server crashes with `DateTime.Parse("")` if prepolExpiryDate is an
+  // empty string. Doc says the field "can be omitted/left blank" when
+  // validPolCopy is No — omit it entirely rather than send "".
+  const hasPrevPol = c.validPolCopy==='Yes';
+  const common={
+    coverType:'TP',
+    make:vehicle.make, model:vehicle.model, variant,
+    rto:vehicle.rto,
+    regDate:c.regDate, mfgMonth:c.mfgMonth, mfgYear:c.mfgYear,
+    fullname, mobile:c.mobile||'', email,
+    vehicleOwnedBy:c.vehicleOwnedBy||'I',
+    validPolCopy:c.validPolCopy||'No',
+    isPreClaimed:'No', ownershipChange:'No', preNCB:'',
+    vehicleNo:toHyphenReg(vehicle.reg),
+    // Vendor Q4: Previous Policy Number is required at the Quote API when
+    // a valid previous policy is declared. NCB is not required for TP.
+    ...(hasPrevPol ? {
+      previousInsurer: vehicle.previousInsurer||'',
+      prepolExpiryDate: c.prepolExpiryDate||'',
+      prevoiusPolicyNumber: c.previousPolicyNumber || '',
+    } : {}),
+    ...(kycId?{kycId}:{}),
+  };
+  // policyType: "renew"/"renewcar" only when a valid previous policy exists.
+  // With no prev policy, use "expired" (break-in). Sending renewcar/renew
+  // without a prev policy causes Digit's server to crash on empty date parse
+  // and HDFC to return an opaque "Something Went Wrong".
+  if(isBike){
+    return {
+      quote:{
+        ...common,
+        policyType: hasPrevPol ? 'renew' : 'expired',
+        previousYearPolicyType: c.previousYearPolicyType || 'Comprehensive (Own damage + Third Party Liability)',
+        tpprepolExpiryDate:null,
+      },
+      bikeAddons:{
+        paTenure:'1',
+        isCPACover: cpaCovered(),
+        isNoCPAReason: cpaCovered() ? '' : (cpaReason() || 'Already covered under existing standalone PA'),
+        paidDriver:false, accidentCoPassenger:false,
+        accidentCoPassengerValue:0, tppd:false,
+        // Documented in Swapinsurer bike addons schema; empty/zero is the
+        // sample default when the covers aren't opted.
+        TPPDSI:'0', llPaidDriverCheck:'', llPaidDriverValue:'',
+      },
+    };
+  }
+  return {
+    quote:{
+      ...common,
+      seatingCapacity:pickSeatCapacity(),
+      policyType: hasPrevPol ? 'renewcar' : 'expired',
+    },
+    carAddons:{
+      paTenure:'1',
+      isCPACover: cpaCovered(),
+      isNoCPAReason: cpaCovered() ? '' : (cpaReason() || 'Already covered under existing standalone PA'),
+      paidDriver:false, accidentCoPassenger:false,
+      accidentCoPassengerValue:0,
+      externallyCng:false, externallycngValue:0,
+      tppd:false,
+    },
+  };
+}
+
+// Helpers so buildQuoteBody respects the IRDAI consent CPA opt-out. Default
+// (no consent recorded yet, e.g. at the Quote step) is `true` — mandatory
+// CPA cover per IRDAI unless the customer actively opts out at the pay step.
+function cpaCovered(){
+  const c = vehicle._irdaiConsent;
+  if (!c) return true;
+  return !!c.cpaCovered;
+}
+function cpaReason(){
+  const c = vehicle._irdaiConsent;
+  return (c && c.cpaDeclineReason) || '';
+}
+
+// Clone the insert body and attach the transId as quoteId for the get-quote step.
+// Bike get-quote also needs seatingCapacity (not required in insert-bike-quote body).
+function buildGetQuoteBody(insertBody, transId){
+  const body=JSON.parse(JSON.stringify(insertBody));
+  body.quote.quoteId=String(transId||'');
+  if(vehicle.line==='Two-Wheeler' && !body.quote.seatingCapacity){
+    body.quote.seatingCapacity=pickSeatCapacity();
+  }
+  return body;
+}
+
+// Insurer picker on the Price step. Both HDFCTP and GODIGITTP are supported
+// by the same Swapinsurer /getcarquote & /getbikequote routes via the
+// Insurer header; toggling here just re-fetches with the new code.
+const INSURER_LABELS={HDFCTP:'HDFC ERGO', GODIGITTP:'Digit'};
+function pickInsurer(code){
+  if(!INSURER_LABELS[code]) return;
+  if(vehicle.insurerCode===code) return;
+  vehicle.insurerCode=code;
+  document.querySelectorAll('#insurerPick .ins-opt').forEach(b=>{
+    const on=b.dataset.code===code;
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-checked',on?'true':'false');
+  });
+  // Only re-fetch when the user is actively on the Price step.
+  if(curFlow===5) fetchQuote();
+}
+
+async function fetchQuote(){
+  const box=document.getElementById('priceBox');
+  const lbl=box.querySelector('.pb-lbl');
+  const amt=document.getElementById('pbVal');
+  const sub=document.getElementById('pbSub');
+  const list=document.getElementById('pbBreakdown');
+  const proceed=document.getElementById('payProceedBtn');
+  const retry=document.getElementById('retryQuoteBtn');
+  proceed.hidden=true; retry.hidden=true;
+  lbl.textContent='Fetching your quote…'; amt.textContent='…'; sub.textContent='One moment while the insurer calculates your premium.';
+
+  const isBike = vehicle.line==='Two-Wheeler';
+  const typeQs     = isBike ? 'type=bike' : 'type=car';
+  const insertPath = `/api/mialtus/insert-quote?${typeQs}`;
+  const getPath    = `/api/swapinsurer/get-quote?${typeQs}`;
+  const insurer    = vehicle.insurerCode || 'HDFCTP';
+
+  try{
+    const insertBody = buildQuoteBody();
+    const ir = await fetch(insertPath, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(insertBody)});
+    const ij = await ir.json();
+    if(!ir.ok || !ij.transId) throw new Error(ij.message || ij.error || `insert failed (${ir.status})`);
+    const transId = ij.transId;
+    // Persist the partner transId on the vehicle so the proposal + payment
+    // handoff can reuse it. Without this, buildCarProposalBody /
+    // buildBikeProposalBody read insertBody.quote.quoteId (not set here) and
+    // send transId: "" to HDFC → successFailureURL comes back as
+    // "privateCar/hdfccartransaction?transId=" (empty) and the gateway errors.
+    vehicle._partnerTransId = String(transId);
+
+    const gr = await fetch(`${getPath}&insurer=${encodeURIComponent(insurer)}`, {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify(buildGetQuoteBody(insertBody, transId)),
+    });
+    const gj = await gr.json();
+    if(!gr.ok || gj.errorStatus) throw new Error(gj.errorText || gj.error || `quote failed (${gr.status})`);
+
+    const payable = Number(gj.payablePremium)||0;
+    const base    = Number(gj.thirdPartyPremium || gj.baseThirdPartyPremium)||0;
+    const cpa     = Number(gj.paOwnerDriver)||0;
+    const geog    = Number(gj.geogExtensionTPPremium)||0;
+    const bifuel  = Number(gj.tpBiFuel)||0;
+    const gst     = Number(gj.serviceTax)||0;
+
+    vehicle.price = payable;
+    vehicle._quoteResponse = gj;
+    trackLead('quote_viewed');
+
+    lbl.textContent = `${INSURER_LABELS[insurer]||insurer} · Third-party cover · policy ${gj.policystartDate||''} → ${gj.policyEndDate||''}`;
+    countUp('pbVal', payable);
+    sub.textContent = `Base TP ₹${base.toLocaleString('en-IN')}${geog?` + geog. ext ₹${geog.toLocaleString('en-IN')}`:''}${bifuel?` + bi-fuel ₹${bifuel.toLocaleString('en-IN')}`:''} + CPA ₹${cpa.toLocaleString('en-IN')} + GST ₹${gst.toLocaleString('en-IN')}`;
+    list.innerHTML = [
+      'Unlimited third-party injury cover',
+      '₹7.5 lakh property damage cover',
+      '₹15 lakh owner-driver accident cover',
+      `Insurer transaction ID: ${gj.pTransactionId||'—'}`,
+    ].map(t=>`<li>${t}</li>`).join('');
+    proceed.hidden = false;
+  } catch(e){
+    console.warn('quote failed:', e);
+    const rawMsg = String(e.message||e);
+    vehicle._quoteResponse = { errorStatus:true, errorText:rawMsg };
+    trackLead(/declined/i.test(rawMsg) ? 'quote_declined' : 'quote_failed');
+    // Vendor sometimes returns raw C# stack traces in errorText. Never show
+    // those to end users. Classify and rewrite to something meaningful.
+    const isStack = /StackTrace|at System\.|SwapInsurerApi\.DAL|Value cannot be null/i.test(rawMsg);
+    const isDecline = /declined|not eligible/i.test(rawMsg);
+    const isUnmapped = /not\s*mapped/i.test(rawMsg);
+    const otherInsurer = insurer==='HDFCTP' ? 'Digit' : 'HDFC ERGO';
+    let userMsg;
+    if (isDecline) userMsg = `${INSURER_LABELS[insurer]||insurer} declined this vehicle. Try ${otherInsurer} instead.`;
+    else if (isStack) userMsg = `The insurer's system returned an error for this vehicle. Try ${otherInsurer} instead, or contact support.`;
+    else if (isUnmapped) userMsg = `The insurer hasn't priced this specific variant at UAT.`;
+    else userMsg = rawMsg;
+    lbl.textContent = 'Could not fetch your quote';
+    amt.textContent = '—';
+    sub.textContent = userMsg;
+    if (isUnmapped) {
+      list.innerHTML = '<li>The insurer hasn\'t priced this specific variant at UAT.</li><li>Go back and try a different variant of the same model.</li>';
+    } else if (isDecline || isStack) {
+      list.innerHTML = `<li>Click <b>${otherInsurer}</b> above to compare, or press Retry.</li>`;
+    } else {
+      list.innerHTML = '';
+    }
+    retry.hidden = false;
+  }
+}
+
+// Parse "MH12XE0849" -> {regA:"MH", regB:"12", regC:"XE", regD:"0849"}.
+// Handles Bharat-series too: "23BH3521J" -> {regA:"23", regB:"BH", regC:"3521", regD:"J"}.
+function splitRegistration(reg){
+  const raw = String(reg||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const bh = raw.match(/^(\d{2})(BH)(\d{4})([A-Z]{1,2})$/);
+  if(bh) return {regA:bh[1], regB:bh[2], regC:bh[3], regD:bh[4]};
+  const st = raw.match(/^([A-Z]{2})(\d{1,2})([A-Z]{1,3})(\d{4})$/);
+  if(st) return {regA:st[1], regB:st[2], regC:st[3], regD:st[4]};
+  return {regA:'', regB:'', regC:'', regD:''};
+}
+
+// Build the HDFC bike-proposal payload. Combines the quote/addons (already
+// built) with the API-1 response and a fully-populated proposal object per
+// the HDFC Two-Wheeler Proposal doc. Uses verified eKYC values wherever
+// available, falling back to typed customer data. Sends internal
+// journey-state fields as null/blank per the doc's note.
+function buildBikeProposalBody(){
+  const insertBody = buildQuoteBody();
+  // The quote path's insertquote returned a partner transId that we persisted
+  // on vehicle._partnerTransId — stamp it onto the quote block so transId /
+  // quoteId / Surl all carry the correct value downstream.
+  if (vehicle._partnerTransId) insertBody.quote.quoteId = String(vehicle._partnerTransId);
+  const c = vehicle.customer || {};
+  const k = vehicle.kyc || {};
+  const kd = k.raw || {};
+  const gj = vehicle._quoteResponse || {};
+  const addr = c.address || {};
+  const nominee = c.nominee || {};
+  const financier = c.financier || null;
+  const {regA, regB, regC, regD} = splitRegistration(vehicle.reg);
+
+  // Prefer verified eKYC values (doc: "Use the verified values returned by HDFC").
+  const fullname = k.fullName || c.fullname || '';
+  const nameParts = fullname.trim().split(/\s+/);
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '';
+  const dob = k.dob || '';
+  const pan = k.pan || '';
+  const pincode = String(kd.permanentPincode || addr.pincode || '');
+  const addrL1 = kd.permanentAddress1 || addr.line || '';
+  const addrL2 = kd.permanentAddress2 || '';
+  // Vendor Q9: prefer state/city from the pincode master (populated by
+  // enrichAddressFromKycPincode()) — the eKYC permanentCity can differ from
+  // the pincode's actual city, and HDFC's proposal uses the pincode value.
+  const pm = (vehicle.kyc && vehicle.kyc.pincodeMaster) || {};
+  const stateName = (pm.stateName || addr.state || '').toUpperCase();
+  const stateCode = pm.stateCode || '';
+  const cityName = (pm.cityName || kd.permanentCity || addr.city || '').toUpperCase();
+  const cityCode = pm.cityCode || '';
+
+  const nomineeParts = String(nominee.name||'').trim().split(/\s+/);
+  const nomineeFname = nomineeParts[0] || '';
+  const nomineeLname = nomineeParts.slice(1).join(' ') || nomineeParts[0] || '';
+
+  // Partner transId is authoritative for the proposal's transId/quoteId fields.
+  // pTransactionId (HDFC's own) is reserved for the dedicated pTransactionId field.
+  const partnerTransId = String(vehicle._partnerTransId || insertBody.quote.quoteId || '');
+  const transId = partnerTransId;
+  const pTransactionId = gj.pTransactionId || partnerTransId;
+  const isOrg = (c.vehicleOwnedBy==='O');
+
+  const proposal = {
+    salutation: c.salutation || (isOrg?'M/S':'Mr'),
+    pTransactionId,
+    paymentNumber: null, bankrefnum: null, paymentStatus: null,
+    referenceNumber: null, refProposal: null, isAngular: true,
+    fullname, firstName, lastName,
+    dob, email: (c.email||'').toUpperCase(), mobile: c.mobile || '', landLine: '',
+    panCard: pan, gender: c.gender || 'Male',
+    maritialValue: c.maritalValue || '', maritialText: c.maritalText || '',
+    occupationValue: c.occupation || '', tyreRimNo: '',
+    occupationText: c.occupationText || c.occupation || '',
+    gstNo: '', adhaarNumber: '',
+    nomineefullname: nominee.name || '',
+    nomineeFname, nomineeLname,
+    nomineeDob: nominee.dob || '',
+    relationshipValue: nominee.relation || '',
+    relationshipText: nominee.relationText || nominee.relation || '',
+    orgName: fullname,
+    vehicleOwnedBy: c.vehicleOwnedBy || 'I',
+    rto: vehicle.rto || '',
+    regA, regB, regC, regD,
+    regDate: c.regDate || '',
+    engineNo: c.engineNo || '', chassisNo: c.chassisNo || '',
+    isVehcileFinance: !!c.hypothecated, financeCity: '',
+    isPuc: !!c.hasPuc, pucNo: c.pucNo || '',
+    pucExpiryDate: c.pucExpiryDate || null,
+    inspectionTid: '', transactionRef: '',
+    prevoiusInsurerValue: c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '').toUpperCase() : '',
+    prevoiusInsurerText: c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '') : '',
+    prevoiusPolicyNumber: c.previousPolicyNumber || '',
+    prevoiusPolicyType: c.previousYearPolicyType || '',
+    pdfLink: '', base64PDF: '',
+    prevoiusPolicyExpiryDate: c.prepolExpiryDate || '',
+    tpPolicyExpiryDate: null, tpPolicyNumber: '',
+    tpprevoiusInsurerValue: c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '').toUpperCase() : '',
+    tpprevoiusInsurerText: c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '') : '',
+    policyType: c.validPolCopy==='Yes' ? 'renew' : 'expired',
+    addrL1, addrL2, landmark: '',
+    stateName, stateCode, cityName, cityCode,
+    pincode, areaName: '', areaCode: '',
+    isSameAddressChecked: true,
+    rcLandmark: '', rcAddrL1: addrL1, rcAddrL2: addrL2,
+    rcStateName: stateName, rcStateCode: stateCode,
+    rcCityName: cityName, rcCityCode: cityCode,
+    rcPincode: pincode, rcAreaName: '', rcAreaCode: '',
+    cpaPolicyNo: '', cpaSuminsured: '', cpaPreinsurer: '', cpaPreinsurerName: '',
+    cpaPolicyFromdate: null, cpaPolicyTodate: null,
+    make: vehicle.make || '', model: vehicle.model || '',
+    variant: vehicle.variantHint || vehicle.variant || '',
+    idv: '0', coverType: 'tponly',
+    mfgYear: c.mfgYear || '', mfgMonth: c.mfgMonth || '',
+    transId, quoteId: transId,
+    logo: '', netPremium: String(gj.netPremium || ''),
+    payablePremium: String(gj.payablePremium || vehicle.price || ''),
+    serviceTax: String(gj.serviceTax || ''),
+    insurerName: 'hdfc',
+    saveForLater: '', typeofButon: '', transSavelaterText: '', transSaveLater: '',
+    termsCondition: 'true',
+    // Doc-v3 (2026-10-09): HDFC proposals now take a `callbackurl` field.
+    // Vendor computes the checksum against this URL; HDFC gateway resolves
+    // Surl/Furl against it after payment. This is the B2 fix — no more need
+    // to prepend our origin client-side (which broke the checksum).
+    callbackurl: window.location.origin + '/privateBike/hdfcbiketransaction',
+    proposerLink: '', stage: '6',
+    polStartDateToSaiba: gj.policystartDate || '',
+    polEndDateToSaiba: gj.policyEndDate || '',
+    tPexpiryDateToSaiba: gj.policyEndDate || '',
+    policyStartDate: gj.policystartDate || '',
+    policyEndDate: gj.policyEndDate || '',
+    currentNCB: gj.currentNCB || 'NA',
+    seatCapacity: '', policyStatus: c.validPolCopy==='Yes' ? 'Inforce' : 'Expired',
+    proposalPDFHTML: '',
+    domainName: window.location.origin + '/',
+    InsureAPIDomainName: window.location.origin + '/',
+    ClientDomainName: window.location.origin + '/',
+    odYear: '', isRenewalPolicy: c.validPolCopy==='Yes',
+    insuredFullName: fullname,
+    tp: Number(gj.totalTPCalculated || gj.thirdPartyPremium || 0),
+    od: 0,
+    cc: vehicle.variantHint || vehicle.variant || '',
+    fuel: 'Petrol',
+    coverNote: '', refBy: null, saibaAutoid: '', custCode: '',
+    zone: gj.zone || 'A',
+    enquiryID: '', applicationId: '',
+    ckycNumber: k.ckycNumber || '',
+    insuredPolicyNumber: '', inspectiontype: '',
+    share_EmailID: null, share_MobileNo: '', paymentTinyURL: null,
+    isKYCDone: true, isKYC: 'No',
+    kycPan: pan, kycDob: dob, policy_Gen_Flag: '',
+    addressVerificationDocExt: null,
+    eky_Id: k.kycId || '',
+    photoupload: null, photoDocExt: null, photouploadFileName: null,
+    idVerificationDocType: null, idVerificationDocId: null, idVerificationDocExt: null,
+    idProofupload: null, addreesProofupload: null,
+    addressVerificationDocType: null, addressVerificationDocId: null,
+    kycStatus: null, otp: null, isSaveLater: null,
+    lvTransactionIDGlobal: null, fatherName: null,
+    insured_photoExt: null, paNorForm60: null,
+    pan_Form60_Document: null, pan_Form60_Document_Ext: null,
+  };
+
+  return {
+    quote: insertBody.quote,
+    bikeAddons: insertBody.bikeAddons,
+    quoteResponseBike: gj,
+    proposal,
+  };
+}
+
+// Build the HDFC car-proposal payload per the HDFC Four-Wheeler API doc.
+// Payload shape is simpler than bike: fewer journey-state fields, no
+// fullname/orgName/tpprevoius*/cpa*/photoupload fields. Wrapper key is
+// `carAddons` / `carQuoteResponse` (not bikeAddons / quoteResponseBike).
+function buildCarProposalBody(){
+  const insertBody = buildQuoteBody();
+  if (vehicle._partnerTransId) insertBody.quote.quoteId = String(vehicle._partnerTransId);
+  const c = vehicle.customer || {};
+  const k = vehicle.kyc || {};
+  const kd = k.raw || {};
+  const gj = vehicle._quoteResponse || {};
+  const addr = c.address || {};
+  const nominee = c.nominee || {};
+  const {regA, regB, regC, regD} = splitRegistration(vehicle.reg);
+
+  const fullname = k.fullName || c.fullname || '';
+  const nameParts = fullname.trim().split(/\s+/);
+  const firstName = nameParts[0] || '';
+  const lastName  = nameParts.slice(1).join(' ') || nameParts[0] || '';
+  const dob = k.dob || '';
+  const pan = k.pan || '';
+  const pincode = String(kd.permanentPincode || addr.pincode || '');
+  const addrL1 = kd.permanentAddress1 || addr.line || '';
+  const addrL2 = kd.permanentAddress2 || '';
+  const pm = (vehicle.kyc && vehicle.kyc.pincodeMaster) || {};
+  const stateName = (pm.stateName || addr.state || '').toUpperCase();
+  const stateCode = pm.stateCode || '';
+  const cityName  = (pm.cityName  || kd.permanentCity || addr.city || '').toUpperCase();
+  const cityCode  = pm.cityCode  || '';
+
+  const nomineeParts = String(nominee.name||'').trim().split(/\s+/);
+  const nomineeFname = nomineeParts[0] || '';
+  const nomineeLname = nomineeParts.slice(1).join(' ') || nomineeParts[0] || '';
+
+  const partnerTransId = String(vehicle._partnerTransId || insertBody.quote.quoteId || '');
+  const pTransactionId = gj.pTransactionId || partnerTransId;
+
+  const proposal = {
+    salutation: c.salutation || 'Mr',
+    pTransactionId,
+    firstName, lastName,
+    dob,
+    email: (c.email||'').toUpperCase(),
+    mobile: c.mobile || '',
+    panCard: pan,
+    gender: c.gender || 'Male',
+    maritialValue: c.maritalValue || '', maritialText: c.maritalText || '',
+    occupationValue: c.occupation || '', occupationText: c.occupationText || c.occupation || '',
+    gstNo: '', adhaarNumber: '',
+    nomineeFname, nomineeLname,
+    nomineeDob: nominee.dob || '',
+    relationshipValue: nominee.relation || '',
+    relationshipText: nominee.relationText || nominee.relation || '',
+    vehicleOwnedBy: c.vehicleOwnedBy || 'I',
+    rto: vehicle.rto || '',
+    regA, regB, regC, regD,
+    regDate: c.regDate || '',
+    engineNo: c.engineNo || '',
+    chassisNo: c.chassisNo || '',
+    isVehcileFinance: !!c.hypothecated,
+    financeCity: '',
+    isPuc: !!c.hasPuc, pucNo: c.pucNo || '', pucExpiryDate: c.pucExpiryDate || null,
+    prevoiusInsurerValue: c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '').toUpperCase() : '',
+    prevoiusInsurerText:  c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '') : '',
+    prevoiusPolicyNumber: c.previousPolicyNumber || '',
+    prevoiusPolicyType:   c.previousYearPolicyType || '',
+    prevoiusPolicyExpiryDate: c.prepolExpiryDate || '',
+    policyType: c.validPolCopy==='Yes' ? 'renewcar' : 'expired',
+    addrL1, addrL2, landmark: '',
+    stateName, stateCode, cityName, cityCode,
+    pincode,
+    isSameAddressChecked: true,
+    rcLandmark: '', rcAddrL1: addrL1, rcAddrL2: addrL2,
+    rcStateName: stateName, rcStateCode: stateCode,
+    rcCityName:  cityName,  rcCityCode: cityCode,
+    rcPincode: pincode,
+    make: vehicle.make || '',
+    model: vehicle.model || '',
+    variant: vehicle.variantHint || vehicle.variant || '',
+    idv: '0',
+    coverType: 'TPOnly',
+    mfgYear: c.mfgYear || '', mfgMonth: c.mfgMonth || '',
+    transId: partnerTransId,
+    netPremium:     String(gj.netPremium || ''),
+    payablePremium: String(gj.payablePremium || vehicle.price || ''),
+    serviceTax:     String(gj.serviceTax || ''),
+    insurerName: 'hdfc',
+    termsCondition: 'true',
+    // Doc-v3 (2026-10-09): HDFC car proposal now takes a `callbackurl` field.
+    // Vendor computes the checksum against this URL; the B2 fix.
+    callbackurl: window.location.origin + '/privateCar/hdfccartransaction',
+    polStartDateToSaiba: gj.policystartDate || '',
+    polEndDateToSaiba:   gj.policyEndDate || '',
+    seatCapacity: String(pickSeatCapacity() || '5'),
+    // HDFC 4W doc §proposal: cc is the engine cubic capacity, numeric string
+    // (e.g. "1198"). Variant strings carry it as "... (1198 CC)" — extract.
+    cc: (function(){
+      const v = String(vehicle.variantHint || vehicle.variant || '');
+      const m = v.match(/\((\d+)\s*CC\)/i);
+      return m ? m[1] : (vehicle.cc ? String(vehicle.cc) : '');
+    })(),
+    ckycNumber: k.ckycNumber || '',
+    isKYCDone: true,
+    kycPan: pan, kycDob: dob,
+    eky_Id: k.kycId || '',
+  };
+
+  return {
+    quote: insertBody.quote,
+    carAddons: insertBody.carAddons,
+    carQuoteResponse: gj,
+    proposal,
+  };
+}
+
+// ---------- Digit proposal builders ----------
+// Per Digit_Private_Car_Proposal_APIs_Documentation and
+// Bike_Proposal_APIs_Documentation_Digit (2026-10-07). Digit's proposal is
+// leaner than HDFC's (no CPA/photo/journey-state fields). Two vendor quirks
+// to work around:
+//   1. carQuoteResponse.errorStatus is Boolean for insertcarproposal and
+//      String for getcarproposal — same field, two body shapes. We emit both
+//      copies and let the proxy choose per endpoint.
+//   2. getcarproposal / getbikeproposal validators require a `carProposal` /
+//      `bikeProposal` key even though the docs show only `proposal`. We send
+//      both keys as the frontend currently does for HDFC bike.
+
+// Build a schema-exact Digit carQuoteResponse by mapping our actual quote
+// numbers into the exact field set Digit's binder expects. HDFC-superset
+// fields that would deserialize to Decimal must be absent or 0; string-typed
+// fields must be string-or-null.
+// Vendor doc-v3 + S1 resolved (2026-10-09): errorStatus unified to String
+// "false" on both Insert and Create endpoints. Pre-fix per-endpoint fork
+// removed; the errorStatusType parameter is now ignored (kept so the
+// existing call sites don't need updating in one go).
+function toDigitCarQuoteResponse(raw){
+  const num = (k) => Number(raw && raw[k]) || 0;
+  const es  = 'false';
+  return {
+    applicationId: null,
+    lLtoEmployee: num('lLtoEmployee'),
+    geogExtensionTPPremium: num('geogExtensionTPPremium'),
+    motorPolicyType: null,
+    errorStatus: es,
+    insurer: 'digit',
+    idv: num('idv'),
+    totalpremiumliabillity: num('totalpremiumliabillity'),
+    vehicleOwnedBy: null, quoteId: null, errorText: null,
+    idvRequest: null, idvResponse: null,
+    tppd: num('tppd'), unnamedsi: num('unnamedsi'),
+    baseThirdPartyPremium: num('baseThirdPartyPremium'),
+    paOwnerDriver: num('paOwnerDriver'),
+    paTenure: null,
+    netPremium: num('netPremium'),
+    serviceTax: num('serviceTax'),
+    policystartDate: String((raw && raw.policystartDate) || ''),
+    policyEndDate:   String((raw && raw.policyEndDate) || ''),
+    payablePremium:  num('payablePremium'),
+    quoteNo: null,
+    modifiedIDV: num('modifiedIDV'), originalIDV: num('originalIDV'),
+    exshowroomPrice: num('exshowroomPrice'),
+    ncbDiscount: num('ncbDiscount'),
+    tpBiFuel: num('tpBiFuel'),
+    paidDriversi: num('paidDriversi'),
+    thirdPartyPremium: num('thirdPartyPremium'),
+    paidDriverPremium: num('paidDriverPremium'),
+    llPaidDriver: num('llPaidDriver'),
+    totalTPCalculated: num('totalTPCalculated'),
+    maxIDV: num('maxIDV'), minIDV: num('minIDV'),
+    cngminIDV: 0, cngmaxIDV: 0, elecminIDV: 0, elecmaxIDV: 0,
+    iscpaCover: null,
+    aaiDiscount: num('aaiDiscount'),
+    coverType: 'TPOnly', termType: null,
+    pTransactionId: String((raw && raw.pTransactionId) || ''),
+    cngValue: null, fuel: null, planName: null,
+    userSpecialDiscount: null, fuelType: null,
+  };
+}
+
+// Schema-exact Digit bike quoteResponseBike (bike doc §quoteResponseBike).
+function toDigitBikeQuoteResponse(raw){
+  const num = (k) => Number(raw && raw[k]) || 0;
+  const es  = 'false';
+  return {
+    applicationId: null, currentNCB: null, insurer: 'digit',
+    policystartDate: String((raw && raw.policystartDate) || ''),
+    policyEndDate:   String((raw && raw.policyEndDate) || ''),
+    errorStatus: es, errorText: null,
+    idvRequest: null, idvResponse: null,
+    tppd: num('tppd'),
+    baseThirdPartyPremium: num('baseThirdPartyPremium'),
+    paOwnerDriver: num('paOwnerDriver'),
+    netPremium: num('netPremium'),
+    serviceTax: num('serviceTax'),
+    payablePremium: num('payablePremium'),
+    quoteNo: null,
+    tpBiFuel: num('tpBiFuel'),
+    personalaccident: num('personalaccident'),
+    paidDriversi: num('paidDriversi'),
+    llPaidDriver: num('llPaidDriver'),
+    llEmployee: num('llEmployee'),
+    totalTPCalculated: num('totalTPCalculated'),
+    coverType: null, termType: 'TPOnly',
+    pTransactionId: String((raw && raw.pTransactionId) || ''),
+    thirdPartyPremium: num('thirdPartyPremium'),
+    paidDriverPremium: num('paidDriverPremium'),
+    userSpecialDiscount: null,
+    geogExtensionTPPremium: num('geogExtensionTPPremium'),
+  };
+}
+
+// Build the shared Digit proposer/vehicle/address/premium block, used by
+// both car and bike (fields are identical modulo coverType).
+function buildDigitProposalCore(isBike){
+  const c = vehicle.customer || {};
+  const k = vehicle.kyc || {};
+  const kd = k.raw || {};
+  const nominee = c.nominee || {};
+  const addr = c.address || {};
+  const gj = vehicle._quoteResponse || {};
+  const { regA, regB, regC, regD } = splitRegistration(vehicle.reg);
+
+  // Digit UAT rejects some obviously-synthetic mobile patterns ("Entered
+  // Mobile Number is invalid"). Use what the customer typed as-is; the pay
+  // step already validates /^[6-9]\d{9}$/.
+  const fullname  = k.fullName || c.fullname || '';
+  const nameParts = fullname.trim().split(/\s+/);
+  const firstName = nameParts[0] || '';
+  const lastName  = nameParts.slice(1).join(' ') || nameParts[0] || '';
+  const dob = k.dob || '';
+  const pan = k.pan || '';
+  const pm = (vehicle.kyc && vehicle.kyc.pincodeMaster) || {};
+  const stateName = pm.stateName || addr.state || '';
+  const stateCode = pm.stateCode || '';
+  // Digit samples put the city name in cityCode too (not a numeric code).
+  const cityName  = (pm.cityName || kd.permanentCity || addr.city || '').toUpperCase();
+  const cityCode  = cityName;
+  const pincode   = String(kd.permanentPincode || addr.pincode || '');
+  const addrL1    = kd.permanentAddress1 || addr.line || '';
+  const addrL2    = kd.permanentAddress2 || '';
+  const nomineeParts = String(nominee.name||'').trim().split(/\s+/);
+  const nomineeFname = nomineeParts[0] || '';
+  const nomineeLname = nomineeParts.slice(1).join(' ') || nomineeParts[0] || '';
+  const pTransactionId = gj.pTransactionId || '';   // Digit's MIALTUS-GUID id
+  const partnerTransId = String(vehicle._partnerTransId || '');
+  const variantStr = vehicle.variantHint || vehicle.variant || '';
+  const ccMatch = String(variantStr).match(/\((\d+)\s*CC\)/i);
+  const cc = ccMatch ? ccMatch[1] : '';
+
+  return {
+    salutation: c.salutation || 'Mr',
+    pTransactionId,
+    firstName, lastName,
+    dob,
+    email: (c.email||'').toUpperCase(),
+    mobile: c.mobile || '',
+    panCard: pan,
+    gender: c.gender || 'Male',
+    maritialValue: c.maritalValue || 'Single', maritialText: c.maritalText || 'Single',
+    occupationValue: c.occupation || 'Private Service',
+    occupationText:  c.occupationText || c.occupation || 'Private Service',
+    gstNo: '', adhaarNumber: '',
+    nomineeFname, nomineeLname,
+    nomineeDob: nominee.dob || '',
+    relationshipValue: (nominee.relation || '').toUpperCase() || 'DAUGHTER',
+    relationshipText:  (nominee.relationText || nominee.relation || '').toUpperCase() || 'DAUGHTER',
+    vehicleOwnedBy: c.vehicleOwnedBy || 'I',
+    rto: vehicle.rto || '',
+    regA, regB, regC, regD,
+    regDate: c.regDate || '',
+    engineNo: c.engineNo || '',
+    chassisNo: c.chassisNo || '',
+    isVehcileFinance: !!c.hypothecated,
+    financeCity: '',
+    isPuc: !!c.hasPuc, pucNo: c.pucNo || '', pucExpiryDate: c.pucExpiryDate || null,
+    prevoiusInsurerValue: c.validPolCopy==='Yes' ? '123' : '',   // Digit sample uses "123" as a stub insurer code
+    prevoiusInsurerText:  c.validPolCopy==='Yes' ? (vehicle.previousInsurer || '') : '',
+    prevoiusPolicyNumber: c.previousPolicyNumber || '',
+    prevoiusPolicyType:   c.previousYearPolicyType || '',
+    prevoiusPolicyExpiryDate: c.prepolExpiryDate || '',
+    policyType: isBike ? 'renew' : 'renewcar',
+    addrL1, addrL2, landmark: '',
+    stateName, stateCode, cityName, cityCode, pincode,
+    isSameAddressChecked: true,
+    rcLandmark: '', rcAddrL1: addrL1, rcAddrL2: addrL2,
+    rcStateName: stateName, rcStateCode: stateCode,
+    rcCityName: cityName,   rcCityCode: cityCode,
+    rcPincode: pincode,
+    make: vehicle.make || '', model: vehicle.model || '',
+    variant: variantStr,
+    idv: '0',
+    coverType: isBike ? 'tponly' : 'TPOnly',
+    mfgYear: c.mfgYear || '', mfgMonth: c.mfgMonth || '',
+    transId: partnerTransId,
+    netPremium:     String(gj.netPremium || ''),
+    payablePremium: String(gj.payablePremium || vehicle.price || ''),
+    serviceTax:     String(gj.serviceTax || ''),
+    insurerName: 'digit',
+    termsCondition: 'true',
+    polStartDateToSaiba: gj.policystartDate || '',
+    polEndDateToSaiba:   gj.policyEndDate || '',
+    seatCapacity: isBike ? '' : String(pickSeatCapacity() || '5'),
+    cc: isBike ? variantStr : (cc || ''),
+    fuel: 'Petrol',
+  };
+}
+
+function buildDigitCarProposalBody(opts){
+  const insertBody = buildQuoteBody();
+  if (vehicle._partnerTransId) insertBody.quote.quoteId = String(vehicle._partnerTransId);
+  const errorStatusType = (opts && opts.errorStatusType) || 'bool';
+  const proposal = buildDigitProposalCore(false);
+  // Create Proposal (API 2) adds callbackurl; Insert Proposal (API 1) omits it.
+  if (opts && opts.callbackurl) proposal.callbackurl = opts.callbackurl;
+  return {
+    quote: insertBody.quote,
+    carQuoteResponse: toDigitCarQuoteResponse(vehicle._quoteResponse || {}, { errorStatusType }),
+    carAddons: insertBody.carAddons,
+    proposal,
+  };
+}
+
+function buildDigitBikeProposalBody(opts){
+  const insertBody = buildQuoteBody();
+  if (vehicle._partnerTransId) insertBody.quote.quoteId = String(vehicle._partnerTransId);
+  const errorStatusType = (opts && opts.errorStatusType) || 'bool';
+  const proposal = buildDigitProposalCore(true);
+  if (opts && opts.callbackurl) proposal.callbackurl = opts.callbackurl;
+  return {
+    quote: insertBody.quote,
+    bikeAddons: insertBody.bikeAddons,
+    quoteResponseBike: toDigitBikeQuoteResponse(vehicle._quoteResponse || {}, { errorStatusType }),
+    proposal,
+  };
+}
+
+// Session storage key for the proposal handoff params + partner transId,
+// so /payment/return.html can pick them up after the HDFC gateway round-trip.
+const PROPOSAL_STATE_KEY = 'bi:proposal:hdfc';
+
+// HDFC's quote + proposal + payment flow is wired for both 2W and 4W (per the
+// HDFC Two-Wheeler and Four-Wheeler API docs).
+function goingToPayHdfc(){
+  const line = vehicle.line;
+  const code = vehicle.insurerCode || 'HDFCTP';
+  return (line==='Two-Wheeler' || line==='Car') && code==='HDFCTP';
+}
+// Digit's quote + proposal + payment flow is wired for both 2W and 4W (per
+// the Digit Private Car and Two-Wheeler Proposal docs from 2026-10-07).
+function goingToPayDigit(){
+  const line = vehicle.line;
+  const code = vehicle.insurerCode || '';
+  return (line==='Two-Wheeler' || line==='Car') && code==='GODIGITTP';
+}
+
+// Vendor Q9: use the KYC pincode to look up the correct state/city from the
+// GetDetailsbyPincodeList master before submitting the proposal. HDFC's
+// proposal sample shows city=KANNAUJ (from pincode) even though kycData
+// returned permanentCity=MOHALI — the pincode master is authoritative.
+async function enrichAddressFromKycPincode(){
+  const kd = (vehicle.kyc && vehicle.kyc.raw) || {};
+  const pincode = String(kd.permanentPincode || (vehicle.customer && vehicle.customer.address && vehicle.customer.address.pincode) || '').replace(/\D/g,'').slice(0,6);
+  if (pincode.length !== 6) return null;
+  try {
+    const r = await fetch('/api/simson/pincode-list', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ pincode, company: 'HDFC' }),
+    });
+    const j = await r.json();
+    const rec = Array.isArray(j) ? j[0] : j;
+    if (!rec) return null;
+    vehicle.kyc = vehicle.kyc || {};
+    vehicle.kyc.pincodeMaster = {
+      pincode: rec.pincode || pincode,
+      stateName: rec.statename || '',
+      stateCode: rec.statecode || '',
+      cityName: rec.cityname || '',
+      cityCode: rec.citycode || '',
+    };
+    return vehicle.kyc.pincodeMaster;
+  } catch (_) { return null; }
+}
+
+async function payNow(){
+  const mobile=(vehicle.customer&&vehicle.customer.mobile)||document.getElementById('mobIn').value.trim();
+  if(!/^[6-9]\d{9}$/.test(mobile)){say('mobErr','Missing mobile number — go back and enter yours.',true);return;}
+  say('mobErr','Your e-policy arrives here on WhatsApp and SMS.');
+  const btn=document.getElementById('payBtn');
+
+  // IRDAI consent gate (R3) — required before any real insurer handoff.
+  // Only prompt if we're going to actually submit a proposal (HDFC or Digit);
+  // the "coming soon" placeholder path skips it.
+  if (goingToPayHdfc() || goingToPayDigit()) {
+    const insurerLabel = goingToPayHdfc() ? 'HDFC ERGO' : 'Digit';
+    const consent = await showIrdaiConsentModal({ insurerLabel, premium: vehicle.price });
+    if (!consent) {
+      trackLead('irdai_consent_declined', {insurer: insurerLabel});
+      say('mobErr','You must accept the policy wording and declaration to proceed.', true);
+      return;
+    }
+    trackLead('irdai_consent_accepted', {
+      insurer: insurerLabel,
+      acceptedAt: consent.acceptedAt,
+      version: consent.version,
+      cpaCovered: consent.cpaCovered,
+    });
+    // Record on the vehicle so the proposal builder can carry CPA opt-out
+    // into the body (per vendor doc, isCPACover = true/false already drives
+    // this on the addons object).
+    vehicle._irdaiConsent = consent;
+  }
+
+  // Dispatch by insurer: HDFC and Digit each have a documented end-to-end
+  // flow; other combinations (e.g. Commercial) still fall through to the
+  // manual-follow-up placeholder.
+  if (goingToPayDigit()) {
+    try { await startDigitProposalFlow(mobile); }
+    catch (err) {
+      btn.classList.remove('paying');btn.innerHTML='Pay securely <svg class="i"><use href="#i-arrow"/></svg>';
+      trackLead('proposal_failed', {insurer:'DIGIT', reason: String(err.message||err)});
+      say('mobErr','Could not initiate Digit payment: '+String(err.message||err), true);
+    }
+    return;
+  }
+  if(!goingToPayHdfc()){
+    btn.classList.add('paying');btn.innerHTML='Preparing…';
+    setTimeout(()=>{
+      btn.classList.remove('paying');btn.innerHTML='Pay securely <svg class="i"><use href="#i-arrow"/></svg>';
+      const which = vehicle.line==='Commercial' ? 'commercial vehicle' : (vehicle.line||'this vehicle').toLowerCase();
+      document.getElementById('doneMsg').innerHTML =
+        `<b>Instant issuance for ${which} is coming soon.</b><br>`+
+        `Our team will contact you on <b>+91 ${mobile}</b> to complete this purchase manually.`;
+      trackLead('pay_manual_followup');
+      resetLeadId();
+      goFlow(7);
+      document.getElementById('regIn').value='';document.getElementById('mobIn').value='';
+    },800);
+    return;
+  }
+
+  // HDFC (car or bike) — real proposal + CIS review + payment redirect.
+  const isBike = vehicle.line === 'Two-Wheeler';
+  const proposalEndpoint = isBike ? '/api/swapinsurer/bike-proposal' : '/api/swapinsurer/car-proposal';
+  const moduleName = isBike ? 'bike' : 'car';
+  btn.classList.add('paying');btn.innerHTML='Preparing your proposal…';
+  trackLead('pay_initiated');
+
+  try {
+    // Vendor Q9: fetch state/city from KYC pincode BEFORE building proposal.
+    await enrichAddressFromKycPincode();
+    const proposalBody = isBike ? buildBikeProposalBody() : buildCarProposalBody();
+    btn.innerHTML='Submitting to HDFC ERGO…';
+    const r = await fetch(proposalEndpoint,{
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify(proposalBody),
+    });
+    const j = await r.json();
+    // Vendor doc-v2 (2026-10-08) contract: errorStatus is null / "" / "false"
+    // on success, "true" (or legacy boolean true) on failure. Any specific
+    // error string ("Premium Mismatch" etc.) comes through errorMessage. So:
+    // treat "true"-ish OR a populated errorMessage as the failure signal.
+    const es = j.errorStatus;
+    const propErr = es === true
+      || (typeof es === 'string' && es.trim().toLowerCase() === 'true')
+      || (j.errorMessage && String(j.errorMessage).trim());
+    if(!r.ok || propErr){
+      throw new Error(j.errorMessage || j.error || `Proposal failed (${r.status})`);
+    }
+    if(j.isBreakin){
+      throw new Error('This policy needs a physical inspection (break-in). Our team will contact you to arrange it.');
+    }
+    if(!j.paymentororkycLink || !j.transactionID){
+      throw new Error('Proposal accepted but the payment gateway parameters were missing. Please contact support.');
+    }
+    // Store handoff params for the return page.
+    sessionStorage.setItem(PROPOSAL_STATE_KEY, JSON.stringify({
+      leadId: currentLeadId(),
+      transId: vehicle._partnerTransId || proposalBody.quote.quoteId,
+      partnerTransId: vehicle._partnerTransId || proposalBody.quote.quoteId,
+      hdfcTxnId: j.transactionID,
+      proposalNo: j.proposalNo || j.statusTransactionID || '',
+      amount: j.txnAmount || String(vehicle.price||''),
+      module: moduleName,
+      insurerCode: 'HDFCTP',
+      insurerLabel: 'HDFC ERGO',
+      returnUrl: j.successFailureURL || '',
+      vehicle: { reg: vehicle.reg, make: vehicle.make, model: vehicle.model, variant: vehicle.variant, line: vehicle.line },
+      customer: { mobile: mobile, fullname: (vehicle.kyc&&vehicle.kyc.fullName)||(vehicle.customer&&vehicle.customer.fullname)||'' },
+    }));
+    trackLead('proposal_created', {proposalNo: j.proposalNo || j.statusTransactionID || ''});
+    btn.innerHTML='Please review the Customer Information Sheet…';
+
+    // Vendor Q8: CIS PDF is mandatory. Show it, get explicit acknowledgment,
+    // then proceed to the payment gateway. Cancelling here rolls back the
+    // Pay button but the proposal is already saved on HDFC's side.
+    const ack = await showCisModal(j.cis_pdfbytes || '', j.proposalNo || '');
+    if (!ack) {
+      btn.classList.remove('paying');btn.innerHTML='Pay securely <svg class="i"><use href="#i-arrow"/></svg>';
+      trackLead('cis_declined');
+      say('mobErr','You must acknowledge the Customer Information Sheet to proceed. Try again when ready.', true);
+      return;
+    }
+    trackLead('cis_acknowledged');
+    btn.innerHTML='Opening secure payment…';
+    submitHdfcPaymentForm(j);
+  } catch (err) {
+    btn.classList.remove('paying');btn.innerHTML='Pay securely <svg class="i"><use href="#i-arrow"/></svg>';
+    trackLead('proposal_failed', {reason: String(err.message||err)});
+    say('mobErr','Could not initiate payment: '+String(err.message||err), true);
+  }
+}
+
+// CIS modal — mandatory per IRDAI, vendor Q8: displays the base64 PDF from
+// the proposal response inside a Blob-backed iframe (Blob URLs are more
+// reliable than data: URLs for embedded PDFs). Resolves to true when the
+// user checks "I have read and understood" + clicks Proceed; false on
+// cancel or close.
+// IRDAI pre-payment consent — mandatory before we initiate any proposal /
+// payment. Shown only when the customer is about to pay through a documented
+// insurer path (HDFC or Digit). Returns a Promise resolving to:
+//   null                                         — user cancelled
+//   { acceptedAt, cpaCovered, cpaDeclineReason } — user accepted
+// `acceptedAt` + the version string are persisted via trackLead for ops /
+// audit review (R3 from the vendor consolidated doc; vendor confirmed on
+// 2026-10-08 this is Bharat Insurance's responsibility, not Simson's).
+const IRDAI_CONSENT_VERSION = '2026-10-08-v1';
+function showIrdaiConsentModal(ctx){
+  return new Promise((resolve) => {
+    const insurer   = (ctx && ctx.insurerLabel) || 'the insurer';
+    const premium   = Number((ctx && ctx.premium) || vehicle.price || 0);
+    const premiumStr = premium ? '₹' + premium.toLocaleString('en-IN') : 'the quoted premium';
+    const back = document.createElement('div');
+    back.className = 'cis-back';
+    back.innerHTML = `
+      <div class="cis-modal" role="dialog" aria-labelledby="irdaiTitle" aria-modal="true">
+        <div class="cis-h">
+          <h3 id="irdaiTitle">Confirm &amp; proceed to payment</h3>
+          <div class="cis-sub">Please review and acknowledge the following before we submit your proposal to ${esc(insurer)}.</div>
+        </div>
+        <div class="irdai-body">
+          <h4>Policy wording</h4>
+          <p>The policy will be issued subject to the terms, conditions, warranties and exclusions mentioned in the policy document.
+             After payment you will receive the full policy wording by email and WhatsApp.</p>
+
+          <h4>Information accuracy</h4>
+          <p>You confirm that all details provided &mdash; vehicle, registration, previous policy, nominee, personal details &mdash;
+             are accurate. Any mis-representation may result in the policy being cancelled and claims being rejected under IRDAI
+             rules (Insurance Act 1938 &sect;45).</p>
+
+          <h4>Compulsory Personal Accident (CPA) cover for owner-driver</h4>
+          <p>IRDAI requires a &#8377;15 lakh Personal Accident cover for the owner-driver of every private motor policy. You may
+             decline this cover <b>only if you already have an equivalent standalone PA cover with any insurer</b>.</p>
+          <div class="cpa-choices">
+            <label><input type="radio" name="cpaChoice" value="opt-in" checked>
+              <span>I accept the Compulsory Personal Accident cover of &#8377;15,00,000 for the owner-driver.</span></label>
+            <label><input type="radio" name="cpaChoice" value="opt-out">
+              <span>I <b>decline</b> CPA on this policy &mdash; I already hold an equivalent standalone personal-accident cover.</span></label>
+          </div>
+          <input type="text" class="alt-cover-input" id="irdaiAltCover" placeholder="Existing PA policy insurer + policy number" style="display:none">
+          <div class="fine">(Required only if you opt out above.)</div>
+
+          <div class="irdai-sect">
+            <label class="cis-ack">
+              <input type="checkbox" id="irdaiAckRead">
+              <span>I have read and understood the policy wording, inclusions, exclusions and claim process; and I accept the
+                    IRDAI mandatory disclosures above.</span>
+            </label>
+          </div>
+
+          <div class="irdai-sect">
+            <label class="cis-ack">
+              <input type="checkbox" id="irdaiAckAccurate">
+              <span>I confirm all information I have provided &mdash; including previous policy details &mdash; is true and
+                    accurate to the best of my knowledge.</span>
+            </label>
+          </div>
+
+          <p class="fine">Premium to be collected: <b>${esc(premiumStr)}</b>. Issued by ${esc(insurer)} and regulated by the
+             Insurance Regulatory and Development Authority of India (IRDAI). Grievances can be raised with the insurer or the
+             IRDAI Integrated Grievance Management System.</p>
+        </div>
+        <div class="cis-f">
+          <div class="cis-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="irdaiCancel">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm" id="irdaiConfirm" disabled>I agree &amp; proceed to pay</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(back);
+    document.body.style.overflow = 'hidden';
+    const altInput = back.querySelector('#irdaiAltCover');
+    const ackRead  = back.querySelector('#irdaiAckRead');
+    const ackAcc   = back.querySelector('#irdaiAckAccurate');
+    const confirmBtn = back.querySelector('#irdaiConfirm');
+    const cpaRadios  = back.querySelectorAll('input[name="cpaChoice"]');
+    function cpaCovered(){
+      const choice = Array.from(cpaRadios).find(r => r.checked);
+      return !choice || choice.value === 'opt-in';
+    }
+    function sync(){
+      const optOut = !cpaCovered();
+      altInput.style.display = optOut ? 'block' : 'none';
+      const altOk = optOut ? altInput.value.trim().length >= 6 : true;
+      confirmBtn.disabled = !(ackRead.checked && ackAcc.checked && altOk);
+    }
+    cpaRadios.forEach(r => r.addEventListener('change', sync));
+    altInput.addEventListener('input', sync);
+    ackRead.addEventListener('change', sync);
+    ackAcc.addEventListener('change', sync);
+    function cleanup(result){ back.remove(); document.body.style.overflow=''; resolve(result); }
+    back.querySelector('#irdaiCancel').addEventListener('click', () => cleanup(null));
+    confirmBtn.addEventListener('click', () => cleanup({
+      acceptedAt: new Date().toISOString(),
+      version: IRDAI_CONSENT_VERSION,
+      cpaCovered: cpaCovered(),
+      cpaDeclineReason: cpaCovered() ? '' : altInput.value.trim(),
+    }));
+    back.addEventListener('keydown', (e) => { if (e.key === 'Escape') cleanup(null); });
+    setTimeout(() => ackRead.focus(), 100);
+    sync();
   });
 }
 
-function payNow(){
-  const mobile=document.getElementById('mobIn').value.trim();
-  if(!/^[6-9]\d{9}$/.test(mobile)){say('mobErr','Please enter a valid 10-digit mobile number.',true);document.getElementById('mobIn').focus();return;}
-  say('mobErr','Your e-policy arrives here on WhatsApp and SMS.');
-  const btn=document.getElementById('payBtn');
-  btn.classList.add('paying');btn.innerHTML='Opening secure payment…';
-  const lead={line:vehicle.line,vtype:vehicle.class,reg:vehicle.reg,mobile,premium:vehicle.price};
-  const n=saveLead(lead);
-  fetch('/api/leads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(lead)}).catch(()=>{});
-  setTimeout(()=>{
-    btn.classList.remove('paying');btn.innerHTML='Pay securely <svg class="i"><use href="#i-arrow"/></svg>';
-    document.getElementById('doneMsg').innerHTML=
-      `Policy <b>#BI-${String(n).padStart(6,'0')}</b> for <b>${vehicle.reg}</b> is being issued.<br>`+
-      `We've sent it to <b>+91 ${mobile}</b> on WhatsApp and SMS.`;
-    goFlow(5);
-    document.getElementById('regIn').value='';document.getElementById('mobIn').value='';
-  },1600);
+// Tiny HTML-escape for inline string interpolation inside the modal above.
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function showCisModal(base64, proposalNo){
+  return new Promise((resolve) => {
+    // Build Blob URL from base64.
+    let pdfUrl = '';
+    try {
+      if (base64) {
+        const bin = atob(base64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+        pdfUrl = URL.createObjectURL(new Blob([bytes], {type: 'application/pdf'}));
+      }
+    } catch(_){}
+
+    const back = document.createElement('div');
+    back.className = 'cis-back';
+    back.innerHTML = `
+      <div class="cis-modal" role="dialog" aria-labelledby="cisTitle" aria-modal="true">
+        <div class="cis-h">
+          <h3 id="cisTitle">Customer Information Sheet</h3>
+          <div class="cis-sub">Please review before payment${proposalNo?` · Proposal ${proposalNo}`:''}</div>
+        </div>
+        <div class="cis-body">
+          ${pdfUrl
+            ? `<iframe src="${pdfUrl}" title="CIS PDF" allow="fullscreen"></iframe>`
+            : `<div class="cis-nopdf"><p>We could not embed the PDF viewer in this browser.</p><p>Please download the CIS below and read it before proceeding.</p></div>`}
+        </div>
+        <div class="cis-f">
+          <label class="cis-ack">
+            <input type="checkbox" id="cisAckChk">
+            <span>I have read and understood the Customer Information Sheet, including the coverage, exclusions, terms and conditions of this policy.</span>
+          </label>
+          <div class="cis-actions">
+            ${pdfUrl?`<a href="${pdfUrl}" download="CIS-${proposalNo||'bharat'}.pdf" class="btn btn-ghost btn-sm">⭳ Download CIS</a>`:''}
+            <button type="button" class="btn btn-ghost btn-sm" id="cisCancel">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm" id="cisConfirm" disabled>Confirm &amp; proceed to pay</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(back);
+    document.body.style.overflow = 'hidden';
+    const cleanup = (result) => {
+      try { if (pdfUrl) URL.revokeObjectURL(pdfUrl); } catch(_){}
+      back.remove(); document.body.style.overflow = '';
+      resolve(result);
+    };
+    const chk = back.querySelector('#cisAckChk');
+    const confirmBtn = back.querySelector('#cisConfirm');
+    chk.addEventListener('change', () => { confirmBtn.disabled = !chk.checked; });
+    back.querySelector('#cisCancel').addEventListener('click', () => cleanup(false));
+    confirmBtn.addEventListener('click', () => cleanup(true));
+    // Do NOT close on backdrop click — the user must make a deliberate choice.
+    back.addEventListener('keydown', (e) => { if (e.key === 'Escape') cleanup(false); });
+    setTimeout(() => chk.focus(), 100);
+  });
+}
+
+// Build and submit an HTML form POST to HDFC's MakePayment.aspx with the
+// exact field names the doc requires. Surl/Furl MUST come from the vendor's
+// response unchanged — verified by direct probing on 2026-10-07:
+//   Surl = "privateCar/hdfccartransaction?transId=X"              → 200 OK
+//   Surl = "http://localhost:46991/privateCar/..." (doc sample)   → 302 Internal Error
+//   Surl = "https://www.bharatinsurance.online/privateCar/..."    → 302 Internal Error
+// HDFC's checksum is computed server-side against the exact successFailureURL
+// string, so any client-side modification breaks validation. Vendor-side
+// blocker for the return redirect: today HDFC resolves the bare path against
+// its own host (heapp21.hdfcergo.com) → 404. The vendor needs to either
+// configure our domain as the merchant base URL at HDFC or return an absolute
+// successFailureURL whose checksum includes our domain.
+// Our vercel.json rewrites /privateBike/hdfcbiketransaction and
+// /privateCar/hdfccartransaction → /api/payment/callback — once the vendor
+// returns an absolute Surl that matches the checksum, the flow completes.
+function submitHdfcPaymentForm(resp){
+  const form = document.createElement('form');
+  form.method = 'POST'; form.action = resp.paymentororkycLink; form.style.display='none';
+  const addField = (name, value) => {
+    const i = document.createElement('input');
+    i.type='hidden'; i.name=name; i.value = value==null?'':String(value);
+    form.appendChild(i);
+  };
+  addField('Trnsno', resp.transactionID);
+  addField('Amt',    resp.txnAmount);
+  addField('Appid',  resp.appid);
+  addField('Subid',  resp.subid);
+  addField('Surl',   resp.successFailureURL);
+  addField('Furl',   resp.successFailureURL);
+  addField('Src',    'POST');
+  addField('Chksum', resp.checkSum);
+  document.body.appendChild(form);
+  form.submit();
+}
+
+// ---------- Digit proposal + KYC + payment flow ----------
+// Per Digit_Private_Car_Proposal_APIs_Documentation / Bike_Proposal_APIs_
+// Documentation_Digit (2026-10-07). Three browser-visible steps:
+//   1. Insert Proposal (MIALTUS)  → saves the proposal
+//   2. Create Proposal (DIGIT)    → returns a KYC URL (paymentororkycLink)
+//   3. Redirect to KYC URL        → customer completes KYC on Digit's portal
+// Digit then redirects back to our callbackurl (/digit/kyc-return?transId=X).
+// The return handler in payment/return.html picks up the sessionStorage state
+// and calls Payment-After-KYC → payment redirect → Response-After-Payment.
+const DIGIT_KYC_RETURN_PATH     = '/digit/kyc-return';
+const DIGIT_PAYMENT_RETURN_PATH = '/digit/payment-return';
+async function startDigitProposalFlow(mobile){
+  const btn = document.getElementById('payBtn');
+  const isBike = vehicle.line === 'Two-Wheeler';
+  const module = isBike ? 'bike' : 'car';
+  const typeQs = isBike ? 'bike' : 'car';
+  btn.classList.add('paying'); btn.innerHTML='Preparing your proposal…';
+  trackLead('pay_initiated', {insurer:'DIGIT'});
+
+  // Resolve state/city from the KYC pincode (same pre-step as HDFC).
+  await enrichAddressFromKycPincode();
+
+  // --- API 1: Insert Proposal (MIALTUS). Boolean errorStatus (binder still
+  // requires it despite doc-v2 showing String). ---
+  const insertBody = isBike
+    ? buildDigitBikeProposalBody({ errorStatusType: 'bool' })
+    : buildDigitCarProposalBody({ errorStatusType: 'bool' });
+  btn.innerHTML='Saving proposal…';
+  const ir = await fetch(`/api/mialtus/insert-proposal?type=${typeQs}`, {
+    method:'POST', headers:{'content-type':'application/json'},
+    body: JSON.stringify(insertBody),
+  });
+  const ij = await ir.json();
+  if (!ir.ok) throw new Error('Insert Proposal failed: ' + (ij.message || ij.error || `HTTP ${ir.status}`));
+  if (String(ij.status) !== '1' && !ij.transID) {
+    throw new Error('Insert Proposal rejected: ' + (ij.message || JSON.stringify(ij).slice(0, 200)));
+  }
+
+  // --- API 2: Create Proposal (DIGIT). ---
+  // Vendor confirmed 2026-10-08 that Digit UAT is intermittent: Create
+  // Proposal often returns "Kyc Link is Empty" or "Failed as endpoint takes
+  // more than 30 sec" on the first try, succeeds on the second. Retry up to
+  // 3 times with a short backoff before surfacing the failure to the user.
+  const callbackurl = window.location.origin + DIGIT_KYC_RETURN_PATH;
+  const createBody = isBike
+    ? buildDigitBikeProposalBody({ errorStatusType: 'string', callbackurl })
+    : buildDigitCarProposalBody({ errorStatusType: 'string', callbackurl });
+  const DIGIT_RETRIES = 3;
+  const DIGIT_RETRY_MS = 1500;
+  const isTransient = (msg) => {
+    const s = String(msg || '').toLowerCase();
+    return s.includes('kyc link is empty')
+      || s.includes('takes more than 30 sec')
+      || s.includes('endpoint timeout')
+      || s.includes('timed out')
+      || s.includes('502 bad gateway')
+      || s.includes('bad gateway')
+      || /<title>\s*5\d\d/i.test(String(msg||''));
+  };
+  let cj = null, lastErr = '';
+  for (let attempt = 1; attempt <= DIGIT_RETRIES; attempt++) {
+    btn.innerHTML = attempt === 1 ? 'Submitting to Digit…' : `Retrying Digit (attempt ${attempt}/${DIGIT_RETRIES})…`;
+    const cr = await fetch(`/api/swapinsurer/${typeQs}-proposal?insurer=DIGIT`, {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify(createBody),
+    });
+    cj = await cr.json();
+    if (!cr.ok) { lastErr = (cj.error || cj.errorMessage || `HTTP ${cr.status}`); break; }
+    const createErr = (cj.errorMessage && String(cj.errorMessage).trim())
+      || (typeof cj.errorStatus === 'string' && cj.errorStatus.trim() && cj.errorStatus !== '');
+    const haveLink  = cj.paymentororkycLink && cj.enquiryID && cj.refProposal;
+    if (haveLink && !createErr) break;      // success
+    lastErr = String(createErr || 'No KYC link returned').replace(/[\r\n\\]+/g,' ').replace(/"/g,'').trim();
+    if (!isTransient(lastErr) || attempt === DIGIT_RETRIES) break;  // non-transient or exhausted
+    trackLead('digit_proposal_retry', {attempt, reason: lastErr.slice(0,120)});
+    await new Promise(r => setTimeout(r, DIGIT_RETRY_MS));
+  }
+  if (!cj || !cj.paymentororkycLink || !cj.enquiryID || !cj.refProposal) {
+    throw new Error(`Digit proposal did not complete after ${DIGIT_RETRIES} attempts. Last response: ${lastErr || 'unknown'}. Please try again in a moment or switch to HDFC ERGO.`);
+  }
+
+  // Persist the handoff for the two return stages.
+  sessionStorage.setItem(PROPOSAL_STATE_KEY, JSON.stringify({
+    leadId: currentLeadId(),
+    stage: 'digit-kyc-pending',
+    insurerCode: 'GODIGITTP',
+    insurerLabel: 'Digit',
+    module,
+    partnerTransId: vehicle._partnerTransId || insertBody.quote.quoteId,
+    transId: vehicle._partnerTransId || insertBody.quote.quoteId,
+    enquiryID: cj.enquiryID,
+    applicationId: cj.applicationId,
+    refProposal: cj.refProposal,
+    paymentororkycLink: cj.paymentororkycLink,
+    amount: String(vehicle.price || ''),
+    kycCallbackUrl: callbackurl,
+    paymentCallbackUrl: window.location.origin + DIGIT_PAYMENT_RETURN_PATH,
+    vehicle: { reg: vehicle.reg, make: vehicle.make, model: vehicle.model, variant: vehicle.variant, line: vehicle.line },
+    customer: { mobile, fullname: (vehicle.kyc&&vehicle.kyc.fullName)||(vehicle.customer&&vehicle.customer.fullname)||'' },
+  }));
+
+  trackLead('proposal_created', {insurer:'DIGIT', refProposal: cj.refProposal, enquiryID: cj.enquiryID});
+  btn.innerHTML='Opening Digit KYC…';
+  // Top-level navigation — Digit's portal cannot be embedded in an iframe.
+  window.location.href = cj.paymentororkycLink;
 }
 
 // Enter advances the flow
-document.getElementById('regIn').addEventListener('focus',loadBank,{once:true});
-document.getElementById('regIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lookup();}});
+document.getElementById('regIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();startFlow();}});
 document.getElementById('mobIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();payNow();}});
-// keep the plate looking like a plate while typing
+// keep the plate looking like a plate while typing. Two shapes:
+// - state plates:  AA 12 BC 3456
+// - Bharat series: 23 BH 3521 J
 document.getElementById('regIn').addEventListener('input',e=>{
-  e.target.value=norm(e.target.value).replace(/^([A-Z]{2})(\d{1,2})([A-Z]{0,3})(\d{0,4}).*$/,(m,a,b,c,d)=>[a,b,c,d].filter(Boolean).join(' '));
+  const v=norm(e.target.value);
+  const bh=v.match(/^(\d{2})(BH)(\d{0,4})([A-Z]{0,2}).*$/);
+  const st=v.match(/^([A-Z]{2})(\d{1,2})([A-Z]{0,3})(\d{0,4}).*$/);
+  const parts=bh?[bh[1],bh[2],bh[3],bh[4]]:st?[st[1],st[2],st[3],st[4]]:[v];
+  e.target.value=parts.filter(Boolean).join(' ');
 });
 
 // ---- modal ----
@@ -1326,7 +3768,15 @@ function renderPage(slug){const p=PAGES[slug];if(!p)return'';const noun=p.line==
 }
 function showPage(slug){document.getElementById('view-home').style.display='none';const pm=document.getElementById('pageMount');pm.style.display='block';pm.innerHTML=renderPage(slug);scrollTo(0,0);}
 function showHome(target){const pm=document.getElementById('pageMount');pm.style.display='none';pm.innerHTML='';document.getElementById('view-home').style.display='';if(target&&target!=='#top'&&target!=='#'){const el=document.querySelector(target);if(el){el.scrollIntoView();return;}}scrollTo(0,0);}
-function router(){const m=location.hash.match(/^#\/(car|two-wheeler|commercial)$/);if(m)showPage(m[1]);else if(location.hash==='#/admin')showAdmin();else showHome(location.hash);}
+function router(){
+  const h=location.hash;
+  const m=h.match(/^#\/(car|two-wheeler|commercial)$/);
+  if(m)return showPage(m[1]);
+  if(h==='#/admin')return showAdmin();
+  // unknown /path segments would blow up showHome's querySelector; treat any
+  // "#/whatever" that we don't recognise as home-top.
+  showHome(h.startsWith('#/')?'#top':h);
+}
 
 // ==== admin panel — captured quote requests (Vercel Blob + localStorage fallback) ====
 const ADMIN_PASS='bharat@2026';
@@ -1335,65 +3785,354 @@ async function showAdmin(){
   document.getElementById('view-home').style.display='none';
   const pm=document.getElementById('pageMount');pm.style.display='block';scrollTo(0,0);
   if(sessionStorage.getItem('bharat_admin_ok')!=='1'){pm.innerHTML=adminLoginHtml();return;}
-  pm.innerHTML='<section class="ppage-hero"><div class="admin-wrap"><div class="crumb"><a href="#top">Home</a> › <span>Admin</span></div><p style="color:var(--muted);padding:24px 0">Loading requests…</p></div></section>';
-  let leads=null;
-  try{const r=await fetch('/api/leads?pass='+encodeURIComponent(ADMIN_PASS),{cache:'no-store'});if(r.ok)leads=(await r.json()).leads||[];}catch(e){}
-  if(leads===null)leads=JSON.parse(localStorage.getItem('bharat_leads')||'[]');
+  pm.innerHTML=`<div class="admin-shell">${adminTopbarHtml()}<div class="admin-container"><p style="color:var(--muted);padding:24px 0;text-align:center">Loading dashboard…</p></div></div>`;
+  let leads=null; let apiError='';
+  try{
+    const r=await fetch('/api/leads?pass='+encodeURIComponent(ADMIN_PASS),{cache:'no-store'});
+    if(r.status===401){
+      sessionStorage.removeItem('bharat_admin_ok');
+      pm.innerHTML=adminLoginHtml('The server rejected the passcode. Check that <code>ADMIN_PASS</code> on the Vercel project matches the passcode above, then log in again.');
+      return;
+    }
+    if(!r.ok) throw new Error(`API ${r.status}`);
+    const j=await r.json();
+    leads=Array.isArray(j.leads)?j.leads:[];
+  }catch(e){
+    apiError=String(e.message||e);
+  }
+  if(leads===null){
+    leads=readLeads();
+    _adminLeads=leads;
+    pm.innerHTML=adminDashHtml(leads, `Live server data unavailable (${apiError||'network error'}). Showing leads captured in this browser only.`);
+    return;
+  }
   _adminLeads=leads;pm.innerHTML=adminDashHtml(leads);
+}
+
+function adminTopbarHtml(){
+  return `<div class="admin-topbar"><div class="admin-topbar-inner">
+    <div class="admin-brand">
+      <div class="admin-brand-ic"><img src="bharat-assets/favicon.svg" alt=""></div>
+      <div>
+        <div class="admin-brand-title">Bharat Insurance</div>
+        <div class="admin-brand-sub">Admin Dashboard</div>
+      </div>
+    </div>
+    <div class="admin-actions">
+      <button class="admin-btn" onclick="showAdmin()" title="Reload">↻ Refresh</button>
+      <button class="admin-btn" onclick="adminExport()">⭳ Export CSV</button>
+      <button class="admin-btn danger" onclick="adminClear()">Clear all</button>
+      <button class="admin-btn" onclick="adminLogout()">Log out</button>
+    </div>
+  </div></div>`;
 }
 function adminLogin(){const v=(document.getElementById('apass')||{}).value||'';if(v===ADMIN_PASS){sessionStorage.setItem('bharat_admin_ok','1');showAdmin();}else alert('Incorrect passcode.');}
 function adminLogout(){sessionStorage.removeItem('bharat_admin_ok');showAdmin();}
 async function adminClear(){if(!confirm('Delete ALL captured quote requests? This cannot be undone.'))return;localStorage.removeItem('bharat_leads');try{await fetch('/api/leads?pass='+encodeURIComponent(ADMIN_PASS),{method:'DELETE'});}catch(e){}showAdmin();}
 function adminExport(){const a=_adminLeads;if(!a.length){alert('No requests to export.');return;}
-  const rows=[['Time','Type','Vehicle','Registration','Mobile','Est. Premium']].concat(a.map(l=>[l.ts,l.line,l.vtype||'',l.reg||'',l.mobile,l.premium]));
-  const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
+  // Neutralise CSV/Excel formula injection: any cell that starts with =, +, -,
+  // @ (or TAB / CR) can be interpreted as a formula on open. Prefixing with a
+  // single quote is the standard OWASP mitigation.
+  const csvCell=x=>{let s=String(x==null?'':x);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
+  const g=(o,path)=>{try{return path.split('.').reduce((x,k)=>x&&x[k],o);}catch(e){return '';}};
+  const rows=[['ID','First seen','Last seen','Status','Type','Vehicle sub-type','Make','Model','Variant','Registration','RTO','Previous Insurer','Insurer chosen','Customer name','Email','Mobile','Ownership','KYC verified','KYC ID','PAN','CKYC','Address pincode','City','State','Occupation','Nominee name','Nominee relation','Financed','Financier','Insurer TransID','Policy start','Policy end','Base TP','CPA','GST','Payable','Est. Premium','User agent','Referrer']]
+    .concat(a.map(l=>[
+      l.id||'', l.firstSeen||l.ts||'', l.lastSeen||l.ts||'', l.status||'',
+      l.line||'', l.vtype||'', l.make||'', l.model||'', l.variant||'',
+      l.reg||'', l.rto||'', l.previousInsurer||'',
+      l.insurerLabel||l.insurerCode||'',
+      g(l,'customer.fullname')||g(l,'kyc.fullName')||'',
+      g(l,'customer.email')||'', l.mobile||'',
+      g(l,'customer.vehicleOwnedBy')||'',
+      g(l,'kyc.verified')?'Yes':(l.kyc?'Pending':''),
+      g(l,'kyc.kycId')||'', g(l,'kyc.pan')||'', g(l,'kyc.ckycNumber')||'',
+      g(l,'customer.address.pincode')||'', g(l,'customer.address.city')||'',
+      g(l,'customer.address.state')||'',
+      g(l,'customer.occupation')||'',
+      g(l,'customer.nominee.name')||'', g(l,'customer.nominee.relation')||'',
+      g(l,'customer.hypothecated')?'Yes':'No',
+      g(l,'customer.financier.name')||'',
+      g(l,'quote.pTransactionId')||'',
+      g(l,'quote.policystartDate')||'', g(l,'quote.policyEndDate')||'',
+      g(l,'quote.thirdPartyPremium')||g(l,'quote.baseThirdPartyPremium')||0,
+      g(l,'quote.paOwnerDriver')||0, g(l,'quote.serviceTax')||0,
+      g(l,'quote.payablePremium')||l.premium||0,
+      l.premium||0,
+      g(l,'session.ua')||'', g(l,'session.referrer')||'',
+    ]));
+  const csv=rows.map(r=>r.map(csvCell).join(',')).join('\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const link=document.createElement('a');link.href=url;link.download='bharat-quote-requests.csv';document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);}
-function adminLoginHtml(){return `<section class="ppage-hero"><div class="admin-wrap"><div class="crumb"><a href="#top">Home</a> › <span>Admin</span></div>
-      <div style="max-width:380px;margin:16px auto 46px;text-align:center">
-        <img src="bharat-assets/favicon.svg" alt="" style="width:54px;height:54px;margin-bottom:14px">
-        <h1 style="font-size:26px;margin:0 0 6px">Admin login</h1>
-        <p style="color:var(--muted);margin:0 0 18px">Enter the passcode to view captured quote requests.</p>
-        <input id="apass" type="password" placeholder="Passcode" onkeydown="if(event.key==='Enter')adminLogin()" style="text-align:center">
-        <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="adminLogin()">Unlock</button>
-        <p class="hint">Demo passcode: <b>bharat@2026</b></p>
-      </div></div></section>`;}
-function adminDashHtml(a){
-  const rev=a.slice().reverse();
-  const cnt=l=>a.filter(x=>x.line===l).length, sum=a.reduce((s,x)=>s+(+x.premium||0),0);
-  const badge=l=>({Car:'#e8eefb|#122f63','Two-Wheeler':'#e7f5ec|#1a7d3c',Commercial:'#fff2e3|#e8801a'}[l]||'#eef2fa|#5b6b86');
+function adminLoginHtml(notice){return `<div class="admin-shell"><div class="admin-container">
+    <div class="admin-crumb"><a href="#top">← Back to site</a></div>
+    <div class="admin-login-card">
+      <img src="bharat-assets/favicon.svg" alt="">
+      <h1>Admin login</h1>
+      <p class="sub">Enter the passcode to view captured quote requests.</p>
+      ${notice?`<div class="admin-login-notice">${notice}</div>`:''}
+      <input id="apass" type="password" placeholder="Passcode" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button onclick="adminLogin()">Unlock →</button>
+    </div>
+  </div></div>`;}
+// Status codes -> colour + short label. Ordered by journey progress so the
+// funnel-drop-off is intuitive when scanning the admin table.
+const STATUS_META={
+  details_captured: {label:'Details',    fg:'#5b6b86', bg:'#eef2fa'},
+  kyc_redirect:     {label:'KYC (web)',  fg:'#7a4bcc', bg:'#ece0fa'},
+  kyc_verified:     {label:'KYC ✓',      fg:'#1a7d3c', bg:'#e0f2e6'},
+  quote_viewed:     {label:'Quote ✓',    fg:'#122f63', bg:'#e6f0fa'},
+  quote_declined:   {label:'Declined',   fg:'#c8102e', bg:'#fce4e6'},
+  quote_failed:     {label:'Quote fail', fg:'#c8102e', bg:'#fce4e6'},
+  pay_initiated:    {label:'Paying…',    fg:'#e8801a', bg:'#fdece0'},
+  proposal_created: {label:'Proposal ✓', fg:'#7a4bcc', bg:'#ece0fa'},
+  proposal_failed:  {label:'Proposal ✗', fg:'#c8102e', bg:'#fce4e6'},
+  cis_acknowledged: {label:'CIS ✓',      fg:'#7a4bcc', bg:'#ece0fa'},
+  cis_declined:     {label:'CIS ✗',      fg:'#c8102e', bg:'#fce4e6'},
+  pay_manual_followup:{label:'Manual F/U',fg:'#e8801a', bg:'#fdece0'},
+  pay_success:      {label:'Paid ✓',     fg:'#1a7d3c', bg:'#e0f2e6'},
+  pay_failed:       {label:'Pay ✗',      fg:'#c8102e', bg:'#fce4e6'},
+  pay_cancelled:    {label:'Cancelled',  fg:'#5b6b86', bg:'#eef2fa'},
+  issuance_pending: {label:'Issuing…',   fg:'#e8801a', bg:'#fdece0'},
+  issuance_failed:  {label:'Issue ✗',    fg:'#c8102e', bg:'#fce4e6'},
+  issued:           {label:'Issued',     fg:'#1a7d3c', bg:'#e0f2e6'},
+  '':               {label:'—',          fg:'#5b6b86', bg:'#eef2fa'},
+};
+
+let _adminFilters={status:'',line:'',insurer:'',q:''};
+function setAdminFilter(k,v){
+  _adminFilters[k]=v;
+  const pm=document.getElementById('pageMount');
+  if(pm) pm.innerHTML=adminDashHtml(_adminLeads);
+  // Restore focus to search after re-render
+  if(k==='q'){setTimeout(()=>{const s=document.getElementById('aSearch');if(s){s.focus();s.value=v;s.setSelectionRange(v.length,v.length);}},0);}
+}
+function onSearchInput(v){
+  clearTimeout(window._aSearchT);
+  window._aSearchT=setTimeout(()=>setAdminFilter('q',v),120);
+}
+function toggleAdminRow(id){
+  const row=document.getElementById('exp-'+id);
+  if(row) row.hidden=!row.hidden;
+}
+
+function adminDashHtml(a, warning){
+  const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmt=iso=>{try{return new Date(iso).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}};
-  const rowsHtml=rev.map((l,i)=>{const p=badge(l.line).split('|');return `<tr>
-    <td>${rev.length-i}</td><td>${fmt(l.ts)}</td>
-    <td><span class="abadge" style="background:${p[0]};color:${p[1]}">${l.line}</span></td>
-    <td>${l.vtype||'—'}</td><td>${l.reg||'—'}</td>
-    <td><a href="https://wa.me/91${l.mobile}" target="_blank" rel="noopener" style="color:var(--green);font-weight:600">+91 ${l.mobile}</a></td>
-    <td><b>₹${(+l.premium||0).toLocaleString('en-IN')}</b></td></tr>`;}).join('');
-  return `<section class="ppage-hero" style="padding-bottom:10px"><div class="admin-wrap">
-      <div class="crumb"><a href="#top">Home</a> › <span>Admin</span></div>
-      <h1 style="font-size:32px;margin:0 0 4px">Quote requests</h1>
-      <p style="color:var(--muted);margin:0">Every "Get a Quote" submission captured on this site.</p>
-    </div></section>
-    <section style="padding-top:8px"><div class="admin-wrap">
-      <div class="astat">
-        <div class="card"><b>${a.length}</b><span>Total requests</span></div>
-        <div class="card"><b>${cnt('Car')}</b><span>Car</span></div>
-        <div class="card"><b>${cnt('Two-Wheeler')}</b><span>Two-Wheeler</span></div>
-        <div class="card"><b>${cnt('Commercial')}</b><span>Commercial</span></div>
-        <div class="card"><b>₹${sum.toLocaleString('en-IN')}</b><span>Total est. premium</span></div>
+  const fmtDate=iso=>{try{return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return iso;}};
+  const badgeVeh=l=>({Car:'#e8eefb|#122f63','Two-Wheeler':'#e7f5ec|#1a7d3c',Commercial:'#fff2e3|#e8801a'}[l]||'#eef2fa|#5b6b86');
+  const veh=l=>({Car:'🚗','Two-Wheeler':'🏍️',Commercial:'🚚'}[l]||'📄');
+
+  const f=_adminFilters;
+  const q=(f.q||'').trim().toLowerCase();
+  const filtered=a.filter(l=>{
+    if(f.status && (l.status||'')!==f.status) return false;
+    if(f.line   && (l.line||'')!==f.line)     return false;
+    if(f.insurer&& (l.insurerCode||'')!==f.insurer) return false;
+    if(q){
+      const c=l.customer||{}, k=l.kyc||{};
+      const hay=[l.id,l.reg,l.mobile,c.fullname,c.email,k.fullName,k.pan,k.kycId,l.make,l.model].filter(Boolean).join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).slice().sort((x,y)=>String(y.lastSeen||y.ts||'').localeCompare(String(x.lastSeen||x.ts||'')));
+
+  const cnt=st=>a.filter(x=>(x.status||'')===st).length;
+  const cntLine=l=>a.filter(x=>x.line===l).length;
+  const cntInsurer=code=>a.filter(x=>x.insurerCode===code).length;
+  const sumIssued=a.filter(x=>x.status==='issued').reduce((s,x)=>s+(+x.premium||0),0);
+  const sumPayInit=a.filter(x=>x.status==='pay_initiated').reduce((s,x)=>s+(+x.premium||0),0);
+  const pct=(num,den)=>den?Math.round(num/den*100)+'%':'0%';
+
+  const withDetails=a.filter(x=>x.status).length;
+  const withKyc=cnt('kyc_verified')+cnt('quote_viewed')+cnt('quote_declined')+cnt('quote_failed')+cnt('pay_initiated')+cnt('issued');
+  const withQuote=cnt('quote_viewed')+cnt('pay_initiated')+cnt('issued');
+  const withPay=cnt('pay_initiated')+cnt('issued');
+  const withIssued=cnt('issued');
+  const convRate=withDetails?Math.round(withIssued/withDetails*1000)/10:0;
+
+  // ---- KPI cards ----
+  const kpisHtml=`<div class="admin-kpis">
+    <div class="kpi"><div class="kpi-ic">👥</div><div class="kpi-lbl">Total sessions</div><div class="kpi-val">${a.length.toLocaleString('en-IN')}</div><div class="kpi-sub">${withDetails} with completed details</div></div>
+    <div class="kpi"><div class="kpi-ic">🎯</div><div class="kpi-lbl">Conversion</div><div class="kpi-val">${convRate}%</div><div class="kpi-sub">${withIssued} issued of ${withDetails}</div></div>
+    <div class="kpi"><div class="kpi-ic">💳</div><div class="kpi-lbl">Premium collected</div><div class="kpi-val">₹${sumIssued.toLocaleString('en-IN')}</div><div class="kpi-sub">+ ₹${sumPayInit.toLocaleString('en-IN')} in-flight</div></div>
+    <div class="kpi"><div class="kpi-ic">📊</div><div class="kpi-lbl">Quote view rate</div><div class="kpi-val">${pct(withQuote,withDetails)}</div><div class="kpi-sub">${withQuote} of ${withDetails} details</div></div>
+  </div>`;
+
+  // ---- Funnel ----
+  const maxFunnel=Math.max(withDetails,1);
+  const funnelStages=[
+    {lbl:'Details',   n:withDetails, col:'#5b6b86'},
+    {lbl:'KYC done',  n:withKyc,     col:'#7a4bcc'},
+    {lbl:'Quote view',n:withQuote,   col:'#122f63'},
+    {lbl:'Pay init',  n:withPay,     col:'#e8801a'},
+    {lbl:'Issued',    n:withIssued,  col:'#1a7d3c'},
+  ];
+  const funnelHtml=funnelStages.map(s=>{
+    const w=Math.max(4,Math.round(s.n/maxFunnel*100));
+    return `<div class="funnel-row">
+      <span class="funnel-lbl">${s.lbl}</span>
+      <div class="funnel-track"><div class="funnel-fill" style="width:${w}%;background:${s.col}">${s.n>0?s.n:''}</div></div>
+      <span class="funnel-num"><b>${pct(s.n,withDetails)}</b></span>
+    </div>`;
+  }).join('');
+
+  // ---- Insurer breakdown ----
+  const hdfcN=cntInsurer('HDFCTP'), digitN=cntInsurer('GODIGITTP');
+  const insurerTotal=hdfcN+digitN;
+  const insurerHtml=[
+    {lbl:'HDFC ERGO', n:hdfcN, col:'#122f63'},
+    {lbl:'Digit',     n:digitN, col:'#7a4bcc'},
+  ].map(x=>`<div class="pie-row">
+      <span class="pie-dot" style="background:${x.col}"></span>
+      <span class="pie-lbl">${x.lbl}</span>
+      <span class="pie-num">${x.n}</span>
+      <span class="pie-pct">${insurerTotal?Math.round(x.n/insurerTotal*100)+'%':'—'}</span>
+    </div>`).join('');
+
+  // ---- Vehicle-type breakdown ----
+  const typeTotal=cntLine('Car')+cntLine('Two-Wheeler')+cntLine('Commercial');
+  const typeHtml=[
+    {lbl:'🚗 Private Car',     n:cntLine('Car'),         col:'#122f63'},
+    {lbl:'🏍️ Two-Wheeler',    n:cntLine('Two-Wheeler'),  col:'#1a7d3c'},
+    {lbl:'🚚 Commercial',      n:cntLine('Commercial'),   col:'#e8801a'},
+  ].map(x=>`<div class="pie-row">
+      <span class="pie-dot" style="background:${x.col}"></span>
+      <span class="pie-lbl">${x.lbl}</span>
+      <span class="pie-num">${x.n}</span>
+      <span class="pie-pct">${typeTotal?Math.round(x.n/typeTotal*100)+'%':'—'}</span>
+    </div>`).join('');
+
+  // ---- Filter chips ----
+  const statusChip=(v,lbl)=>`<button class="chip${f.status===v?' on':''}" onclick="setAdminFilter('status','${v}')">${lbl}</button>`;
+  const lineChip=(v,lbl)=>`<button class="chip${f.line===v?' on':''}" onclick="setAdminFilter('line','${v}')">${lbl}</button>`;
+  const insChip=(v,lbl)=>`<button class="chip${f.insurer===v?' on':''}" onclick="setAdminFilter('insurer','${v}')">${lbl}</button>`;
+  const chipsHtml=`
+    <div class="chip-row"><span class="chip-lbl">Status</span>
+      ${statusChip('','All')}${statusChip('details_captured','Details')}${statusChip('kyc_verified','KYC ✓')}${statusChip('quote_viewed','Quoted')}${statusChip('quote_declined','Declined')}${statusChip('pay_initiated','Paying')}${statusChip('issued','Issued')}
+    </div>
+    <div class="chip-row"><span class="chip-lbl">Type</span>
+      ${lineChip('','All')}${lineChip('Car','🚗 Car')}${lineChip('Two-Wheeler','🏍️ Two-Wheeler')}${lineChip('Commercial','🚚 Commercial')}
+    </div>
+    <div class="chip-row"><span class="chip-lbl">Insurer</span>
+      ${insChip('','All')}${insChip('HDFCTP','HDFC ERGO')}${insChip('GODIGITTP','Digit')}
+    </div>`;
+
+  // ---- Rows ----
+  const rowsHtml=filtered.map((l,i)=>{
+    const rowNum=i+1;
+    const rid=(l.id||('idx'+i)).replace(/[^A-Za-z0-9_-]/g,'_');
+    const s=STATUS_META[l.status||'']||STATUS_META[''];
+    const p=badgeVeh(l.line).split('|');
+    const mmv=[l.make,l.model,l.variant].filter(Boolean).map(esc).join(' ');
+    const vehicleCell=`<b>${esc(l.reg||l.vtype||l.line||'—')}</b>${mmv?`<div class="asub">${mmv}</div>`:''}`;
+    const custName=(l.customer&&l.customer.fullname)||(l.kyc&&l.kyc.fullName)||'';
+    const kycCell=l.kyc&&l.kyc.verified?'<span class="kyc-yes" title="KYC verified">✓</span>':(l.kyc?'<span class="kyc-pending" title="KYC pending">~</span>':'<span class="kyc-none">—</span>');
+    const insCell=l.insurerLabel||l.insurerCode||'<span class="amuted">—</span>';
+    // structured detail sections
+    const c=l.customer||{}, k=l.kyc||{}, q_=l.quote||{}, a_=c.address||{}, n_=c.nominee||{}, fi=c.financier||{}, se=l.session||{};
+    const kv=(rows)=>rows.filter(r=>r[1]!=null && r[1]!=='').map(r=>`<dt>${r[0]}</dt><dd>${esc(String(r[1]))}</dd>`).join('');
+    const timeline=(l.events||[]).map(e=>{const m=STATUS_META[e.status]||STATUS_META[''];return `<span class="timeline-item" style="background:${m.bg};color:${m.fg}">${fmt(e.ts)} · ${m.label}</span>`}).join('');
+    const detailHtml=`<div class="detail-grid">
+        <div class="detail-box"><h4>👤 Customer</h4><dl class="detail-kv">${kv([
+          ['Name', c.fullname||k.fullName],['Email', c.email],['Mobile', l.mobile?'+91 '+l.mobile:''],
+          ['Ownership', c.vehicleOwnedBy==='O'?'Organization':c.vehicleOwnedBy==='I'?'Individual':''],
+          ['Occupation', c.occupation],['DOB', k.dob],
+        ])}</dl></div>
+        <div class="detail-box"><h4>🚙 Vehicle</h4><dl class="detail-kv">${kv([
+          ['Type', l.line],['Sub-type', l.vtype],['Reg no.', l.reg],
+          ['Make', l.make],['Model', l.model],['Variant', l.variant],
+          ['RTO', l.rto],['Reg date', c.regDate],
+          ['Prev insurer', l.previousInsurer],['Prev policy', c.previousYearPolicyType],
+          ['Prev expiry', c.prepolExpiryDate],['Valid prev policy?', c.validPolCopy],
+        ])}</dl></div>
+        <div class="detail-box"><h4>🔐 KYC</h4><dl class="detail-kv">${kv([
+          ['Verified', k.verified?'Yes':(k.kycId?'Started':'—')],
+          ['KYC ID', k.kycId],['PAN', k.pan],['CKYC', k.ckycNumber],
+          ['Verified name', k.fullName],
+        ])}</dl></div>
+        <div class="detail-box"><h4>🏠 Address</h4><dl class="detail-kv">${kv([
+          ['Pincode', a_.pincode],['City', a_.city],['State', a_.state],['Line', a_.line],
+        ])||'<dt style="grid-column:1/-1;color:var(--muted);font-style:italic">not captured</dt>'}</dl></div>
+        <div class="detail-box"><h4>👥 Nominee</h4><dl class="detail-kv">${kv([
+          ['Name', n_.name],['DOB', n_.dob],['Relation', n_.relation],
+        ])||'<dt style="grid-column:1/-1;color:var(--muted);font-style:italic">not captured</dt>'}</dl></div>
+        <div class="detail-box"><h4>💰 Quote &amp; Policy</h4><dl class="detail-kv">${kv([
+          ['Insurer', l.insurerLabel||l.insurerCode],
+          ['Payable', q_.payablePremium?'₹'+(+q_.payablePremium).toLocaleString('en-IN'):''],
+          ['Base TP', q_.thirdPartyPremium||q_.baseThirdPartyPremium?'₹'+((+q_.thirdPartyPremium||+q_.baseThirdPartyPremium)).toLocaleString('en-IN'):''],
+          ['CPA', q_.paOwnerDriver?'₹'+(+q_.paOwnerDriver).toLocaleString('en-IN'):''],
+          ['GST', q_.serviceTax?'₹'+(+q_.serviceTax).toLocaleString('en-IN'):''],
+          ['Insurer TxnID', q_.pTransactionId],
+          ['Policy period', q_.policystartDate&&q_.policyEndDate?`${q_.policystartDate} → ${q_.policyEndDate}`:''],
+          ['Proposal no.', l.proposalNo],
+          ['HDFC txn', l.hdfcTxnId],
+          ['Policy no.', l.policyNo],
+          ['Reason', l.reason],
+          ['Quote error', q_.errorText],
+        ])}</dl></div>
+        <div class="detail-box"><h4>🏦 Financier</h4><dl class="detail-kv">${kv([
+          ['Hypothecated', c.hypothecated?'Yes':'No'],['Name', fi.name],['Code', fi.code],
+        ])}</dl></div>
+        <div class="detail-box"><h4>🖥 Session</h4><dl class="detail-kv">${kv([
+          ['First seen', fmt(l.firstSeen||l.ts)],['Last seen', fmt(l.lastSeen||l.ts)],
+          ['Updates', l.updates],['Referrer', se.referrer],['Timezone', se.tz],['Screen', se.screen],
+          ['User agent', (se.ua||'').slice(0,80)+((se.ua||'').length>80?'…':'')],
+        ])}</dl></div>
       </div>
-      <div class="atoolbar">
-        <button class="btn btn-ghost btn-sm" onclick="showAdmin()">↻ Refresh</button>
-        <button class="btn btn-ghost btn-sm" onclick="adminExport()">⭳ Export CSV</button>
-        <button class="btn btn-ghost btn-sm" style="color:#c8102e;border-color:#f3c7cd" onclick="adminClear()">Clear all</button>
-        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="adminLogout()">Log out</button>
+      <div class="detail-timeline"><h4>🕒 Journey timeline</h4>${timeline||'<span class="amuted">no events</span>'}</div>
+      <details class="detail-raw"><summary>▸ Raw JSON</summary><pre>${esc(JSON.stringify(l,null,2))}</pre></details>`;
+    return `<tr>
+        <td class="arow-num">${rowNum}</td>
+        <td><b>${fmtDate(l.lastSeen||l.ts)}</b><div class="asub">${fmt(l.lastSeen||l.ts).split(', ')[1]||''}</div></td>
+        <td><span class="abadge" style="background:${s.bg};color:${s.fg}">${s.label}</span></td>
+        <td><span class="abadge" style="background:${p[0]};color:${p[1]}">${veh(l.line)} ${esc(l.line||'—')}</span></td>
+        <td>${vehicleCell}</td>
+        <td>${esc(custName)||'<span class="amuted">—</span>'}${l.customer&&l.customer.email?`<div class="asub">${esc(l.customer.email)}</div>`:''}</td>
+        <td>${l.mobile?`<a href="https://wa.me/91${esc(l.mobile)}" target="_blank" rel="noopener" style="color:var(--green);font-weight:600;text-decoration:none">+91 ${esc(l.mobile)}</a>`:'<span class="amuted">—</span>'}</td>
+        <td>${kycCell}</td>
+        <td>${l.insurerLabel?esc(l.insurerLabel):(l.insurerCode?esc(l.insurerCode):'<span class="amuted">—</span>')}</td>
+        <td>${l.policyNo?`<span style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--green);font-weight:700">${esc(l.policyNo)}</span>`:'<span class="amuted">—</span>'}</td>
+        <td class="aprice">${(+l.premium||0)?'₹'+(+l.premium).toLocaleString('en-IN'):'<span class="amuted">—</span>'}</td>
+        <td><button class="arow-btn" onclick="toggleAdminRow('${rid}')">Details ▾</button></td>
+      </tr>
+      <tr id="exp-${rid}" hidden class="detail-row"><td colspan="12">${detailHtml}</td></tr>`;
+  }).join('');
+
+  return `<div class="admin-shell">${adminTopbarHtml()}
+    <div class="admin-container">
+      <div class="admin-crumb"><a href="#top">← Back to site</a> / <b>Admin dashboard</b></div>
+      ${warning?`<div class="admin-warn">${warning}</div>`:''}
+      ${kpisHtml}
+      <div class="admin-two">
+        <div class="admin-card">
+          <div class="admin-card-h"><h3>Conversion funnel</h3><span class="h-sub">Details → Issued</span></div>
+          ${withDetails?funnelHtml:'<p style="color:var(--muted);margin:0">No sessions have completed the details step yet.</p>'}
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-h"><h3>Insurer split</h3><span class="h-sub">by chosen quote</span></div>
+          ${insurerTotal?insurerHtml:'<p style="color:var(--muted);margin:0">No quotes fetched yet.</p>'}
+          <div class="admin-card-h" style="margin:20px 0 12px"><h3>Vehicle type</h3><span class="h-sub">${typeTotal} total</span></div>
+          ${typeTotal?typeHtml:'<p style="color:var(--muted);margin:0">No sessions yet.</p>'}
+        </div>
       </div>
-      ${a.length? `<div style="overflow-x:auto"><table class="atable"><thead><tr><th>#</th><th>Time</th><th>Type</th><th>Vehicle</th><th>Reg No</th><th>Mobile</th><th>Est. premium</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>`
-        : `<div class="card" style="text-align:center;padding:48px"><p style="color:var(--muted);margin:0">No requests yet. Submit the quote form on the homepage to see it appear here.</p></div>`}
-      <p class="hint" style="text-align:left;margin-top:16px">Stored centrally via Vercel Blob (falls back to this browser if the API is unreachable).</p>
-    </div></section>`;
+
+      <div class="admin-card">
+        <div class="admin-toolbar-row">
+          <div class="admin-card-h" style="margin:0;flex:0"><h3>All requests</h3><span class="h-sub">${filtered.length} of ${a.length}</span></div>
+          <div class="admin-search">
+            <input id="aSearch" placeholder="Search by name, reg, mobile, PAN, KYC ID…" value="${esc(f.q||'')}" oninput="onSearchInput(this.value)">
+          </div>
+        </div>
+        ${chipsHtml}
+        ${filtered.length? `<div class="atable-wrap"><table class="atable"><thead><tr><th>#</th><th>Last activity</th><th>Status</th><th>Type</th><th>Vehicle</th><th>Customer</th><th>Mobile</th><th>KYC</th><th>Insurer</th><th>Policy no.</th><th>Premium</th><th></th></tr></thead><tbody>${rowsHtml}</tbody></table></div>`
+          : `<div class="admin-empty"><h4>${a.length?'No records match the current filters':'No requests yet'}</h4><p>${a.length?'Try clearing a filter or the search box.':'Submit the quote form on the homepage to see it appear here.'}</p></div>`}
+        <p style="color:var(--muted);font-size:12px;margin-top:14px">Stored centrally via Vercel Blob (per-session upsert). Same customer appears once with their full journey attached.</p>
+      </div>
+    </div>
+  </div>`;
 }
 
 addEventListener('hashchange',router);router();
+detectKycReturn();
 </script>
 </body>
 </html>

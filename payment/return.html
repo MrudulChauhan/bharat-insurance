@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Payment Result — Bharat Insurance</title>
+<link rel="icon" type="image/svg+xml" href="/bharat-assets/favicon.svg">
+<style>
+:root{--navy:#122f63;--green:#1a7d3c;--orange:#e8801a;--red:#c8102e;--muted:#5b6b86;--line:#e2e8f4}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:'Hanken Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a2e;background:linear-gradient(180deg,#f7f9fc 0%,#eef2fa 100%);min-height:100vh}
+.wrap{max-width:520px;margin:0 auto;padding:64px 20px 32px}
+.card{background:#fff;border-radius:20px;border:1px solid var(--line);padding:32px;box-shadow:0 12px 40px rgba(18,47,99,.06)}
+.status-ic{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;font-size:38px;color:#fff;font-weight:700}
+.status-ic.ok{background:var(--green)}
+.status-ic.fail{background:var(--red)}
+.status-ic.pending{background:var(--orange)}
+h1{font-size:24px;margin:0 0 8px;color:var(--navy);text-align:center;font-weight:800}
+.sub{color:var(--muted);text-align:center;font-size:14.5px;margin:0 0 22px;line-height:1.5}
+dl{margin:18px 0 0;padding:16px;background:#f5f7fb;border-radius:12px;font-size:14px}
+dl>div{display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px dashed var(--line)}
+dl>div:last-child{border-bottom:0}
+dt{color:var(--muted);font-weight:600}
+dd{margin:0;color:#1a1a2e;font-weight:700;text-align:right;word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{flex:1;min-width:130px;padding:13px 18px;border:none;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;text-align:center;font-family:inherit;transition:transform .1s,filter .15s;display:inline-block}
+.btn:hover{filter:brightness(.95)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:linear-gradient(180deg,#f5981f,#e8801a);color:#fff}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--navy)}
+.spinner{width:24px;height:24px;border:3px solid #eef2fb;border-top-color:var(--navy);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footnote{margin-top:20px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5}
+.confirming{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:14px;font-size:12.5px;color:var(--muted)}
+.confirming .dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.policy-box{background:#e0f2e6;border:1px solid #a3d9b5;border-radius:10px;padding:14px 18px;margin-top:18px;text-align:center}
+.policy-box .plbl{font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.policy-box .pnum{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:800;color:var(--navy);margin-top:4px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="card" role="status" aria-live="polite" aria-atomic="true">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="sub">Confirming your payment…</p>
+  </div>
+</div>
+
+<script>
+// Payment gateway return handler.
+//
+// Flow for HDFC 2W:
+//   1) HDFC's payment gateway POSTs to /api/payment/callback which parses
+//      the pipe-delimited `hdnmsg`, stores the record, and 302-redirects
+//      the browser here with ?transId=<partnerId>&hdfcTxnId=<...>&status=<...>.
+//   2) We poll /api/payment/callback?transId=<partnerId> to get the
+//      authoritative payment record.
+//   3) On success: we read the stored proposal handoff params from
+//      sessionStorage (set before the redirect), call getpolicyafterpayment
+//      to issue the policy, then getpolicypdf to download it.
+//   4) The customer sees the policy number + a "Download policy PDF" button.
+(function(){
+  'use strict';
+
+  const q = new URLSearchParams(location.search);
+  const partnerTransId = q.get('transId') || '';
+  const hdfcTxnId = q.get('hdfcTxnId') || '';
+  const urlStatus = (q.get('status') || '').toLowerCase();
+  const PROPOSAL_STATE_KEY = 'bi:proposal:hdfc';
+
+  // Lightweight lead tracker — the main app's trackLead() lives in
+  // index.html and isn't available here. Same server-side upsert-by-id
+  // endpoint, minimal payload: just the status transition + policy details.
+  function trackLead(status, extras){
+    let leadId = '';
+    try { leadId = sessionStorage.getItem('bharat_lead_id') || ''; } catch(_){}
+    if (!leadId) return; // nothing to update
+    const body = Object.assign({ id: leadId, status: status }, extras || {});
+    const payload = JSON.stringify(body);
+    try {
+      if (navigator.sendBeacon &&
+          navigator.sendBeacon('/api/leads', new Blob([payload], {type:'application/json'}))) return;
+    } catch(_){}
+    try {
+      fetch('/api/leads', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: payload, keepalive: true,
+      }).catch(()=>{});
+    } catch(_){}
+  }
+
+  const el = (tag, attrs, ...children) => {
+    const n = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k.startsWith('aria-') || k === 'role') n.setAttribute(k, v);
+      else n[k] = v;
+    }
+    for (const c of children) if (c) n.appendChild(c);
+    return n;
+  };
+
+  function setCard(...children){
+    const card = document.getElementById('card');
+    while (card.firstChild) card.removeChild(card.firstChild);
+    for (const c of children) if (c) card.appendChild(c);
+  }
+
+  function refsBlock(refObj){
+    const entries = Object.entries(refObj).filter(([,v])=>v!=null && v!=='');
+    if (!entries.length) return null;
+    const dl = el('dl');
+    for (const [k, v] of entries) {
+      const row = el('div');
+      row.appendChild(el('dt', { text: k }));
+      row.appendChild(el('dd', { text: String(v) }));
+      dl.appendChild(row);
+    }
+    return dl;
+  }
+
+  function actions(items){
+    const wrap = el('div', { class: 'actions' });
+    for (const a of items) {
+      if (!a) continue;
+      wrap.appendChild(el('a', a));
+    }
+    return wrap;
+  }
+
+  function footnote(){
+    const p = el('p', { class: 'footnote' });
+    p.appendChild(document.createTextNode('If you need help, WhatsApp '));
+    const wa = el('a', { href: 'https://wa.me/917226800990', text: '+91 72268 00990' });
+    wa.style.color = 'inherit'; p.appendChild(wa);
+    p.appendChild(document.createTextNode(' or email '));
+    const mail = el('a', { href: 'mailto:care@bharatinsurance.in', text: 'care@bharatinsurance.in' });
+    mail.style.color = 'inherit'; p.appendChild(mail);
+    return p;
+  }
+
+  function renderSpinner(msg){
+    const s = el('div', { class: 'spinner', 'aria-hidden': 'true' });
+    const p = el('p', { class: 'sub', text: msg });
+    setCard(s, p);
+  }
+
+  function renderFailure(title, subtext, refs){
+    setCard(
+      el('div', { class: 'status-ic fail', 'aria-hidden': 'true', text: '✕' }),
+      el('h1', { text: title }),
+      el('p', { class: 'sub', text: subtext }),
+      refsBlock(refs || {}),
+      actions([
+        { class: 'btn primary', href: '/#top', text: 'Try again' },
+        { class: 'btn ghost', href: 'https://wa.me/917226800990', target: '_blank', rel: 'noopener', text: 'Chat on WhatsApp' },
+      ]),
+      footnote(),
+    );
+  }
+
+  function renderPending(msg){
+    setCard(
+      el('div', { class: 'status-ic pending', 'aria-hidden': 'true', text: '⏳' }),
+      el('h1', { text: 'Payment is processing' }),
+      el('p', { class: 'sub', text: msg || 'Your bank is still confirming this payment. We will notify you as soon as it clears.' }),
+      footnote(),
+    );
+  }
+
+  function renderSuccess(policyNumber, refs, pdfBase64){
+    const kids = [
+      el('div', { class: 'status-ic ok', 'aria-hidden': 'true', text: '✓' }),
+      el('h1', { text: 'Payment successful' }),
+      el('p', { class: 'sub', text: 'Your policy has been issued. Download it below or check WhatsApp shortly.' }),
+    ];
+    if (policyNumber) {
+      const box = el('div', { class: 'policy-box' });
+      box.appendChild(el('div', { class: 'plbl', text: 'Policy number' }));
+      box.appendChild(el('div', { class: 'pnum', text: policyNumber }));
+      kids.push(box);
+    }
+    const dl = refsBlock(refs || {});
+    if (dl) kids.push(dl);
+    const actionsWrap = el('div', { class: 'actions' });
+    if (pdfBase64) {
+      const dl2 = el('a', { class: 'btn primary', text: 'Download policy PDF' });
+      dl2.href = 'data:application/pdf;base64,' + pdfBase64;
+      dl2.download = (policyNumber || 'bharat-policy') + '.pdf';
+      actionsWrap.appendChild(dl2);
+    }
+    actionsWrap.appendChild(el('a', { class: 'btn ghost', href: '/#top', text: 'Back to home' }));
+    kids.push(actionsWrap);
+    kids.push(footnote());
+    setCard(...kids);
+  }
+
+  // Poll our callback endpoint for the authoritative payment record.
+  async function waitForPaymentRecord(deadlineMs){
+    const key = partnerTransId || hdfcTxnId;
+    if (!key) return null;
+    let delay = 1200;
+    while (Date.now() < deadlineMs) {
+      try {
+        const r = await fetch('/api/payment/callback?transId=' + encodeURIComponent(key),
+          { cache:'no-store', credentials:'omit' });
+        if (r.ok) {
+          const j = await r.json();
+          if (j && j.found && j.status && j.status !== 'unknown') return j;
+        }
+      } catch { /* transient */ }
+      await new Promise(r => setTimeout(r, delay));
+      delay = Math.min(delay + 400, 4000);
+    }
+    return null;
+  }
+
+  async function issuePolicyAndDownload(saved, paid){
+    renderSpinner('Payment confirmed. Issuing your policy…');
+    // Pull the paymentDate out of the HDFC callback's hdnmsg (parseHdfcHdnmsg
+    // on the server stores it as "15-09-2026 11:24:35"). Vendor expects
+    // dd/MM/yyyy — fall back to today if the callback didn't carry it.
+    const paymentDate = (function(){
+      const dt = paid && paid.paymentDateTime ? String(paid.paymentDateTime) : '';
+      const m = dt.match(/^(\d{2})-(\d{2})-(\d{4})/);
+      if (m) return m[1] + '/' + m[2] + '/' + m[3];
+      const t = new Date();
+      const dd = String(t.getDate()).padStart(2,'0');
+      const mm = String(t.getMonth()+1).padStart(2,'0');
+      const yy = t.getFullYear();
+      return dd + '/' + mm + '/' + yy;
+    })();
+    // Vendor Q7c: send transaction/proposal/amount keys with the exact casing
+    // per the selected module. HDFC's bike doc uses PascalCase
+    // (TransactionID / ProposalNumber / Amount); the 4W doc uses lowerCamel
+    // (transactionID / proposalNumber / amount). Branch here so each module
+    // matches its spec.
+    const mod = saved.module || 'bike';
+    const txId = saved.hdfcTxnId;
+    const propNo = saved.proposalNo;
+    const amt = String(saved.amount || '');
+    const casedKeys = mod === 'car'
+      ? { transactionID: txId, proposalNumber: propNo, amount: amt }
+      : { TransactionID: txId, ProposalNumber: propNo, Amount: amt };
+    const paramater = {
+      insurerName: 'HDFC',
+      applicationId: saved.hdfcTxnId,
+      refProposal: saved.proposalNo,
+      coverType: 'TPOnly',
+      module: mod,
+      transId: saved.partnerTransId || saved.transId,
+      ...casedKeys,
+      paymentDate,
+    };
+    let policyNumber = '';
+    try {
+      const r = await fetch('/api/swapinsurer/policy-after-payment', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({ paramater }),
+      });
+      const j = await r.json();
+      if (!r.ok || j.errorStatus) {
+        trackLead('issuance_failed', {
+          reason: (j && (j.errorMessage||j.error)) || ('HTTP '+r.status),
+          hdfcTxnId: saved.hdfcTxnId, proposalNo: saved.proposalNo,
+        });
+        return renderFailure(
+          'Policy issuance failed',
+          'Payment succeeded but the insurer could not issue the policy. Our team will contact you within 24 hours.',
+          { 'Partner transId': saved.partnerTransId, 'HDFC txn': saved.hdfcTxnId, 'Proposal': saved.proposalNo,
+            'Error': (j && (j.errorMessage||j.error)) || ('HTTP '+r.status) },
+        );
+      }
+      policyNumber = j.policyNumber || j.PolicyNumber || '';
+      if (!policyNumber) {
+        trackLead('issuance_pending', { hdfcTxnId: saved.hdfcTxnId, proposalNo: saved.proposalNo });
+        return renderFailure(
+          'Policy issuance pending',
+          'The insurer accepted the payment but has not confirmed the policy number yet. Please refresh in a few minutes or contact us.',
+          { 'Partner transId': saved.partnerTransId, 'HDFC txn': saved.hdfcTxnId, 'Proposal': saved.proposalNo },
+        );
+      }
+    } catch (e) {
+      trackLead('issuance_failed', { reason: String(e.message||e) });
+      return renderFailure(
+        'Could not confirm the policy',
+        'Payment succeeded but we could not reach the insurer to issue the policy. Our team will contact you within 24 hours.',
+        { 'Partner transId': saved.partnerTransId, 'HDFC txn': saved.hdfcTxnId, 'Error': String(e.message||e) },
+      );
+    }
+
+    // Now the PDF.
+    renderSpinner('Policy issued. Fetching your policy PDF…');
+    let pdfBase64 = '';
+    try {
+      const r = await fetch('/api/swapinsurer/policy-pdf', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({
+          PolicyNo: policyNumber,
+          Module: saved.module || 'bike',
+          RefNo: saved.proposalNo,
+          Transid: saved.partnerTransId || saved.transId,
+          covertType: 'TPOnly',
+        }),
+      });
+      const j = await r.json();
+      if (r.ok && !j.errorStatus) pdfBase64 = j.pdfBytes || '';
+    } catch { /* non-fatal — show without PDF */ }
+
+    renderSuccess(policyNumber, {
+      'Partner transId': saved.partnerTransId,
+      'HDFC txn': saved.hdfcTxnId,
+      'Proposal': saved.proposalNo,
+      'Amount': saved.amount ? '₹' + Number(saved.amount).toLocaleString('en-IN') : '',
+    }, pdfBase64);
+
+    // Persist the outcome to the admin panel — status=issued with the real
+    // policy number so ops can see the completed sale.
+    trackLead('issued', {
+      policyNo: policyNumber, hdfcTxnId: saved.hdfcTxnId, proposalNo: saved.proposalNo,
+      premium: Number(saved.amount || 0),
+    });
+
+    // Clean up state.
+    try { sessionStorage.removeItem(PROPOSAL_STATE_KEY); } catch {}
+  }
+
+  // ---------- Digit flow (two return stages) ----------
+  // Stage 1: /digit/kyc-return — customer finished KYC on Digit's portal.
+  //   Call /partner/ekyc/getpaymentafterkyc, redirect to the Digit payment URL.
+  // Stage 2: /digit/payment-return — customer finished payment on Digit's gateway.
+  //   Call /partner/motor/getresponseafterpayment (car) or
+  //        /partner/policygenerate/getpolicyafterpayment (bike), then PDF.
+  function moduleTitle(m){ const s=String(m||'car'); return s.charAt(0).toUpperCase()+s.slice(1); }
+  async function runDigitKycReturn(saved){
+    renderSpinner('KYC complete — requesting your Digit payment link…');
+    const r = await fetch('/api/swapinsurer/ekyc?op=payment-after-kyc', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({
+        paymentororkycLink: saved.paymentororkycLink,
+        insurerName: saved.insurerLabel || 'Digit',
+        errorStatus: '', errorMessage: null,
+        enquiryID: saved.enquiryID,
+        applicationId: saved.applicationId,
+        refProposal: saved.refProposal,
+        module: moduleTitle(saved.module),
+        transId: saved.partnerTransId || saved.transId,
+        callbackurl: saved.paymentCallbackUrl,
+      }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || `payment-after-kyc HTTP ${r.status}`);
+    if (j.errorMessage && String(j.errorMessage).trim()) throw new Error(String(j.errorMessage).trim());
+    if (!j.paymentLink) throw new Error('Digit did not return a payment link');
+    // Advance stage + redirect
+    saved.stage = 'digit-payment-pending';
+    saved.digitPaymentId = j.digitPaymentId || '';
+    sessionStorage.setItem(PROPOSAL_STATE_KEY, JSON.stringify(saved));
+    trackLead('digit_payment_link', {applicationId: saved.applicationId});
+    renderSpinner('Opening Digit payment page…');
+    window.location.href = j.paymentLink;
+  }
+  async function runDigitPaymentReturn(saved){
+    renderSpinner('Payment received — generating your policy…');
+    const module = (saved.module || 'car').toLowerCase();
+    const r = await fetch('/api/swapinsurer/policy-after-payment?insurer=DIGIT&module='+module, {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({
+        paramater: {
+          paymentororkycLink: saved.paymentororkycLink,
+          insurerName: 'Digit',
+          errorStatus: '', errorMessage: null,
+          enquiryID: saved.enquiryID,
+          applicationId: saved.applicationId,
+          refProposal: saved.refProposal,
+          module: moduleTitle(saved.module),
+          transId: saved.partnerTransId || saved.transId,
+          callbackurl: saved.paymentCallbackUrl,
+        },
+      }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || `getresponseafterpayment HTTP ${r.status}`);
+    if (j.errorMessage && String(j.errorMessage).trim()) throw new Error(String(j.errorMessage).trim());
+    // Digit uses refProposal as the policy number when policyNumber isn't echoed at top-level.
+    const policyNumber = j.policyNumber || j.policy_No || saved.refProposal || '';
+    if (!policyNumber) throw new Error('Policy status returned but no policy number present');
+    // Fetch PDF (non-fatal).
+    let pdfBase64 = '';
+    try {
+      const pr = await fetch('/api/swapinsurer/policy-pdf', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({
+          PolicyNo: policyNumber,
+          Module: module,
+          RefNo: saved.applicationId,  // Digit: RefNo = applicationId (not proposalNo)
+          Transid: saved.partnerTransId || saved.transId,
+        }),
+      });
+      const pj = await pr.json();
+      if (pr.ok && !pj.errorStatus) pdfBase64 = pj.pdfBytes || '';
+    } catch {}
+    trackLead('issued', {
+      insurer: 'DIGIT', policyNo: policyNumber,
+      refProposal: saved.refProposal, applicationId: saved.applicationId,
+      premium: Number(saved.amount||0),
+    });
+    renderSuccess(policyNumber, {
+      'Partner transId': saved.partnerTransId,
+      'Insurer': 'Digit',
+      'Proposal ref': saved.refProposal,
+      'Amount': saved.amount ? '₹' + Number(saved.amount).toLocaleString('en-IN') : '',
+    }, pdfBase64);
+    try { sessionStorage.removeItem(PROPOSAL_STATE_KEY); } catch {}
+  }
+
+  (async function main(){
+    // Digit two-stage return — the vercel.json rewrites preserve the browser
+    // URL (/digit/kyc-return or /digit/payment-return), so pathname + the
+    // saved stage tell us which step we're on.
+    const path = String(location.pathname || '');
+    const isDigitKycReturn     = path === '/digit/kyc-return';
+    const isDigitPaymentReturn = path === '/digit/payment-return';
+    if (isDigitKycReturn || isDigitPaymentReturn) {
+      let saved = null;
+      try { saved = JSON.parse(sessionStorage.getItem(PROPOSAL_STATE_KEY) || 'null'); } catch {}
+      if (!saved) {
+        renderFailure(
+          'Session expired',
+          'Your proposal state was lost. Please head back to the home page and start a fresh quote.',
+          { 'Note': 'This usually happens when the return opens in a new browser or private window.' },
+        );
+        return;
+      }
+      try {
+        if (isDigitKycReturn) await runDigitKycReturn(saved);
+        else                   await runDigitPaymentReturn(saved);
+      } catch (e) {
+        trackLead(isDigitKycReturn ? 'digit_kyc_return_failed' : 'digit_issuance_failed', {reason: String(e.message||e)});
+        renderFailure(
+          isDigitKycReturn ? 'Could not fetch Digit payment link' : 'Policy issuance failed',
+          String(e.message || e),
+          {
+            'Partner transId': saved.partnerTransId,
+            'Enquiry ID': saved.enquiryID,
+            'Proposal ref': saved.refProposal,
+          },
+        );
+      }
+      return;
+    }
+
+    // Very quick optimistic classification from URL params — if the callback
+    // already flagged failure we don't need to wait.
+    if (urlStatus === 'failure' || urlStatus === 'cancelled') {
+      trackLead(urlStatus === 'cancelled' ? 'pay_cancelled' : 'pay_failed', {hdfcTxnId});
+      renderFailure(
+        urlStatus === 'cancelled' ? 'Payment cancelled' : 'Payment did not go through',
+        urlStatus === 'cancelled'
+          ? "You cancelled the payment. Your quote is still saved — try again whenever you're ready."
+          : 'Nothing has been charged. You can retry the payment or head back to the home page.',
+        { 'Partner transId': partnerTransId, 'HDFC txn': hdfcTxnId },
+      );
+      return;
+    }
+
+    renderSpinner('Confirming your payment…');
+    // Wait up to 60s for the callback record.
+    const rec = await waitForPaymentRecord(Date.now() + 60_000);
+    if (!rec) {
+      renderPending('We are still waiting for confirmation from the payment gateway. If money was debited, our team will reconcile within 24 hours.');
+      return;
+    }
+    if (rec.status !== 'success') {
+      trackLead(rec.status === 'cancelled' ? 'pay_cancelled' : 'pay_failed', {hdfcTxnId: rec.hdfcTxnId||rec.transId});
+      renderFailure(
+        rec.status === 'cancelled' ? 'Payment cancelled' : 'Payment did not go through',
+        'Nothing has been charged. You can retry the payment or head back to the home page.',
+        { 'Partner transId': partnerTransId, 'HDFC txn': rec.transId, 'Status': rec.status },
+      );
+      return;
+    }
+    trackLead('pay_success', {hdfcTxnId: rec.hdfcTxnId||rec.transId, amount: rec.amount});
+    // Success — pull the saved proposal state to drive the policy issuance.
+    let saved = null;
+    try { saved = JSON.parse(sessionStorage.getItem(PROPOSAL_STATE_KEY) || 'null'); } catch {}
+    if (!saved || !saved.proposalNo || !saved.hdfcTxnId) {
+      // Missing state — probably a different browser / new tab. Show a
+      // partial-success page so the customer isn't left in the dark.
+      renderSuccess('', {
+        'Partner transId': partnerTransId,
+        'HDFC txn': rec.transId,
+        'Note': 'Session state missing; our team will send your policy on WhatsApp shortly.',
+      }, '');
+      return;
+    }
+    await issuePolicyAndDownload(saved, rec);
+  })();
+})();
+</script>
+</body>
+</html>
